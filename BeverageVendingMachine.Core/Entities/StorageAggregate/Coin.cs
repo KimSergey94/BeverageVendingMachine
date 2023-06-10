@@ -6,13 +6,24 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Core.Entities.StorageAggregate
 {
+    /// <summary>
+    /// Represents a coin element in storage aggregate
+    /// </summary>
     public class Coin
     {
-        public Coin(CoinDenomination denomination)
+        public Coin(int denomination)
         {
             Denomination = denomination;
         }
-        public CoinDenomination Denomination { get; }
-        public int Amount { get; set; }
+
+        /// <summary>
+        /// Coin denomination
+        /// </summary>
+        public int Denomination { get; }
+
+        /// <summary>
+        /// Quantity of coins with set denomination
+        /// </summary>
+        public int Quantity { get; set; }
     }
 }

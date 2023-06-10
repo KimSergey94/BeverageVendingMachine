@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BeverageVendingMachine.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,67 +7,72 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Core.Entities.StorageAggregate
 {
-    public class Storage
+    /// <summary>
+    /// Represents vending machine storage
+    /// </summary>
+    public class Storage : IStorage
     {
         public Storage() { }
-        public Storage(Dictionary<CoinDenomination, List<Coin>> depositedCoins, List<StorageItem> items, StorageItem selectedItem)
+        public Storage(Dictionary<int, List<Coin>> depositedCoins, List<IStorageItem> items)
         {
             DepositedCoins = depositedCoins;
             Items = items;
-            SelectedItem = selectedItem;
         }
+
+        /// <summary>
+        /// The total deposited amount from all deposited coins
+        /// </summary>
         public int DepositedAmount
         {
             get
             {
                 var result = 0;
                 foreach (var depositedCoins in DepositedCoins)
-                    result += (int)depositedCoins.Key * depositedCoins.Value.Count;
+                    result += depositedCoins.Key * depositedCoins.Value.Count;
                 return result;
             }
         }
-        public List<CoinDenomination> BlockedCoinDenomination { get; set; } = new List<CoinDenomination>();
-        public Dictionary<CoinDenomination, List<Coin>> DepositedCoins { get; set; }
-        public List<StorageItem> Items { get; set; }
-        public StorageItem SelectedItem { get; set; }
 
-        public int CalculateChange()
-        {
-            return DepositedAmount - SelectedItem.Cost;
-        }
+        /// <summary>
+        /// Dictionary with coin denomination key and the collection of coins with such denomination deposited to the vending machine storage 
+        /// </summary>
+        public Dictionary<int, List<Coin>> DepositedCoins { get; } = new Dictionary<int, List<Coin>>();
+
+        /// <summary>
+        /// Represents items inside vending machine storage
+        /// </summary>
+        public List<IStorageItem> Items { get; set; } = new List<IStorageItem>();
+
+        /// <summary>
+        /// To deposit a coin to a vending machine storage
+        /// </summary>
+        /// <param name="coin">Coin you want to deposit</param>
         public void DepositCoin(Coin coin)
         {
             if (DepositedCoins[coin.Denomination] == null)
                 DepositedCoins[coin.Denomination] = new List<Coin>() { coin };
             else DepositedCoins[coin.Denomination].Add(coin);
         }
-        public int ReleaseSelectedItem()
+
+        /// <summary>
+        /// To clear deposited coins (after purchase)
+        /// </summary>
+        public void ClearDepositedCoins()
         {
-            var change = CalculateChange();
-            if (change >= 0)
-            {
-                DepositedCoins = new Dictionary<CoinDenomination, List<Coin>>();
-                SelectedItem = null;
-                return change;
-            }
-            else
-            {
-                throw new Exception("Not enough deposited amount.");
-            }
+            DepositedCoins.Clear();
         }
-        public void SelectItem(StorageItem selectedItem)
+
+        /// <summary>
+        /// Releases selected item from vending machine storage
+        /// </summary>
+        /// <param name="SelectedItem">Selected item from vending machine storage</param>
+        /// <returns>Return released selected item from vending machine storage</returns>
+        public IStorageItem ReleaseSelectedItem(IStorageItem SelectedItem)
         {
-            SelectedItem = selectedItem;
-        }
-        public void BlockCoinDenomination(CoinDenomination coinDenomination)
-        {
-            if(BlockedCoinDenomination.FirstOrDefault(coinDenom => coinDenom == coinDenomination) == null)
-                BlockedCoinDenomination.Add(coinDenomination);
-        }
-        public void UnblockCoinDenomination(CoinDenomination coinDenomination)
-        {
-            coinDenomination = BlockedCoinDenomination.FirstOrDefault(coinDenom => coinDenom == coinDenomination);
-            if (coinDenomination != null) BlockedCoinDenomination.Remove(coinDenomination);
+            if(Items.Contains(SelectedItem)) Items.Remove(SelectedItem);
+
+            //needs to be checked
+            return SelectedItem;
         }
     }   
 }

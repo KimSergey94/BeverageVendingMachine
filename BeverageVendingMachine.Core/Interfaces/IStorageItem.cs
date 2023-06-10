@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BeverageVendingMachine.Core.Interfaces
+{
+    /// <summary>
+    /// Interface of vending machine storage item
+    /// </summary>
+    public interface IStorageItem
+    {
+        /// <summary>
+        /// Name of the storage item
+        /// </summary>
+        public string Name { get; set; }
+
+
+        /// <summary>
+        /// Cost of the storage item
+        /// </summary>
+        public int Cost { get; set; }
+
+        /// <summary>
+        /// Url path to image of the storage item
+        /// </summary>
+        public string ImageUrl { get; set; }
+    }
+}

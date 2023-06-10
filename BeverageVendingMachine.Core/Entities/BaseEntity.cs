@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Core.Entities
 {
-    public class BaseEntity
+    /// <summary>
+    /// Abstract class as a base of entities
+    /// </summary>
+    public abstract class BaseEntity
     {
         public int Id { get; set; }
 
