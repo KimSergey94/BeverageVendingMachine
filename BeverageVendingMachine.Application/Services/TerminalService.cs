@@ -1,5 +1,5 @@
 ﻿using BeverageVendingMachine.Core.Entities;
-using BeverageVendingMachine.Core.Entities.StorageAggregate;
+using BeverageVendingMachine.Core.Helpers.StorageHelper;
 using BeverageVendingMachine.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace BeverageVendingMachine.Application.Services
         /// <summary>
         /// Singleton vending machine storage instance
         /// </summary>
-        private static Core.Entities.StorageAggregate.Storage _storage;
+        private static StorageHelper _storage;
 
         protected TerminalService(IUnitOfWork unitOfWork)
         {
@@ -30,11 +30,11 @@ namespace BeverageVendingMachine.Application.Services
         /// Get the instance of storage singleton
         /// </summary>
         /// <returns>Returns the instance of storage singleton</returns>
-        public static Core.Entities.StorageAggregate.Storage GetInstance()
+        public static StorageHelper GetInstance()
         {
             if (_storage == null)
             {
-                _storage = new Core.Entities.StorageAggregate.Storage();
+                _storage = new StorageHelper();
             }
             return _storage;
         }
@@ -116,6 +116,11 @@ namespace BeverageVendingMachine.Application.Services
             var change = CalculateChange();
             if (change >= 0)
             {
+                var coinOperation = new CoinOperation(,);
+                coinOperation.IsWithdrawal = false;
+                coinOperation.Quantity =
+
+                await _unitOfWork.repository<CoinOperation>().AddAsync();
                 _storage.ClearDepositedCoins();
                 return SelectedItem;
             }

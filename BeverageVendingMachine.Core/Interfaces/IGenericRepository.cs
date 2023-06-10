@@ -1,4 +1,4 @@
-﻿using BeverageVendingMachine.Core.Entities;
+﻿using BeverageVendingMachine.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

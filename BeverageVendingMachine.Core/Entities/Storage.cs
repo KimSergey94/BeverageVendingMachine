@@ -1,4 +1,5 @@
-﻿using BeverageVendingMachine.Core.Interfaces;
+﻿using BeverageVendingMachine.Core.Common;
+using BeverageVendingMachine.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,18 @@ namespace BeverageVendingMachine.Core.Entities
     /// <summary>
     /// Represent storage of the vending machine
     /// </summary>
-    public class Storage : BaseEntity
+    public class Storage : BaseEntity, IStorage
     {
+        public Storage()
+        {
+
+        }
+        public Storage(IStorageItem storageItem, int quantity)
+        {
+            StorageItem = storageItem;
+            Quantity = quantity;
+        }
+
         /// <summary>
         /// Storage item object
         /// </summary>
@@ -26,6 +37,5 @@ namespace BeverageVendingMachine.Core.Entities
         /// The quantity of specified storage item
         /// </summary>
         public int Quantity { get; set; }
-
     }
 }

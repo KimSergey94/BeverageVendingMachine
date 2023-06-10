@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BeverageVendingMachine.Core.Common;
 
 namespace BeverageVendingMachine.Core.Entities
 {
@@ -11,6 +12,17 @@ namespace BeverageVendingMachine.Core.Entities
     /// </summary>
     public class CoinOperation : BaseEntity
     {
+        public CoinOperation()
+        {
+
+        }
+        public CoinOperation(CoinDenomination coinDenomination, int quantity, bool isWithdrawal)
+        {
+            CoinDenomination = coinDenomination;
+            Quantity = quantity;
+            IsWithdrawal = isWithdrawal;
+        }
+
         /// <summary>
         /// Coin denomination
         /// </summary>
@@ -22,13 +34,13 @@ namespace BeverageVendingMachine.Core.Entities
         public int CoinDenominationId { get; set; }
 
         /// <summary>
-        /// Indicates whether the operation is of withdrawal type
-        /// </summary>
-        public bool IsWithdrawal { get; set; }
-
-        /// <summary>
         /// Indicates the quantity of coins with set coin denomination
         /// </summary>
         public int Quantity { get; set; }
+
+        /// <summary>
+        /// Indicates whether the operation is of withdrawal type
+        /// </summary>
+        public bool IsWithdrawal { get; set; }
     }
 }

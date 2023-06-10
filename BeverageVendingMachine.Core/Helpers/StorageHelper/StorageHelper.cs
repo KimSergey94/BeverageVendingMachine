@@ -5,19 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Entities.StorageAggregate
+namespace BeverageVendingMachine.Core.Helpers.StorageHelper
 {
     /// <summary>
-    /// Represents vending machine storage
+    /// Represents vending machine storage. Realisation of storage operations
     /// </summary>
-    public class Storage : IStorage
+    public class StorageHelper : IStorageHelper
     {
-        public Storage() { }
-        public Storage(Dictionary<int, List<Coin>> depositedCoins, List<IStorageItem> items)
+        public StorageHelper() { }
+        public StorageHelper(Dictionary<int, List<Coin>> coins, Dictionary<int, List<Coin>> depositedCoins, List<IStorageItem> items)
         {
+            Coins = coins;
             DepositedCoins = depositedCoins;
             Items = items;
         }
+
 
         /// <summary>
         /// The total deposited amount from all deposited coins
@@ -34,7 +36,12 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         }
 
         /// <summary>
-        /// Dictionary with coin denomination key and the collection of coins with such denomination deposited to the vending machine storage 
+        /// Dictionary with coin denomination as a key and the collection of coins with such denomination as a value that are contained inside the vending machine storage 
+        /// </summary>
+        public Dictionary<int, List<Coin>> Coins { get; } = new Dictionary<int, List<Coin>>();
+
+        /// <summary>
+        /// Dictionary with coin denomination as a key and the collection of coins with such denomination deposited to the vending machine storage as a value
         /// </summary>
         public Dictionary<int, List<Coin>> DepositedCoins { get; } = new Dictionary<int, List<Coin>>();
 
@@ -42,6 +49,7 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         /// Represents items inside vending machine storage
         /// </summary>
         public List<IStorageItem> Items { get; set; } = new List<IStorageItem>();
+
 
         /// <summary>
         /// To deposit a coin to a vending machine storage
@@ -69,10 +77,20 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         /// <returns>Return released selected item from vending machine storage</returns>
         public IStorageItem ReleaseSelectedItem(IStorageItem SelectedItem)
         {
-            if(Items.Contains(SelectedItem)) Items.Remove(SelectedItem);
+            if (Items.Contains(SelectedItem)) Items.Remove(SelectedItem);
 
             //needs to be checked
             return SelectedItem;
         }
-    }   
+
+        /// <summary>
+        /// Provides dictionary with coin denomination as a key and the collection of coins with such denomination as a value
+        /// </summary>
+        /// <param name="change">The change amount needed to be returned to a user</param>
+        /// <returns>The dictionary with coin denomination as a key and the collection of coins with such denomination as a value to provide to user</returns>
+        public Dictionary<int, List<Coin>> GetCoinsForChange(int change)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
