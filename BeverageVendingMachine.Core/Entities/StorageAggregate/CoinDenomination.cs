@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BeverageVendingMachine.Core.Common;
 
-namespace BeverageVendingMachine.Core.Entities
+namespace BeverageVendingMachine.Core.Entities.StorageAggregate
 {
     /// <summary>
     /// Coin denomination entity
