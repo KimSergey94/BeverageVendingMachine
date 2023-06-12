@@ -20,7 +20,7 @@ namespace BeverageVendingMachine.Core.Interfaces
         /// <summary>
         /// Cost of the storage item
         /// </summary>
-        public int Cost { get; set; }
+        public double Cost { get; set; }
 
         /// <summary>
         /// Url path to image of the storage item

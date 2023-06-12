@@ -14,7 +14,7 @@ namespace BeverageVendingMachine.Core.Entities
     public class StorageItem: BaseEntity, IStorageItem
     {
         public StorageItem() { }
-        public StorageItem(int id, string name, int cost, string imageUrl) 
+        public StorageItem(int id, string name, double cost, string imageUrl) 
         {
             Id = id;
             Name = name;
@@ -30,7 +30,7 @@ namespace BeverageVendingMachine.Core.Entities
         /// <summary>
         /// Cost of the storage item
         /// </summary>
-        public int Cost { get; set; }
+        public double Cost { get; set; }
 
         /// <summary>
         /// Url path to image of the storage item

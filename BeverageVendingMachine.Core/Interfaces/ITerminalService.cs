@@ -27,13 +27,13 @@ namespace BeverageVendingMachine.Core.Interfaces
         /// Calculates change by subtracting selected item cost from the deposited amount
         /// </summary>
         /// <returns>Returns amount to be returned to a vending machine user</returns>
-        int CalculateChange();
+        double CalculateChange();
 
         /// <summary>
         /// Returns the deposited amount
         /// </summary>
         /// <returns>deposited amount</returns>
-        int GetDepositedAmount();
+        double GetDepositedAmount();
 
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace BeverageVendingMachine.Core.Interfaces
         /// Releases selected storage item
         /// </summary>
         /// <returns>StorageItem type selectedItem</returns>
-        IStorageItem ReleaseSelectedItem();
+        Task<IStorageItem> ReleaseSelectedItemAndChange();
 
     }
 }

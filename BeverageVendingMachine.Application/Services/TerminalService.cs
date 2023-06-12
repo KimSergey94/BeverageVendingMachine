@@ -1,5 +1,5 @@
 ﻿using BeverageVendingMachine.Core.Entities;
-using BeverageVendingMachine.Core.Helpers.StorageHelper;
+using BeverageVendingMachine.Core.Entities.StorageAggregate;
 using BeverageVendingMachine.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,26 +15,30 @@ namespace BeverageVendingMachine.Application.Services
     public sealed class TerminalService : ITerminalService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICoinDenominationRepository _coinDenominationRepository;
 
         /// <summary>
         /// Singleton vending machine storage instance
         /// </summary>
-        private static StorageHelper _storage;
+        private static StorageAggregate _storage;
 
-        protected TerminalService(IUnitOfWork unitOfWork)
+        protected TerminalService(IUnitOfWork unitOfWork, ICoinDenominationRepository coinDenominationRepository)
         {
             _unitOfWork = unitOfWork;
+            _coinDenominationRepository = coinDenominationRepository;
         }
 
         /// <summary>
         /// Get the instance of storage singleton
         /// </summary>
         /// <returns>Returns the instance of storage singleton</returns>
-        public static StorageHelper GetInstance()
+        public static StorageAggregate GetStorageInstance()
         {
             if (_storage == null)
             {
-                _storage = new StorageHelper();
+                //init last state from db
+
+                _storage = new StorageAggregate();//add params
             }
             return _storage;
         }
@@ -72,7 +76,7 @@ namespace BeverageVendingMachine.Application.Services
         /// Calculates change by subtracting selected item cost from the deposited amount
         /// </summary>
         /// <returns>Returns amount to be returned to a vending machine user</returns>
-        public int CalculateChange()
+        public double CalculateChange()
         {
             return GetDepositedAmount() - SelectedItem.Cost;
         }
@@ -81,9 +85,9 @@ namespace BeverageVendingMachine.Application.Services
         /// Returns the deposited amount
         /// </summary>
         /// <returns>deposited amount</returns>
-        public int GetDepositedAmount()
+        public double GetDepositedAmount()
         {
-            return _storage.DepositedAmount;
+            return GetStorageInstance().DepositedAmount;
         }
 
         /// <summary>
@@ -111,21 +115,34 @@ namespace BeverageVendingMachine.Application.Services
         /// </summary>
         /// <returns>StorageItem type selectedItem</returns>
         /// <exception cref="Exception">Not enough deposited amount.</exception>
-        public IStorageItem ReleaseSelectedItem()
+        public async Task<IStorageItem> ReleaseSelectedItemAndChange()
         {
+            var result = SelectedItem;
             var change = CalculateChange();
             if (change >= 0)
             {
-                var coinOperation = new CoinOperation(,);
-                coinOperation.IsWithdrawal = false;
-                coinOperation.Quantity =
+                try
+                {
+                    var coinsForChange = GetStorageInstance().GetCoinsForChange(change);
 
-                await _unitOfWork.repository<CoinOperation>().AddAsync();
-                _storage.ClearDepositedCoins();
-                return SelectedItem;
+                    foreach (var coinDenominationGroup in coinsForChange)
+                    {
+                        var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
+                        var coinOperation = new CoinOperation(coinDenomination, coinDenominationGroup.Value.Count, false);
+                        await _unitOfWork.repository<CoinOperation>().AddAsync(coinOperation);
+                    }
+                    
+                    GetStorageInstance().TakeDepositedCoins();
+                    SelectedItem = null;
+                    return result;
+                }
+                catch
+                {
+                    throw;
+                }
             }
-            else
-            {
+            else 
+            { 
                 throw new Exception("Not enough deposited amount.");
             }
         }

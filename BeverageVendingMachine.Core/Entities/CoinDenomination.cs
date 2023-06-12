@@ -15,7 +15,7 @@ namespace BeverageVendingMachine.Core.Entities
         /// <summary>
         /// Coin denomination value
         /// </summary>
-        public int Value { get; set; }
+        public double Value { get; set; }
 
         /// <summary>
         /// Indicates the current quantity of coins with the specified denomination inside vending machine storage

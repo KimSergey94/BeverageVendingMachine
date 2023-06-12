@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Helpers.StorageHelper
+namespace BeverageVendingMachine.Core.Entities.StorageAggregate
 {
     /// <summary>
     /// Represents vending machine storage item (beverages)
     /// </summary>
-    public class StorageHelperItem : IStorageItem
+    public class StorageAggregateItem : IStorageItem
     {
         /// <summary>
         /// Id of the storage item
@@ -25,7 +25,7 @@ namespace BeverageVendingMachine.Core.Helpers.StorageHelper
         /// <summary>
         /// Cost of the storage item
         /// </summary>
-        public int Cost { get; set; }
+        public double Cost { get; set; }
 
         /// <summary>
         /// Url path to image of the storage item

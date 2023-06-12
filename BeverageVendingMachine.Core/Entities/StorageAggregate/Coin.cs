@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Helpers.StorageHelper
+namespace BeverageVendingMachine.Core.Entities.StorageAggregate
 {
     /// <summary>
     /// Represents a coin element in storage aggregate

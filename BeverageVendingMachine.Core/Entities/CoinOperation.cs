@@ -16,11 +16,11 @@ namespace BeverageVendingMachine.Core.Entities
         {
 
         }
-        public CoinOperation(CoinDenomination coinDenomination, int quantity, bool isWithdrawal)
+        public CoinOperation(CoinDenomination coinDenomination, int quantity, bool isDeposited)
         {
             CoinDenomination = coinDenomination;
             Quantity = quantity;
-            IsWithdrawal = isWithdrawal;
+            IsDeposited = isDeposited;
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace BeverageVendingMachine.Core.Entities
         public int Quantity { get; set; }
 
         /// <summary>
-        /// Indicates whether the operation is of withdrawal type
+        /// Indicates whether the operation is of deposit type
         /// </summary>
-        public bool IsWithdrawal { get; set; }
+        public bool IsDeposited { get; set; }
     }
 }
