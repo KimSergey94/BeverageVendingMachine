@@ -16,7 +16,7 @@ namespace BeverageVendingMachine.Core.Interfaces
         /// Selects item for a puchase
         /// </summary>
         /// <param name="selectedItem">Selected storage item</param>
-        void SelectItem(IStorageItem selectedItem);
+        void SelectItem(StorageItemsIStorageItem selectedItem);
 
         /// <summary>
         /// Unselects item for a puchase
@@ -52,7 +52,7 @@ namespace BeverageVendingMachine.Core.Interfaces
         /// Releases selected storage item
         /// </summary>
         /// <returns>StorageItem type selectedItem</returns>
-        Task<IStorageItem> ReleaseSelectedItemAndChange();
+        Task<StorageItemsIStorageItem> ReleaseSelectedItemAndChange();
 
     }
 }

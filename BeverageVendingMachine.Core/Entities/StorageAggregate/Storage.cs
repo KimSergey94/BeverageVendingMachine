@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace BeverageVendingMachine.Core.Entities.StorageAggregate
 {
     /// <summary>
-    /// Represents vending machine storage. Realisation of storage operations
+    /// Represents vending machine storage. Implementation of storage operations
     /// </summary>
-    public class StorageAggregate  : IAggregateRoot
+    public class Storage : IAggregateRoot
     {
-        public StorageAggregate() { }
-        public StorageAggregate(SortedDictionary<double, List<Coin>> coins, SortedDictionary<double, List<Coin>> depositedCoins, List<IStorageItem> items)
+        public Storage() { }
+        public Storage(SortedDictionary<double, List<CoinDenomination>> coins, SortedDictionary<double, List<CoinDenomination>> depositedCoins, List<IStorageItem> items)
         {
             Coins = coins;
             DepositedCoins = depositedCoins;
@@ -39,13 +39,13 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         /// Dictionary with coin denomination as a key and the collection of coins with such denomination as a value that are contained inside the vending machine storage 
         /// </summary>
         //public Dictionary<double, List<Coin>> Coins { get; } = new Dictionary<double, List<Coin>>();
-        public SortedDictionary<double, List<Coin>> Coins { get; } = new SortedDictionary<double, List<Coin>>();
+        public SortedDictionary<double, List<CoinDenomination>> Coins { get; } = new SortedDictionary<double, List<CoinDenomination>>();
 
         
         /// <summary>
         /// Dictionary with coin denomination as a key and the collection of coins with such denomination deposited to the vending machine storage as a value
         /// </summary>
-        public SortedDictionary<double, List<Coin>> DepositedCoins { get; } = new SortedDictionary<double, List<Coin>>();
+        public SortedDictionary<double, List<CoinDenomination>> DepositedCoins { get; } = new SortedDictionary<double, List<CoinDenomination>>();
 
         /// <summary>
         /// Represents items inside vending machine storage
@@ -57,21 +57,21 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         /// To deposit a coin to a vending machine temporary storage
         /// </summary>
         /// <param name="coin">Coin you want to deposit</param>
-        public void DepositCoin(Coin coin)
+        public void DepositCoin(CoinDenomination coin)
         {
-            if (DepositedCoins[coin.Denomination] == null)
-                DepositedCoins[coin.Denomination] = new List<Coin>() { coin };
-            else DepositedCoins[coin.Denomination].Add(coin);
+            if (DepositedCoins[coin.Value] == null)
+                DepositedCoins[coin.Value] = new List<CoinDenomination>() { coin };
+            else DepositedCoins[coin.Value].Add(coin);
         }
 
         /// <summary>
         /// To deposit coins to a vending machine storage
         /// </summary>
         /// <param name="coins">Coins you want to deposit</param>
-        public void DepositCoins(double coinDenomination, List<Coin> coins)
+        public void DepositCoins(double coinDenomination, List<CoinDenomination> coins)
         {
             if (DepositedCoins[coinDenomination] == null)
-                DepositedCoins[coinDenomination] = new List<Coin>(coins);
+                DepositedCoins[coinDenomination] = new List<CoinDenomination>(coins);
             else DepositedCoins[coinDenomination].AddRange(coins);
         }
 
@@ -93,6 +93,7 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         public IStorageItem ReleaseSelectedItem(IStorageItem SelectedItem)
         {
             if (Items.Contains(SelectedItem)) Items.Remove(SelectedItem);
+            //else { }
 
             //needs to be checked
             return SelectedItem;
@@ -103,9 +104,9 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         /// </summary>
         /// <param name="change">The change amount needed to be returned to a user</param>
         /// <returns>The dictionary with coin denomination as a key and the collection of coins with such denomination as a value to provide to user</returns>
-        public SortedDictionary<double, List<Coin>> GetCoinsForChange(double change)
+        public SortedDictionary<double, List<CoinDenomination>> GetCoinsForChange(double change)
         {
-            var result = new SortedDictionary<double, List<Coin>>();
+            var result = new SortedDictionary<double, List<CoinDenomination>>();
             foreach (var coinDenominationGroup in Coins.OrderByDescending(x => x.Key))
             {
                 var storageCoins = TakeStorageCoinsByDenomination(coinDenominationGroup.Key, change);
@@ -129,7 +130,7 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         /// <param name="coinDenomination">coin denomination to get change</param>
         /// <param name="change">the change left to collect</param>
         /// <returns>returns the coins for a change</returns>
-        private List<Coin> TakeStorageCoinsByDenomination(double coinDenomination, double change)
+        private List<CoinDenomination> TakeStorageCoinsByDenomination(double coinDenomination, double change)
         {
             var totalCoins = Coins[coinDenomination].Count;
             var coinsNeeded = change / coinDenomination;

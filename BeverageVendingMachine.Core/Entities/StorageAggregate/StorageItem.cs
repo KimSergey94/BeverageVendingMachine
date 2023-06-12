@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Entities
+namespace BeverageVendingMachine.Core.Entities.StorageAggregate
 {
     /// <summary>
-    /// Storage item entity (vending machine storage item)
+    /// Vending machine storage item entity
     /// </summary>
-    public class StorageItem: BaseEntity, IStorageItem
+    public class StorageItem : BaseEntity, IStorageItem
     {
         public StorageItem() { }
-        public StorageItem(int id, string name, double cost, string imageUrl) 
+        public StorageItem(int id, string name, double cost, string imageUrl)
         {
             Id = id;
             Name = name;

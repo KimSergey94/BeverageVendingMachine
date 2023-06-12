@@ -9,32 +9,32 @@ using System.Threading.Tasks;
 namespace BeverageVendingMachine.Core.Entities
 {
     /// <summary>
-    /// Represent storage of the vending machine
+    /// Represent inventory items that are available for sale
     /// </summary>
-    public class Storage : BaseEntity, IStorage
+    public class InventoryItem : BaseEntity, IInventoryItem
     {
-        public Storage()
+        public InventoryItem()
         {
 
         }
-        public Storage(IStorageItem storageItem, int quantity)
+        public InventoryItem(IStorageItem storageItem, int quantity)
         {
             StorageItem = storageItem;
             Quantity = quantity;
         }
 
         /// <summary>
-        /// Storage item object
+        /// Inventory item object
         /// </summary>
         public IStorageItem StorageItem { get; set; }
 
         /// <summary>
-        /// Foreign key to storage item
+        /// Foreign key to inventory item
         /// </summary>
         public int StorageItemId { get; set; }
 
         /// <summary>
-        /// The quantity of specified storage item
+        /// The quantity of specified inventory item inside vending machine
         /// </summary>
         public int Quantity { get; set; }
     }

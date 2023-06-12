@@ -20,7 +20,7 @@ namespace BeverageVendingMachine.Application.Services
         /// <summary>
         /// Singleton vending machine storage instance
         /// </summary>
-        private static StorageAggregate _storage;
+        private static Storage _storage;
 
         protected TerminalService(IUnitOfWork unitOfWork, ICoinDenominationRepository coinDenominationRepository)
         {
@@ -32,13 +32,13 @@ namespace BeverageVendingMachine.Application.Services
         /// Get the instance of storage singleton
         /// </summary>
         /// <returns>Returns the instance of storage singleton</returns>
-        public static StorageAggregate GetStorageInstance()
+        public static Storage GetStorageInstance()
         {
             if (_storage == null)
             {
                 //init last state from db
 
-                _storage = new StorageAggregate();//add params
+                _storage = new Storage();//add params
             }
             return _storage;
         }
@@ -133,7 +133,9 @@ namespace BeverageVendingMachine.Application.Services
                     }
                     
                     GetStorageInstance().TakeDepositedCoins();
+                    _storage.ReleaseSelectedItem(SelectedItem);
                     SelectedItem = null;
+                    //needs to be checked
                     return result;
                 }
                 catch

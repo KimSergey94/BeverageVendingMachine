@@ -6,20 +6,23 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Core.Interfaces
 {
-    public interface IStorage
+    /// <summary>
+    /// Represents inventory items that are available for sale
+    /// </summary>
+    public interface IInventoryItem
     {
         /// <summary>
-        /// Storage item object
+        /// Inventory item object
         /// </summary>
         IStorageItem StorageItem { get; set; }
 
         /// <summary>
-        /// Foreign key to storage item
+        /// Foreign key to inventory item
         /// </summary>
         int StorageItemId { get; set; }
 
         /// <summary>
-        /// The quantity of specified storage item
+        /// The quantity of specified inventory item inside vending machine
         /// </summary>
         int Quantity { get; set; }
     }
