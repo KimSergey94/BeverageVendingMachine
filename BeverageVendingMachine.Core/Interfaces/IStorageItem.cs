@@ -12,6 +12,11 @@ namespace BeverageVendingMachine.Core.Interfaces
     public interface IStorageItem
     {
         /// <summary>
+        /// Id of the storage item entity
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
         /// Name of the storage item
         /// </summary>
         public string Name { get; set; }

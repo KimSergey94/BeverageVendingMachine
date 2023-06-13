@@ -30,6 +30,18 @@ namespace BeverageVendingMachine.Core.Interfaces
         /// Returns object with purchase result items
         /// </summary>
         /// <returns>Purchased item and change</returns>
-        Task<PurchaseResult> GetPurchaseResult(double change);
+        Task<PurchaseResult> ReleasePurchaseItemAndChange();
+
+        /// <summary>
+        /// Takes purchase item from inventory
+        /// </summary>
+        /// <returns>Returns purchased item from inventory</returns>
+        IStorageItem ReleasePurchaseItem();
+
+        /// <summary>
+        /// Gets unused coin from deposited coins
+        /// </summary>
+        /// <returns>Returns change</returns>
+        Task<SortedDictionary<double, List<CoinDenomination>>> ReleaseChange();
     }
 }

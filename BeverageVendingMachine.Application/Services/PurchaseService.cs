@@ -42,9 +42,28 @@ namespace BeverageVendingMachine.Application.Services
         /// Returns object with purchase result items
         /// </summary>
         /// <returns>Purchased item and change</returns>
-        public async Task<PurchaseResult> GetPurchaseResult(double change)
+        public async Task<PurchaseResult> ReleasePurchaseItemAndChange()
         {
-            return await _terminalService.ReleaseSelectedItemAndChange();
+            return await _terminalService.ReleasePurchaseItemAndChange();
+        }
+
+
+        /// <summary>
+        /// Takes purchase item from inventory
+        /// </summary>
+        /// <returns>Returns purchased item from inventory</returns>
+        public IStorageItem ReleasePurchaseItem()
+        {
+            return _terminalService.TakePurchaseItemFromInventory();
+        }
+
+        /// <summary>
+        /// Gets unused coin from deposited coins
+        /// </summary>
+        /// <returns>Returns change</returns>
+        public async Task<SortedDictionary<double, List<CoinDenomination>>> ReleaseChange()
+        {
+            return await _terminalService.ReleaseChange();
         }
     }
 }
