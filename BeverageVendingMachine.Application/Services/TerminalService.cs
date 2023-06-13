@@ -1,4 +1,5 @@
-﻿using BeverageVendingMachine.Core.Entities;
+﻿using BeverageVendingMachine.Application.DTOs;
+using BeverageVendingMachine.Core.Entities;
 using BeverageVendingMachine.Core.Entities.StorageAggregate;
 using BeverageVendingMachine.Core.Interfaces;
 using System;
@@ -53,23 +54,33 @@ namespace BeverageVendingMachine.Application.Services
         /// <summary>
         /// Selected item for a purchase
         /// </summary>
-        private IStorageItem SelectedItem { get; set; }
+        private IStorageItem PurchaseItem { get; set; }
+
+
+        /// <summary>
+        /// To deposit a coin to a vending machine temporary storage for a purchase
+        /// </summary>
+        /// <param name="coin">Coin you want to deposit</param>
+        public void DepositCoin(CoinDenomination coin)
+        {
+            _storage.DepositCoin(coin);
+        }
 
         /// <summary>
         /// Selects item for a puchase
         /// </summary>
-        /// <param name="selectedItem">Selected storage item</param>
-        public void SelectItem(IStorageItem selectedItem)
+        /// <param name="purchaseItem">Selected inventory item for a purchase</param>
+        public void SelectPurchaseItem(IStorageItem purchaseItem)
         {
-            SelectedItem = selectedItem;
+            PurchaseItem = purchaseItem;
         }
 
         /// <summary>
         /// Unselects item for a puchase
         /// </summary>
-        public void UnselectItem()
+        public void UnselectPurchaseItem()
         {
-            SelectedItem = null;
+            PurchaseItem = null;
         }
 
         /// <summary>
@@ -78,17 +89,59 @@ namespace BeverageVendingMachine.Application.Services
         /// <returns>Returns amount to be returned to a vending machine user</returns>
         public double CalculateChange()
         {
-            return GetDepositedAmount() - SelectedItem.Cost;
+            return GetDepositedAmount() - PurchaseItem.Cost;
         }
 
         /// <summary>
-        /// Returns the deposited amount
+        /// Returns the amount of deposited coins for a purchase
         /// </summary>
-        /// <returns>deposited amount</returns>
+        /// <returns>the amount of deposited coins for a purchase</returns>
         public double GetDepositedAmount()
         {
             return GetStorageInstance().DepositedAmount;
         }
+
+        /// <summary>
+        /// Releases purchase item and change
+        /// </summary>
+        /// <returns>Returns what should be returned to a customer (purchase item and change)</returns>
+        /// <exception cref="Exception">Not enough deposited amount.</exception>
+        public async Task<PurchaseResult> ReleaseSelectedItemAndChange()
+        {
+            var result = new PurchaseResult(PurchaseItem, new SortedDictionary<double, List<CoinDenomination>>());
+
+            var change = CalculateChange();
+            if (change >= 0)
+            {
+                try
+                {
+                    result.Change = GetStorageInstance().GetCoinsForChange(change);
+
+                    foreach (var coinDenominationGroup in result.Change)
+                    {
+                        var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
+                        var coinOperation = new CoinOperation(coinDenomination, coinDenominationGroup.Value.Count, false);
+                        await _unitOfWork.repository<CoinOperation>().AddAsync(coinOperation);
+                    }
+
+                    GetStorageInstance().TakeDepositedCoins();
+                    _storage.TakePurchaseItemFromInventoryItems(PurchaseItem);
+                    UnselectPurchaseItem();
+
+                    //needs to be checked
+                    return result;
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                throw new Exception("Not enough deposited amount.");
+            }
+        }
+
 
         /// <summary>
         /// Blocks passed coin denomination by Id
@@ -108,45 +161,6 @@ namespace BeverageVendingMachine.Application.Services
         {
             if (BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
                 BlockedCoinDenominations.RemoveAll(coinDenomination => coinDenomination == coinDenominationId);
-        }
-
-        /// <summary>
-        /// Releases selected storage item
-        /// </summary>
-        /// <returns>StorageItem type selectedItem</returns>
-        /// <exception cref="Exception">Not enough deposited amount.</exception>
-        public async Task<IStorageItem> ReleaseSelectedItemAndChange()
-        {
-            var result = SelectedItem;
-            var change = CalculateChange();
-            if (change >= 0)
-            {
-                try
-                {
-                    var coinsForChange = GetStorageInstance().GetCoinsForChange(change);
-
-                    foreach (var coinDenominationGroup in coinsForChange)
-                    {
-                        var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
-                        var coinOperation = new CoinOperation(coinDenomination, coinDenominationGroup.Value.Count, false);
-                        await _unitOfWork.repository<CoinOperation>().AddAsync(coinOperation);
-                    }
-                    
-                    GetStorageInstance().TakeDepositedCoins();
-                    _storage.ReleaseSelectedItem(SelectedItem);
-                    SelectedItem = null;
-                    //needs to be checked
-                    return result;
-                }
-                catch
-                {
-                    throw;
-                }
-            }
-            else 
-            { 
-                throw new Exception("Not enough deposited amount.");
-            }
         }
     }
 }

@@ -17,7 +17,7 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         {
             Coins = coins;
             DepositedCoins = depositedCoins;
-            Items = items;
+            InventoryItems = items;
         }
 
 
@@ -50,11 +50,11 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         /// <summary>
         /// Represents items inside vending machine storage
         /// </summary>
-        public List<IStorageItem> Items { get; set; } = new List<IStorageItem>();
+        public List<IStorageItem> InventoryItems { get; set; } = new List<IStorageItem>();
 
 
         /// <summary>
-        /// To deposit a coin to a vending machine temporary storage
+        /// To deposit a coin to a vending machine temporary storage for a purchase
         /// </summary>
         /// <param name="coin">Coin you want to deposit</param>
         public void DepositCoin(CoinDenomination coin)
@@ -86,17 +86,17 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         }
 
         /// <summary>
-        /// Releases selected item from vending machine storage
+        /// Releases purchase item from vending machine storage
         /// </summary>
         /// <param name="SelectedItem">Selected item from vending machine storage</param>
         /// <returns>Return released selected item from vending machine storage</returns>
-        public IStorageItem ReleaseSelectedItem(IStorageItem SelectedItem)
+        public IStorageItem TakePurchaseItemFromInventoryItems(IStorageItem PurchaseItem)
         {
-            if (Items.Contains(SelectedItem)) Items.Remove(SelectedItem);
+            if (InventoryItems.Contains(PurchaseItem)) InventoryItems.Remove(PurchaseItem);
             //else { }
 
             //needs to be checked
-            return SelectedItem;
+            return PurchaseItem;
         }
 
         /// <summary>
