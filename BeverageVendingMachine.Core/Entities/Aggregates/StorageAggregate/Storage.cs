@@ -196,29 +196,6 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             else return result;
         }
 
-        #region TakeMaxCoinsByDenomination
-        ///// <summary>
-        ///// Takes maximum coins from deposited coin with the passed coin denomination
-        ///// </summary>
-        ///// <param name="coinDenomination">coin denomination to get coins with</param>
-        ///// <param name="amount">the amount to take from deposited coins</param>
-        ///// <returns>Returns the coins taken</returns>
-        //private List<CoinDenomination> TakeDepositedCoinsByDenomination(double coinDenomination, double amount)
-        //{
-        //    return TakeMaxCoinsByDenomination(DepositedCoins, coinDenomination, amount);
-        //}
-
-        ///// <summary>
-        ///// Takes maximum coins from storage with the passed coin denomination
-        ///// </summary>
-        ///// <param name="coinDenomination">coin denomination to get change</param>
-        ///// <param name="change">the change left to collect</param>
-        ///// <returns>returns the coins for a change</returns>
-        //private List<CoinDenomination> TakeStorageCoinsByDenomination(double coinDenomination, double change)
-        //{
-        //    return TakeMaxCoinsByDenomination(Coins, coinDenomination, change);
-        //}
-
         /// <summary>
         /// 
         /// </summary>
@@ -236,6 +213,5 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             coins[coinDenomination] = Coins[coinDenomination].Except(takenCoins).ToList();
             return takenCoins;
         }
-        #endregion
     }
 }
