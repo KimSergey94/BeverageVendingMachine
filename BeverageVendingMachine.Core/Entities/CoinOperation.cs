@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BeverageVendingMachine.Core.Common;
-using BeverageVendingMachine.Core.Entities.StorageAggregate;
+using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
 
 namespace BeverageVendingMachine.Core.Entities
 {

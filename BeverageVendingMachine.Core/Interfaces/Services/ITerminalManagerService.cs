@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Interfaces
+namespace BeverageVendingMachine.Core.Interfaces.Services
 {
     /// <summary>
     /// Interface for a service to manage vending machine terminal

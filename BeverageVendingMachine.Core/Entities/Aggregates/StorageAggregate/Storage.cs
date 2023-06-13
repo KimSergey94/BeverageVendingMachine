@@ -1,11 +1,12 @@
-﻿using BeverageVendingMachine.Core.Interfaces;
+﻿using BeverageVendingMachine.Core.Common;
+using BeverageVendingMachine.Core.Interfaces.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Entities.StorageAggregate
+namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
 {
     /// <summary>
     /// Represents vending machine storage. Implementation of storage operations
@@ -41,7 +42,7 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
         //public Dictionary<double, List<Coin>> Coins { get; } = new Dictionary<double, List<Coin>>();
         public SortedDictionary<double, List<CoinDenomination>> Coins { get; } = new SortedDictionary<double, List<CoinDenomination>>();
 
-        
+
         /// <summary>
         /// Dictionary with coin denomination as a key and the collection of coins with such denomination deposited to the vending machine storage as a value
         /// </summary>
@@ -146,7 +147,7 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
             {
                 return TakeAmountFromCoinsCollection(DepositedCoins, amount);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception($"Not enough deposited coins in the amount of {amount}");
             }
@@ -163,7 +164,7 @@ namespace BeverageVendingMachine.Core.Entities.StorageAggregate
             {
                 return TakeAmountFromCoinsCollection(Coins, amount);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception($"Not enough coins for change in the amount of {amount}");
             }

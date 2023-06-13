@@ -1,5 +1,5 @@
-﻿using BeverageVendingMachine.Core.Entities.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces;
+﻿using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
+using BeverageVendingMachine.Core.Interfaces.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

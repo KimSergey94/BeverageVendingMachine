@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Interfaces
+namespace BeverageVendingMachine.Core.Common
 {
     /// <summary>
     /// Interface marker for aggregate roots

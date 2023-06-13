@@ -1,11 +1,10 @@
-﻿using BeverageVendingMachine.Core.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Interfaces
+namespace BeverageVendingMachine.Core.Common
 {
     /// <summary>
     /// Generic repository interface to implement repository pattern

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Interfaces
+namespace BeverageVendingMachine.Core.Interfaces.Entities
 {
     /// <summary>
     /// Represents inventory items that are available for sale

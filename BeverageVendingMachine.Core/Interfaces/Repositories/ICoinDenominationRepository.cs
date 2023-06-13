@@ -1,11 +1,11 @@
-﻿using BeverageVendingMachine.Core.Entities.StorageAggregate;
+﻿using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Interfaces
+namespace BeverageVendingMachine.Core.Interfaces.Repositories
 {
     public interface ICoinDenominationRepository
     {

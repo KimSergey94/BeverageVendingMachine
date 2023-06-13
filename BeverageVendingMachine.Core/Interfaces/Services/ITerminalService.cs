@@ -1,12 +1,13 @@
 ﻿using BeverageVendingMachine.Application.DTOs;
-using BeverageVendingMachine.Core.Entities.StorageAggregate;
+using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
+using BeverageVendingMachine.Core.Interfaces.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Interfaces
+namespace BeverageVendingMachine.Core.Interfaces.Services
 {
     /// <summary>
     /// Interface for a service to imitate terminal to operate with the vending machine

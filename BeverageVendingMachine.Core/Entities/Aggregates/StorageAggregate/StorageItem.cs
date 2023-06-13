@@ -1,26 +1,31 @@
-﻿using System;
+﻿using BeverageVendingMachine.Core.Common;
+using BeverageVendingMachine.Core.Interfaces.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeverageVendingMachine.Core.Interfaces
+namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
 {
     /// <summary>
-    /// Interface of vending machine storage item
+    /// Vending machine storage item entity
     /// </summary>
-    public interface IStorageItem
+    public class StorageItem : BaseEntity, IStorageItem
     {
-        /// <summary>
-        /// Id of the storage item entity
-        /// </summary>
-        public int Id { get; set; }
+        public StorageItem() { }
+        public StorageItem(int id, string name, double cost, string imageUrl)
+        {
+            Id = id;
+            Name = name;
+            Cost = cost;
+            ImageUrl = imageUrl;
+        }
 
         /// <summary>
         /// Name of the storage item
         /// </summary>
         public string Name { get; set; }
-
 
         /// <summary>
         /// Cost of the storage item
