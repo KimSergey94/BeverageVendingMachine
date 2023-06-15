@@ -121,7 +121,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             {
                 return TakeAmountFromCoinsCollection(DepositedCoins, amount);
             }
-            catch (Exception e)
+            catch
             {
                 throw new Exception($"Not enough deposited coins in the amount of {amount}");
             }
@@ -138,7 +138,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             {
                 return TakeAmountFromCoinsCollection(Coins, amount);
             }
-            catch (Exception e)
+            catch
             {
                 throw new Exception($"Not enough coins for change in the amount of {amount}");
             }
@@ -149,7 +149,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// </summary>
         /// <param name="coins">Collection of coins from which to take coins</param>
         /// <param name="amount">The amount needed to be taken from coins</param>
-        /// <returns></returns>
+        /// <returns>Taken amount in coins representation</returns>
         private SortedDictionary<double, List<CoinDenomination>> TakeAmountFromCoinsCollection(SortedDictionary<double, List<CoinDenomination>> coins, double amount)
         {
             var result = new SortedDictionary<double, List<CoinDenomination>>();
@@ -207,6 +207,17 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         #region Storage items operations
 
         /// <summary>
+        /// Takes all items from vending machine storage
+        /// </summary>
+        /// <returns>Returns all storage items</returns>
+        public List<IStorageItem> TakeAllItemsFromStorage()
+        {
+            var result = StorageItems.Take(StorageItems.Count).ToList();
+            StorageItems = StorageItems.Except(result).ToList();
+            return result;
+        }
+
+        /// <summary>
         /// Takes item from vending machine storage
         /// </summary>
         /// <param name="item">Item from vending machine storage</param>
@@ -225,7 +236,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// </summary>
         /// <param name="item">Item to add to vending machine storage</param>
         /// <returns>Returns 1 if successful, 0 if the item is already in storage, -1 if there was error</returns>
-        public int AddItemToStorageItems(IStorageItem item)
+        public int AddStorageItem(IStorageItem item)
         {
             var result = 1;
             if (!StorageItems.Contains(item)) StorageItems.Add(item);
@@ -233,6 +244,57 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             return result;
         }
 
+        /// <summary>
+        /// Updates storage item
+        /// </summary>
+        /// <param name="storageItem">storage item update entity</param>
+        /// <returns>Returns 1 if successful, 0 if the item is not found, -1 if there was error</returns>
+        public int UpdateStorageItem(IStorageItem item)
+        {
+            var result = 1;
+            var storageItem = StorageItems.FirstOrDefault(storageItem => storageItem.Id == item.Id);
+                
+            if (storageItem == null) result = 0;
+            else
+            {
+                storageItem.Name = item.Name;
+                storageItem.Quantity = item.Quantity;
+                storageItem.ImageUrl = item.ImageUrl;
+                storageItem.Cost = item.Cost;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Deletes storage item
+        /// </summary>
+        /// <param name="storageItem">storage item update entity</param>
+        /// <returns>Returns 1 if successful, 0 if the item is not found, -1 if there was error</returns>
+        public int DeleteStorageItem(IStorageItem item)
+        {
+            var result = 1;
+            var storageItem = StorageItems.FirstOrDefault(storageItem => storageItem.Id == item.Id);
+
+            if (storageItem == null) result = 0;
+            else StorageItems.Remove(storageItem);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Imports new storage items and deletes storage items with ids that are in the passed collection
+        /// </summary>
+        /// <param name="newStorageItemsList">Collection of new storage items </param>
+        public void ImportAndUpdatePassedStorageItems(List<IStorageItem> newStorageItemsList)
+        {
+            var newStorageItemsIds = newStorageItemsList.Select(storageItem => storageItem.Id).ToList();
+
+            //needs to be checked
+            StorageItems.RemoveAll(storageItem => newStorageItemsIds.Contains(storageItem.Id));
+
+            foreach (var newStorageItem in newStorageItemsList) 
+                StorageItems.Add(newStorageItem);
+        }
         #endregion
     }
 }

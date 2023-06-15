@@ -90,15 +90,6 @@ namespace BeverageVendingMachine.Core.Services
             return result;
         }
 
-        /// <summary>
-        /// Adds passed new item to vending machine storage
-        /// </summary>
-        /// <param name="item">New item to add to vending machine storage</param>
-        /// <returns>Returns 1 if successful, 0 if the item is already in storage, -1 if there was error</returns>
-        public int AddNewItemToStorageItems(IStorageItem item)
-        {
-            return _storage.AddItemToStorageItems(item);
-        }
         #endregion
 
 
@@ -164,7 +155,7 @@ namespace BeverageVendingMachine.Core.Services
             }
             catch
             {
-                _storage.AddItemToStorageItems(PurchaseItem);
+                _storage.AddStorageItem(PurchaseItem);
                 //needs to be checked
                 SelectPurchaseItem(PurchaseItem);
                 throw;

@@ -1,7 +1,4 @@
-﻿using BeverageVendingMachine.Core.DTOs;
-using BeverageVendingMachine.Core.Entities;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
+﻿using BeverageVendingMachine.Core.Interfaces.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +32,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// </summary>
         /// <param name="newStorageItem">new storage item object</param>
         /// <returns>Returns whether the creation of the new storage item was successful</returns>
-        Task<bool> AddNewStorageItem(StorageItem newStorageItem);
+        Task<bool> AddNewStorageItem(IStorageItem newStorageItem);
 
 
         /// <summary>
@@ -43,19 +40,19 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// </summary>
         /// <param name="storageItem">storage item update entity</param>
         /// <returns>Returns whether the update was successful</returns>
-        Task<bool> UpdateStorageItem(StorageItem storageItem);
+        Task<bool> UpdateStorageItem(IStorageItem storageItem);
 
         /// <summary>
         /// Deletes storage item
         /// </summary>
         /// <returns>Returns whether the deletion was successful</returns>
-        Task<bool> DeleteStorageItem(StorageItem storageItem);
+        Task<bool> DeleteStorageItem(IStorageItem storageItem);
 
         /// <summary>
-        /// Imports new items and deletes all current storage items
+        /// Imports new storage items and deletes storage items with ids that are in the passed collection
         /// </summary>
         /// <param name="newStorageItemsList">Collection of new storage items </param>
         /// <returns>Returns whether the import was successful</returns>
-        Task<bool> ImportNewStorageItems(List<StorageItem> newStorageItemsList);
+        Task<bool> ImportAndChangeStorageItems(List<IStorageItem> newStorageItemsList);
     }
 }

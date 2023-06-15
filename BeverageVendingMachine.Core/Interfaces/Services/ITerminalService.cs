@@ -30,12 +30,6 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <returns>Returns 1 if successful, 0 if the coin is already unblocked, -1 if there was error</returns>
         int UnblockCoinDenomination(int coinDenominationId);
 
-        /// <summary>
-        /// Adds passed new item to vending machine storage
-        /// </summary>
-        /// <param name="item">New item to add to vending machine storage</param>
-        /// <returns>Returns 1 if successful, 0 if the item is already in storage, -1 if there was error</returns>
-        int AddNewItemToStorageItems(IStorageItem item);
         #endregion
 
 
