@@ -31,5 +31,10 @@ namespace BeverageVendingMachine.Core.Interfaces.Entities
         /// Url path to image of the storage item
         /// </summary>
         public string ImageUrl { get; set; }
+
+        /// <summary>
+        /// The quantity of the storage item inside the vending machine
+        /// </summary>
+        public int Quantity { get; set; }
     }
 }

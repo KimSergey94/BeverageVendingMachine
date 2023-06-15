@@ -10,10 +10,37 @@ using System.Threading.Tasks;
 namespace BeverageVendingMachine.Core.Interfaces.Services
 {
     /// <summary>
-    /// Interface for a service to imitate terminal to operate with the vending machine
+    /// Interface for a service to imitate terminal (operating system) to operate with the vending machine
     /// </summary>
     public interface ITerminalService
     {
+        #region Admin interface
+
+        /// <summary>
+        /// Blocks passed coin denomination by Id
+        /// </summary>
+        /// <param name="coinDenominationId">Id of the coin denomination to block</param>
+        /// <returns>Returns 1 if successful, 0 if the coin is already blocked, -1 if there was error</returns>
+        int BlockCoinDenomination(int coinDenominationId);
+
+        /// <summary>
+        /// Unblock passed coin denomination by Id
+        /// </summary>
+        /// <param name="coinDenominationId">Id of the coin denomination to unblock</param>
+        /// <returns>Returns 1 if successful, 0 if the coin is already unblocked, -1 if there was error</returns>
+        int UnblockCoinDenomination(int coinDenominationId);
+
+        /// <summary>
+        /// Adds passed new item to vending machine storage
+        /// </summary>
+        /// <param name="item">New item to add to vending machine storage</param>
+        /// <returns>Returns 1 if successful, 0 if the item is already in storage, -1 if there was error</returns>
+        int AddNewItemToStorageItems(IStorageItem item);
+        #endregion
+
+
+        #region User interface
+
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
         /// </summary>
@@ -49,7 +76,6 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <returns>Returns purchase item from inventory</returns>
         IStorageItem TakePurchaseItemFromInventory();
 
-
         /// <summary>
         /// Releases change
         /// </summary>
@@ -62,17 +88,6 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <returns>Returns an object with the purchase item and change inside</returns>
         Task<PurchaseResult> ReleasePurchaseItemAndChange();
 
-
-        /// <summary>
-        /// Blocks passed coin denomination by Id
-        /// </summary>
-        /// <param name="coinDenominationId">Id of the coin denomination to block</param>
-        void BlockCoinDenomination(int coinDenominationId);
-
-        /// <summary>
-        /// Unblock passed coin denomination by Id
-        /// </summary>
-        /// <param name="coinDenominationId">Id of the coin denomination to unblock</param>
-        void UnblockCoinDenomination(int coinDenominationId);
+        #endregion
     }
 }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace BeverageVendingMachine.Core.Services
 {
     /// <summary>
-    /// Service to imitate terminal to operate with the vending machine
+    /// Service to imitate terminal (operating system) to operate with the vending machine
     /// </summary>
     public sealed class TerminalService : ITerminalService
     {
@@ -48,17 +48,61 @@ namespace BeverageVendingMachine.Core.Services
         }
 
 
+        #region Fields
         /// <summary>
         /// Collection of coin denomination Ids that were blocked
         /// </summary>
         public List<int> BlockedCoinDenominations { get; set; } = new List<int>();
 
-
         /// <summary>
         /// Selected item for a purchase
         /// </summary>
         private IStorageItem PurchaseItem { get; set; }
+        #endregion
 
+        #region Admin interface
+
+        /// <summary>
+        /// Blocks passed coin denomination by Id
+        /// </summary>
+        /// <param name="coinDenominationId">Id of the coin denomination to block</param>
+        /// <returns>Returns 1 if successful, 0 if the coin is already blocked, -1 if there was error</returns>
+        public int BlockCoinDenomination(int coinDenominationId)
+        {
+            var result = 1;
+            if (!BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
+                BlockedCoinDenominations.Add(coinDenominationId);
+            else result = 0;
+            return result;
+        }
+
+        /// <summary>
+        /// Unblock passed coin denomination by Id
+        /// </summary>
+        /// <param name="coinDenominationId">Id of the coin denomination to unblock</param>
+        /// <returns>Returns 1 if successful, 0 if the coin is already unblocked, -1 if there was error</returns>
+        public int UnblockCoinDenomination(int coinDenominationId)
+        {
+            var result = 1;
+            if (BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
+                BlockedCoinDenominations.RemoveAll(coinDenomination => coinDenomination == coinDenominationId);
+            else result = 0;
+            return result;
+        }
+
+        /// <summary>
+        /// Adds passed new item to vending machine storage
+        /// </summary>
+        /// <param name="item">New item to add to vending machine storage</param>
+        /// <returns>Returns 1 if successful, 0 if the item is already in storage, -1 if there was error</returns>
+        public int AddNewItemToStorageItems(IStorageItem item)
+        {
+            return _storage.AddItemToStorageItems(item);
+        }
+        #endregion
+
+
+        #region User interface
 
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
@@ -110,24 +154,24 @@ namespace BeverageVendingMachine.Core.Services
         /// <returns>Returns purchase item from inventory</returns>
         public IStorageItem TakePurchaseItemFromInventory()
         {
-            var result = _storage.TakePurchaseItemFromInventoryItems(PurchaseItem);
+            var result = _storage.TakeItemFromStorageItems(PurchaseItem);
             UnselectPurchaseItem();
-            //needs to be checked
 
             try
             {
+                //needs to be checked
                 _storage.TakePurchasedItemCostFromDepositedCoins(result.Cost);
             }
             catch
             {
-                _storage.AddPurchaseItemToInventoryItems(PurchaseItem);
+                _storage.AddItemToStorageItems(PurchaseItem);
+                //needs to be checked
                 SelectPurchaseItem(PurchaseItem);
                 throw;
             }
 
             return result;
         }
-
 
         /// <summary>
         /// Releases change
@@ -177,26 +221,6 @@ namespace BeverageVendingMachine.Core.Services
                 throw;
             }
         }
-
-
-        /// <summary>
-        /// Blocks passed coin denomination by Id
-        /// </summary>
-        /// <param name="coinDenominationId">Id of the coin denomination to block</param>
-        public void BlockCoinDenomination(int coinDenominationId)
-        {
-            if (!BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
-                BlockedCoinDenominations.Add(coinDenominationId);
-        }
-
-        /// <summary>
-        /// Unblock passed coin denomination by Id
-        /// </summary>
-        /// <param name="coinDenominationId">Id of the coin denomination to unblock</param>
-        public void UnblockCoinDenomination(int coinDenominationId)
-        {
-            if (BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
-                BlockedCoinDenominations.RemoveAll(coinDenomination => coinDenomination == coinDenominationId);
-        }
+        #endregion
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
 {
     /// <summary>
-    /// Represents vending machine storage. Implementation of storage operations
+    /// Represents vending machine physical storage. Implementation of storage operations
     /// </summary>
     public class Storage : IAggregateRoot
     {
@@ -18,9 +18,11 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         {
             Coins = coins;
             DepositedCoins = depositedCoins;
-            InventoryItems = items;
+            StorageItems = items;
         }
 
+
+        #region Fields
 
         /// <summary>
         /// The total deposited amount from all deposited coins
@@ -39,7 +41,6 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <summary>
         /// Dictionary with coin denomination as a key and the collection of coins with such denomination as a value that are contained inside the vending machine storage 
         /// </summary>
-        //public Dictionary<double, List<Coin>> Coins { get; } = new Dictionary<double, List<Coin>>();
         public SortedDictionary<double, List<CoinDenomination>> Coins { get; } = new SortedDictionary<double, List<CoinDenomination>>();
 
 
@@ -51,8 +52,12 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <summary>
         /// Represents items inside vending machine storage
         /// </summary>
-        public List<IStorageItem> InventoryItems { get; set; } = new List<IStorageItem>();
+        public List<IStorageItem> StorageItems { get; set; } = new List<IStorageItem>();
 
+        #endregion
+
+
+        #region Coins operations
 
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
@@ -77,29 +82,6 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         }
 
         /// <summary>
-        /// To deposit coins to a provided collection
-        /// </summary>
-        /// <param name="coins">Coins you want to deposit</param>
-        private void DepositCoinsToCollection(SortedDictionary<double, List<CoinDenomination>> coinsCollection, double coinDenomination, List<CoinDenomination> coins)
-        {
-            if (coinsCollection[coinDenomination] == null)
-                coinsCollection[coinDenomination] = new List<CoinDenomination>(coins);
-            else coinsCollection[coinDenomination].AddRange(coins);
-        }
-
-        public void TakePurchasedItemCostFromDepositedCoins(double purchaseItemCost)
-        {
-            try
-            {
-                GetDepositedCoins(purchaseItemCost);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Moves deposited coins to primary storage
         /// </summary>
         public void TakeDepositedCoins()
@@ -110,30 +92,22 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         }
 
 
-        /// <summary>
-        /// Releases purchase item from vending machine storage
-        /// </summary>
-        /// <param name="SelectedItem">Selected item from vending machine storage</param>
-        /// <returns>Return released selected item from vending machine storage</returns>
-        /// <exception cref="Exception">Not found purchase item</exception>
-        public IStorageItem TakePurchaseItemFromInventoryItems(IStorageItem purchaseItem)
-        {
-            if (InventoryItems.Contains(purchaseItem)) InventoryItems.Remove(purchaseItem);
-            else throw new Exception($"Not found purchase item with an Id: {purchaseItem.Id}");
-
-            //needs to be checked
-            return purchaseItem;
-        }
+        #region Take coins by amount operations
 
         /// <summary>
-        /// Releases purchase item from vending machine storage
+        /// Takes passed amount from deposited coins 
         /// </summary>
-        /// <param name="SelectedItem">Selected item from vending machine storage</param>
-        /// <returns>Return released selected item from vending machine storage</returns>
-        /// <exception cref="Exception">Not found purchase item</exception>
-        public void AddPurchaseItemToInventoryItems(IStorageItem purchaseItem)
+        /// <param name="purchaseItemCost"></param>
+        public void TakePurchasedItemCostFromDepositedCoins(double purchaseItemCost)
         {
-            if (!InventoryItems.Contains(purchaseItem)) InventoryItems.Add(purchaseItem);
+            try
+            {
+                GetDepositedCoins(purchaseItemCost);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -197,12 +171,12 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         }
 
         /// <summary>
-        /// 
+        /// Takes max coins from the provided collection by denomination
         /// </summary>
         /// <param name="coins">Collection of coins from which to take coins by denomination</param>
         /// <param name="coinDenomination">coin denomination</param>
         /// <param name="amount">The total amount left</param>
-        /// <returns></returns>
+        /// <returns>Returns taken coins from the provided collection</returns>
         private List<CoinDenomination> TakeMaxCoinsByDenomination(IDictionary<double, List<CoinDenomination>> coins, double coinDenomination, double amount)
         {
             var totalCoins = coins[coinDenomination].Count;
@@ -213,5 +187,52 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             coins[coinDenomination] = Coins[coinDenomination].Except(takenCoins).ToList();
             return takenCoins;
         }
+
+        /// <summary>
+        /// To deposit coins to a provided collection
+        /// </summary>
+        /// <param name="coins">Coins you want to deposit</param>
+        private void DepositCoinsToCollection(SortedDictionary<double, List<CoinDenomination>> coinsCollection, double coinDenomination, List<CoinDenomination> coins)
+        {
+            if (coinsCollection[coinDenomination] == null)
+                coinsCollection[coinDenomination] = new List<CoinDenomination>(coins);
+            else coinsCollection[coinDenomination].AddRange(coins);
+        }
+
+        #endregion
+
+        #endregion
+
+
+        #region Storage items operations
+
+        /// <summary>
+        /// Takes item from vending machine storage
+        /// </summary>
+        /// <param name="item">Item from vending machine storage</param>
+        /// <returns>Returns taken item from storage</returns>
+        /// <exception cref="Exception">Not found purchase item</exception>
+        public IStorageItem TakeItemFromStorageItems(IStorageItem item)
+        {
+            var storageItem = StorageItems.FirstOrDefault(x => x.Id == item.Id);
+            if (storageItem == null) throw new Exception($"Not found purchase item with an Id: {item.Id}");
+
+            return storageItem;
+        }
+
+        /// <summary>
+        /// Adds passed item to vending machine storage
+        /// </summary>
+        /// <param name="item">Item to add to vending machine storage</param>
+        /// <returns>Returns 1 if successful, 0 if the item is already in storage, -1 if there was error</returns>
+        public int AddItemToStorageItems(IStorageItem item)
+        {
+            var result = 1;
+            if (!StorageItems.Contains(item)) StorageItems.Add(item);
+            else result = 0;
+            return result;
+        }
+
+        #endregion
     }
 }
