@@ -56,13 +56,13 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Calculates change by subtracting selected item cost from the deposited amount
         /// </summary>
         /// <returns>Returns amount to be returned to a vending machine user</returns>
-        double CalculateChange();
+        decimal CalculateChange();
 
         /// <summary>
         /// Returns the amount of deposited coins for a purchase
         /// </summary>
         /// <returns>the amount of deposited coins for a purchase</returns>
-        double GetDepositedAmount();
+        decimal GetDepositedAmount();
 
         /// <summary>
         /// Takes purchase item from inventory
@@ -74,7 +74,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Releases change
         /// </summary>
         /// <returns>Returns change for a customer</returns>
-        Task<SortedDictionary<double, List<CoinDenomination>>> ReleaseChange();
+        Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange();
 
         /// <summary>
         /// Releases purchase item and change

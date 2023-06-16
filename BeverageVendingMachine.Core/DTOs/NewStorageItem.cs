@@ -16,7 +16,7 @@ namespace BeverageVendingMachine.Core.DTOs
         /// <summary>
         /// Cost of the new storage item
         /// </summary>
-        public double Cost { get; set; }
+        public decimal Cost { get; set; }
 
         /// <summary>
         /// Url path to image of the new storage item

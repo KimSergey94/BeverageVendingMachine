@@ -25,7 +25,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Entities
         /// <summary>
         /// Cost of the storage item
         /// </summary>
-        public double Cost { get; set; }
+        public decimal Cost { get; set; }
 
         /// <summary>
         /// Url path to image of the storage item
@@ -35,6 +35,6 @@ namespace BeverageVendingMachine.Core.Interfaces.Entities
         /// <summary>
         /// The quantity of the storage item inside the vending machine
         /// </summary>
-        public int Quantity { get; set; }
+        public int StorageQuantity { get; set; }
     }
 }

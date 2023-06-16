@@ -14,7 +14,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
     public class Storage : IAggregateRoot
     {
         public Storage() { }
-        public Storage(SortedDictionary<double, List<CoinDenomination>> coins, SortedDictionary<double, List<CoinDenomination>> depositedCoins, List<IStorageItem> items)
+        public Storage(SortedDictionary<decimal, List<CoinDenomination>> coins, SortedDictionary<decimal, List<CoinDenomination>> depositedCoins, List<IStorageItem> items)
         {
             Coins = coins;
             DepositedCoins = depositedCoins;
@@ -27,11 +27,11 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <summary>
         /// The total deposited amount from all deposited coins
         /// </summary>
-        public double DepositedAmount
+        public decimal DepositedAmount
         {
             get
             {
-                var result = 0.00;
+                var result = 0.00m;
                 foreach (var depositedCoins in DepositedCoins)
                     result += depositedCoins.Key * depositedCoins.Value.Count;
                 return result;
@@ -41,13 +41,13 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <summary>
         /// Dictionary with coin denomination as a key and the collection of coins with such denomination as a value that are contained inside the vending machine storage 
         /// </summary>
-        public SortedDictionary<double, List<CoinDenomination>> Coins { get; } = new SortedDictionary<double, List<CoinDenomination>>();
+        public SortedDictionary<decimal, List<CoinDenomination>> Coins { get; } = new SortedDictionary<decimal, List<CoinDenomination>>();
 
 
         /// <summary>
         /// Dictionary with coin denomination as a key and the collection of coins with such denomination deposited to the vending machine storage as a value
         /// </summary>
-        public SortedDictionary<double, List<CoinDenomination>> DepositedCoins { get; } = new SortedDictionary<double, List<CoinDenomination>>();
+        public SortedDictionary<decimal, List<CoinDenomination>> DepositedCoins { get; } = new SortedDictionary<decimal, List<CoinDenomination>>();
 
         /// <summary>
         /// Represents items inside vending machine storage
@@ -74,7 +74,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// To deposit coins to a vending machine storage
         /// </summary>
         /// <param name="coins">Coins you want to deposit</param>
-        public void DepositCoins(double coinDenomination, List<CoinDenomination> coins)
+        public void DepositCoins(decimal coinDenomination, List<CoinDenomination> coins)
         {
             if (DepositedCoins[coinDenomination] == null)
                 DepositedCoins[coinDenomination] = new List<CoinDenomination>(coins);
@@ -98,7 +98,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// Takes passed amount from deposited coins 
         /// </summary>
         /// <param name="purchaseItemCost"></param>
-        public void TakePurchasedItemCostFromDepositedCoins(double purchaseItemCost)
+        public void TakePurchasedItemCostFromDepositedCoins(decimal purchaseItemCost)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// </summary>
         /// <param name="amount">The amount needed to be taken</param>
         /// <returns>The dictionary with coin denomination as a key and the collection of coins with such denomination as a value from deposited coins</returns>
-        public SortedDictionary<double, List<CoinDenomination>> GetDepositedCoins(double amount)
+        public SortedDictionary<decimal, List<CoinDenomination>> GetDepositedCoins(decimal amount)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// </summary>
         /// <param name="amount">The change amount needed to be returned to a user</param>
         /// <returns>The dictionary with coin denomination as a key and the collection of coins with such denomination as a value to provide to user</returns>
-        public SortedDictionary<double, List<CoinDenomination>> GetCoinsForChange(double amount)
+        public SortedDictionary<decimal, List<CoinDenomination>> GetCoinsForChange(decimal amount)
         {
             try
             {
@@ -150,9 +150,9 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <param name="coins">Collection of coins from which to take coins</param>
         /// <param name="amount">The amount needed to be taken from coins</param>
         /// <returns>Taken amount in coins representation</returns>
-        private SortedDictionary<double, List<CoinDenomination>> TakeAmountFromCoinsCollection(SortedDictionary<double, List<CoinDenomination>> coins, double amount)
+        private SortedDictionary<decimal, List<CoinDenomination>> TakeAmountFromCoinsCollection(SortedDictionary<decimal, List<CoinDenomination>> coins, decimal amount)
         {
-            var result = new SortedDictionary<double, List<CoinDenomination>>();
+            var result = new SortedDictionary<decimal, List<CoinDenomination>>();
             foreach (var coinDenominationGroup in coins.OrderByDescending(x => x.Key))
             {
                 var takenCoins = TakeMaxCoinsByDenomination(coins, coinDenominationGroup.Key, amount);
@@ -177,7 +177,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <param name="coinDenomination">coin denomination</param>
         /// <param name="amount">The total amount left</param>
         /// <returns>Returns taken coins from the provided collection</returns>
-        private List<CoinDenomination> TakeMaxCoinsByDenomination(IDictionary<double, List<CoinDenomination>> coins, double coinDenomination, double amount)
+        private List<CoinDenomination> TakeMaxCoinsByDenomination(IDictionary<decimal, List<CoinDenomination>> coins, decimal coinDenomination, decimal amount)
         {
             var totalCoins = coins[coinDenomination].Count;
             var coinsNeeded = amount / coinDenomination;
@@ -192,7 +192,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// To deposit coins to a provided collection
         /// </summary>
         /// <param name="coins">Coins you want to deposit</param>
-        private void DepositCoinsToCollection(SortedDictionary<double, List<CoinDenomination>> coinsCollection, double coinDenomination, List<CoinDenomination> coins)
+        private void DepositCoinsToCollection(SortedDictionary<decimal, List<CoinDenomination>> coinsCollection, decimal coinDenomination, List<CoinDenomination> coins)
         {
             if (coinsCollection[coinDenomination] == null)
                 coinsCollection[coinDenomination] = new List<CoinDenomination>(coins);
@@ -258,7 +258,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             else
             {
                 storageItem.Name = item.Name;
-                storageItem.Quantity = item.Quantity;
+                storageItem.StorageQuantity = item.StorageQuantity;
                 storageItem.ImageUrl = item.ImageUrl;
                 storageItem.Cost = item.Cost;
             }

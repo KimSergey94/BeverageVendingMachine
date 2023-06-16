@@ -13,7 +13,7 @@ namespace BeverageVendingMachine.Application.DTOs
     /// </summary>
     public class PurchaseResult
     {
-        public PurchaseResult(IStorageItem purchaseItem, SortedDictionary<double, List<CoinDenomination>> change)
+        public PurchaseResult(IStorageItem purchaseItem, SortedDictionary<decimal, List<CoinDenomination>> change)
         {
             PurchaseItem = purchaseItem;
             Change = change;
@@ -27,6 +27,6 @@ namespace BeverageVendingMachine.Application.DTOs
         /// <summary>
         /// Represents the coins for a change
         /// </summary>
-        public SortedDictionary<double, List<CoinDenomination>> Change { get; set; }
+        public SortedDictionary<decimal, List<CoinDenomination>> Change { get; set; }
     }
 }

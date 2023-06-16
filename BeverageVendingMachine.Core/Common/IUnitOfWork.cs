@@ -12,10 +12,10 @@ namespace BeverageVendingMachine.Core.Common
     public interface IUnitOfWork
     {
         /// <summary>
-        /// Method to get needed entity repository
+        /// Gets needed entity repository and/or initiates its instance
         /// </summary>
         /// <typeparam name="TEntity">TEntity generic type for entity repository</typeparam>
-        /// <returns></returns>
+        /// <returns>Returns repository for the provided param type TEntity</returns>
         IGenericRepository<TEntity> repository<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>

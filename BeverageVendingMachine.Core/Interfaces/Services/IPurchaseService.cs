@@ -43,6 +43,6 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Gets unused coin from deposited coins
         /// </summary>
         /// <returns>Returns change</returns>
-        Task<SortedDictionary<double, List<CoinDenomination>>> ReleaseChange();
+        Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange();
     }
 }

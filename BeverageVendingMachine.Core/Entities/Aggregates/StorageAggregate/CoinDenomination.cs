@@ -15,12 +15,12 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <summary>
         /// Coin denomination value
         /// </summary>
-        public double Value { get; set; }
+        public decimal Value { get; set; }
 
         /// <summary>
         /// Indicates the current quantity of coins with the specified denomination inside vending machine storage
         /// </summary>
-        public int Quantity { get; set; }
+        public int StorageQuantity { get; set; }
 
         /// <summary>
         /// Indicates whether the coin denomination is blocked by admin

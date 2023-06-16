@@ -62,7 +62,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Gets unused coin from deposited coins
         /// </summary>
         /// <returns>Returns change</returns>
-        public async Task<SortedDictionary<double, List<CoinDenomination>>> ReleaseChange()
+        public async Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange()
         {
             return await _terminalService.ReleaseChange();
         }

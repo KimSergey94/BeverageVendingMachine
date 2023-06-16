@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Core.Interfaces.Repositories
 {
+    /// <summary>
+    /// Coin denomination repository interface
+    /// </summary>
     public interface ICoinDenominationRepository
     {
         /// <summary>
@@ -14,12 +17,6 @@ namespace BeverageVendingMachine.Core.Interfaces.Repositories
         /// </summary>
         /// <param name="value">Value or denomination of the coin</param>
         /// <returns>Returns coin denomination entity with the provided value</returns>
-        Task<CoinDenomination> GetCoinDenominationByValue(double value);
-
-        ///// <summary>
-        ///// Saves changes to database
-        ///// </summary>
-        ///// <returns>The task result contains the number of state entries written to the database</returns>
-        //Task<int> Complete();
+        Task<CoinDenomination> GetCoinDenominationByValue(decimal value);
     }
 }

@@ -14,7 +14,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
     public class StorageItem : BaseEntity, IStorageItem
     {
         public StorageItem() { }
-        public StorageItem(int id, string name, double cost, string imageUrl)
+        public StorageItem(int id, string name, decimal cost, string imageUrl)
         {
             Id = id;
             Name = name;
@@ -30,7 +30,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <summary>
         /// Cost of the storage item
         /// </summary>
-        public double Cost { get; set; }
+        public decimal Cost { get; set; }
 
         /// <summary>
         /// Url path to image of the storage item
@@ -40,6 +40,6 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         /// <summary>
         /// The quantity of the storage item inside the vending machine
         /// </summary>
-        public int Quantity { get; set; }
+        public int StorageQuantity { get; set; }
     }
 }

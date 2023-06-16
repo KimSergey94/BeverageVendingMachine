@@ -26,42 +26,42 @@ namespace BeverageVendingMachine.Core.Common
         Task<T> GetByIdAsync(int id);
 
         /// <summary>
-        /// Adds the passed T object to a collection asynchronously
+        /// Adds the passed T type object to a collection asynchronously
         /// </summary>
-        /// <param name="entity">T object to be added to a collection</param>
-        /// <returns>Returns added T object to a collection</returns>
+        /// <param name="entity">T type object to be added to a collection</param>
+        /// <returns>Returns added T type object to a collection</returns>
         Task<T> AddAsync(T entity);
 
         /// <summary>
-        /// Deletes passed T object from a collection asynchronously
+        /// Deletes passed T type object from a collection asynchronously
         /// </summary>
-        /// <param name="entity">T object to be deleted from a collection</param>
-        /// <returns>Returns if T object has been successfully deleted from a collection</returns>
+        /// <param name="entity">T type object to be deleted from a collection</param>
+        /// <returns>Returns whether T type object has been successfully deleted from a collection</returns>
         Task<bool> DeleteAsync(T entity);
 
         /// <summary>
-        /// Updates passed T object in a collection asynchronously
+        /// Updates passed T type object in a collection asynchronously
         /// </summary>
-        /// <param name="entity">T object to be updated in a collection</param>
+        /// <param name="entity">T type object to be updated in a collection</param>
         /// <returns>Returns updated T object</returns>
         Task<T> UpdateAsync(T entity);
 
         /// <summary>
-        /// Adds the passed T object to a collection
+        /// Adds the passed T type object to a collection
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entity">T type object to be added to a collection</param>
         void Add(T entity);
 
         /// <summary>
-        /// Updates passed T object in a collection
+        /// Updates passed T type object in a collection
         /// </summary>
-        /// <param name="entity">T object to be updated in a collection</param>
+        /// <param name="entity">T type object to be updated in a collection</param>
         void Update(T entity);
 
         /// <summary>
-        /// Deletes passed T object from a collection
+        /// Deletes passed T type object from a collection
         /// </summary>
-        /// <param name="entity">T object to be deleted from a collection</param>
+        /// <param name="entity">T type object to be deleted from a collection</param>
         void Delete(T entity);
     }
 }

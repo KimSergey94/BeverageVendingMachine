@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeverageVendingMachine.Core", "BeverageVendingMachine.Core\BeverageVendingMachine.Core.csproj", "{A2808673-7017-4A7D-AD7B-DCCB8D897747}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeverageVendingMachine.Infrastructure", "BeverageVendingMachine.Infrastructure\BeverageVendingMachine.Infrastructure.csproj", "{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A2808673-7017-4A7D-AD7B-DCCB8D897747}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2808673-7017-4A7D-AD7B-DCCB8D897747}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2808673-7017-4A7D-AD7B-DCCB8D897747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

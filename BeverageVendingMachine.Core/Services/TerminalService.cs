@@ -125,7 +125,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Calculates change by subtracting selected item cost from the deposited amount
         /// </summary>
         /// <returns>Returns amount to be returned to a vending machine user</returns>
-        public double CalculateChange()
+        public decimal CalculateChange()
         {
             return GetDepositedAmount() - PurchaseItem.Cost;
         }
@@ -134,7 +134,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Returns the amount of deposited coins for a purchase
         /// </summary>
         /// <returns>the amount of deposited coins for a purchase</returns>
-        public double GetDepositedAmount()
+        public decimal GetDepositedAmount()
         {
             return GetStorageInstance().DepositedAmount;
         }
@@ -168,7 +168,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Releases change
         /// </summary>
         /// <returns>Returns change for a customer</returns>
-        public async Task<SortedDictionary<double, List<CoinDenomination>>> ReleaseChange()
+        public async Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange()
         {
             var change = CalculateChange();
             if (change >= 0)
