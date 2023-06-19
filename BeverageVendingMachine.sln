@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeverageVendingMachine.Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeverageVendingMachine.Infrastructure", "BeverageVendingMachine.Infrastructure\BeverageVendingMachine.Infrastructure.csproj", "{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeverageVendingMachine.Web", "BeverageVendingMachine.Web\BeverageVendingMachine.Web.csproj", "{0F235B39-D2FF-41F1-9FF2-7CDCE9DE9EB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A4A6D3E-5B8F-47C3-B1C2-3B8BED32CB16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F235B39-D2FF-41F1-9FF2-7CDCE9DE9EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F235B39-D2FF-41F1-9FF2-7CDCE9DE9EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F235B39-D2FF-41F1-9FF2-7CDCE9DE9EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F235B39-D2FF-41F1-9FF2-7CDCE9DE9EB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

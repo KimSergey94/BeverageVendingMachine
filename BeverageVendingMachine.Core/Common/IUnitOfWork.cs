@@ -16,7 +16,7 @@ namespace BeverageVendingMachine.Core.Common
         /// </summary>
         /// <typeparam name="TEntity">TEntity generic type for entity repository</typeparam>
         /// <returns>Returns repository for the provided param type TEntity</returns>
-        IGenericRepository<TEntity> repository<TEntity>() where TEntity : BaseEntity;
+        IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
         /// Commits latest changes to a database

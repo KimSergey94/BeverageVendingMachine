@@ -156,7 +156,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
             foreach (var coinDenominationGroup in coins.OrderByDescending(x => x.Key))
             {
                 var takenCoins = TakeMaxCoinsByDenomination(coins, coinDenominationGroup.Key, amount);
-                amount = amount - takenCoins.Count * coinDenominationGroup.Key;
+                amount -= takenCoins.Count * coinDenominationGroup.Key;
                 result.Add(coinDenominationGroup.Key, takenCoins);
                 coins[coinDenominationGroup.Key] = coins[coinDenominationGroup.Key].Except(takenCoins).ToList();
             }
@@ -226,9 +226,7 @@ namespace BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate
         public IStorageItem TakeItemFromStorageItems(IStorageItem item)
         {
             var storageItem = StorageItems.FirstOrDefault(x => x.Id == item.Id);
-            if (storageItem == null) throw new Exception($"Not found purchase item with an Id: {item.Id}");
-
-            return storageItem;
+            return storageItem == null ? throw new Exception($"Not found purchase item with an Id: {item.Id}") : storageItem;
         }
 
         /// <summary>

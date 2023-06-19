@@ -45,9 +45,9 @@ namespace BeverageVendingMachine.Infrastructure.Data
         /// </summary>
         /// <typeparam name="TEntity">TEntity generic type for entity repository</typeparam>
         /// <returns>Returns repository for the provided param type TEntity</returns>
-        public IGenericRepository<TEntity> repository<TEntity>() where TEntity : BaseEntity
+        public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
         {
-            if (_repositories == null) _repositories = new Hashtable();
+            _repositories ??= new Hashtable();
             var Type = typeof(TEntity).Name;
             if (!_repositories.ContainsKey(Type))
             {

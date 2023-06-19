@@ -59,7 +59,7 @@ namespace BeverageVendingMachine.Core.Services
         public async Task<bool> AddNewStorageItem(IStorageItem newStorageItem)
         {
             var result = true;
-            var addedStorageItem = await _unitOfWork.repository<StorageItem>().AddAsync(newStorageItem as StorageItem);
+            var addedStorageItem = await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem as StorageItem);
 
             if (addedStorageItem == null) result = false;
             else TerminalService.GetStorageInstance().AddStorageItem(newStorageItem);
@@ -76,7 +76,7 @@ namespace BeverageVendingMachine.Core.Services
         {
             var result = true;
 
-            var updatedStorageItemEntity = await _unitOfWork.repository<StorageItem>().UpdateAsync(storageItem as StorageItem);
+            var updatedStorageItemEntity = await _unitOfWork.Repository<StorageItem>().UpdateAsync(storageItem as StorageItem);
             
             //needs to be checked
             if(updatedStorageItemEntity == storageItem) result = false;
@@ -96,7 +96,7 @@ namespace BeverageVendingMachine.Core.Services
         {
             var result = true;
 
-            if (await _unitOfWork.repository<StorageItem>().DeleteAsync(storageItem as StorageItem))
+            if (await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItem as StorageItem))
             {
                 var storageItemDeletionResult = TerminalService.GetStorageInstance().DeleteStorageItem(storageItem as StorageItem);
                 if (storageItemDeletionResult != 1) throw new Exception("The storage item deletion has not been updated in the system.");
@@ -125,12 +125,12 @@ namespace BeverageVendingMachine.Core.Services
 
             foreach(var storageItemToDelete in storageItemsToDelete)
             {
-                await _unitOfWork.repository<StorageItem>().DeleteAsync(storageItemToDelete as StorageItem);
+                await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItemToDelete as StorageItem);
             }
 
             foreach (var newStorageItem in newStorageItemsList)
             {
-                await _unitOfWork.repository<StorageItem>().AddAsync(newStorageItem as StorageItem);
+                await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem as StorageItem);
             }
 
             TerminalService.GetStorageInstance().ImportAndUpdatePassedStorageItems(newStorageItemsList);

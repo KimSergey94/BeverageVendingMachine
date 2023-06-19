@@ -26,7 +26,7 @@ namespace BeverageVendingMachine.Core.Services
         /// </summary>
         private static Storage _storage;
 
-        protected TerminalService(IUnitOfWork unitOfWork, ICoinDenominationRepository coinDenominationRepository)
+        public TerminalService(IUnitOfWork unitOfWork, ICoinDenominationRepository coinDenominationRepository)
         {
             _unitOfWork = unitOfWork;
             _coinDenominationRepository = coinDenominationRepository;
@@ -181,7 +181,7 @@ namespace BeverageVendingMachine.Core.Services
                     {
                         var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
                         var coinOperation = new CoinOperation(coinDenomination, coinDenominationGroup.Value.Count, false);
-                        await _unitOfWork.repository<CoinOperation>().AddAsync(coinOperation);
+                        await _unitOfWork.Repository<CoinOperation>().AddAsync(coinOperation);
                     }
                     return changeCoins;
                 }

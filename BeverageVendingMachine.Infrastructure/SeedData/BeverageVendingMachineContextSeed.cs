@@ -54,4 +54,3 @@ namespace BeverageVendingMachine.Infrastructure.SeedData
         }
     }
 }
-}
