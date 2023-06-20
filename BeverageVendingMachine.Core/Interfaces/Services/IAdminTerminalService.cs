@@ -10,7 +10,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
     /// <summary>
     /// Interface for a service to manage vending machine terminal as ab admin
     /// </summary>
-    public interface ITerminalAdminService
+    public interface IAdminTerminalService
     {
         /// <summary>
         /// Blocks passed coin denomination by Id

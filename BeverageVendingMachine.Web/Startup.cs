@@ -42,7 +42,7 @@ namespace BeverageVendingMachine.Web
                 });
             });
 
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,16 +65,15 @@ namespace BeverageVendingMachine.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
-
             app.UseSwaggerGen();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "Default",
+                    pattern: "{controller=Terminal}/{action=Index}/{secretKey?}"
+                );
             });
         }
     }

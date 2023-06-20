@@ -13,11 +13,11 @@ namespace BeverageVendingMachine.Core.Services
     /// <summary>
     /// Service to manage vending machine terminal as an admin
     /// </summary>
-    public class TerminalAdminService : ITerminalAdminService
+    public class AdminTerminalService : IAdminTerminalService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITerminalService _terminalService;
-        public TerminalAdminService(IUnitOfWork unitOfWork, ITerminalService terminalService)
+        public AdminTerminalService(IUnitOfWork unitOfWork, ITerminalService terminalService)
         {
             _unitOfWork = unitOfWork;
             _terminalService = terminalService;

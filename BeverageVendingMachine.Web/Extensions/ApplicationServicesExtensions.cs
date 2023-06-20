@@ -18,7 +18,7 @@ namespace BeverageVendingMachine.Web.Extensions
             services.AddScoped<BeverageVendingMachineContextSeed, BeverageVendingMachineContextSeed>();
             services.AddScoped<ICoinDenominationRepository, CoinDenominationRepository>();
             services.AddScoped<ITerminalService, TerminalService>();
-            services.AddScoped<ITerminalAdminService, TerminalAdminService>();
+            services.AddScoped<IAdminTerminalService, AdminTerminalService>();
             services.AddScoped<IPurchaseService, PurchaseService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
