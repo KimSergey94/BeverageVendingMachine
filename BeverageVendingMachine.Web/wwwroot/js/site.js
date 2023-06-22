@@ -4,15 +4,18 @@
 // Write your JavaScript code.
 
 window.addEventListener("load", (event) => {
-
+    initProducts();
 });
 
 function initProducts() {
     return $.ajax({
-        url: '/',
-        type: 'post',
+        url: '/api/TerminalApi/GetCoins',
+        type: 'get',
         success: function (data) {
-            
+            console.log('initProducts', data);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("error" + XMLHttpRequest.responseText);
         }
     })
 }

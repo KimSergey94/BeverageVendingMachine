@@ -48,9 +48,6 @@ namespace BeverageVendingMachine.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -64,15 +61,19 @@ namespace BeverageVendingMachine.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseHttpsRedirection();
             app.UseSwaggerGen();
             app.UseRouting();
+            app.UseCors();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "Default",
                     pattern: "{controller=Terminal}/{action=Index}/{secretKey?}"
+                );
+                endpoints.MapControllerRoute(
+                    name: "apis",
+                    pattern: "api/{controller=TerminalApi}/{action=GetCoins}/{params?}"
                 );
             });
         }

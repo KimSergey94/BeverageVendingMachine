@@ -33,7 +33,17 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         #endregion
 
         #region Load terminal data
-        
+        /// <summary>
+        /// Gets all existing coins
+        /// </summary>
+        /// <returns>All existing coins</returns>
+        Task<IReadOnlyList<CoinDenomination>> GetCoins();
+
+        /// <summary>
+        /// Gets all existing storage items
+        /// </summary>
+        /// <returns>All existing storage items</returns>
+        Task<IReadOnlyList<StorageItem>> GetStorageItems();
         #endregion
 
         #region User interface

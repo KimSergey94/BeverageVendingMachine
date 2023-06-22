@@ -93,14 +93,39 @@ namespace BeverageVendingMachine.Core.Services
         #endregion
 
 
+        #region Load terminal data
+        
+        /// <summary>
+        /// Gets all existing coins
+        /// </summary>
+        /// <returns>All existing coins</returns>
+        public async Task<IReadOnlyList<CoinDenomination>> GetCoins()
+        {
+            var coins = await _unitOfWork.Repository<CoinDenomination>().GetAllAsync();
+            return coins;
+        }
+
+        /// <summary>
+        /// Gets all existing storage items
+        /// </summary>
+        /// <returns>All existing storage items</returns>
+        public async Task<IReadOnlyList<StorageItem>> GetStorageItems()
+        {
+            return await _unitOfWork.Repository<StorageItem>().GetAllAsync();
+        }
+        #endregion
+
+
         #region User interface
 
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
         /// </summary>
         /// <param name="coin">Coin you want to deposit</param>
-        public void DepositCoin(CoinDenomination coin)
+        public async void DepositCoin(CoinDenomination coin)
         {
+            coin.DepositedQuantity += 1;
+            await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coin);
             _storage.DepositCoin(coin);
         }
 
@@ -180,6 +205,8 @@ namespace BeverageVendingMachine.Core.Services
                     foreach (var coinDenominationGroup in changeCoins)
                     {
                         var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
+                        coinDenomination.DepositedQuantity -= coinDenominationGroup.Value.Count;
+                        await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coinDenomination);
                         var coinOperation = new CoinOperation(coinDenomination, coinDenominationGroup.Value.Count, false);
                         await _unitOfWork.Repository<CoinOperation>().AddAsync(coinOperation);
                     }
