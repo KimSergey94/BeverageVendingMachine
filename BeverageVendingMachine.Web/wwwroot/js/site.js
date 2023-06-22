@@ -3,6 +3,24 @@
 
 // Write your JavaScript code.
 
+window.addEventListener("load", (event) => {
+
+});
+
+function initProducts() {
+    return $.ajax({
+        url: '/',
+        type: 'post',
+        success: function (data) {
+            
+        }
+    })
+}
+function initCoins() {
+
+}
+
+
 
 function makePurchase() {
     console.log('makePurchase');

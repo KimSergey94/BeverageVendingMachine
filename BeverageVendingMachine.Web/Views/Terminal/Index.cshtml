@@ -3,76 +3,78 @@
 @{
 }
 
-<h3 class="welcome-title text-color">I am a beverage vending machine terminal</h3>
+<div class="terminal">
+    <h3 class="welcome-title text-color">I am a beverage vending machine terminal</h3>
 
-<div class="coins-info">
-    <h4 class="coins-info__deposited-amount text-color">Deposited amount: <span id="coins-info__deposited-amount-value" class="coins-info__deposited-amount-value">123</span></h4>
-    <h4 class="coins-info__change-amount text-color">Your change: <span id="coins-info__change-amount-value" class="coins-info__change-amount-value">44</span></h4>
-</div>
+    <div class="coins-info">
+        <h4 class="coins-info__deposited-amount text-color">Deposited amount: <span id="coins-info__deposited-amount-value" class="coins-info__deposited-amount-value">0</span></h4>
+        <h4 class="coins-info__change-amount text-color">Your change: <span id="coins-info__change-amount-value" class="coins-info__change-amount-value">0</span></h4>
+    </div>
 
-<div class="coins-list-container">
-    <ul class="reset-ul-list coins-list">
-        <li id="coins-list-item" class="coins-list-item">
-            <span class="coin">1</span>
-        </li>
-    </ul>
-</div>
+    <div class="coins-list-container">
+        <ul class="reset-ul-list coins-list">
+            <li id="coins-list-item" class="coins-list-item coin">
+                1
+            </li>
+        </ul>
+    </div>
 
-<div class="products-container">
-    <ul class="reset-ul-list products-list">
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-        <li class="products-list-item">
-            <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" />
-            <span class="product-text-color products-list-item__title">Product name</span>
-            <span class="product-text-color products-list-item__amount">Quantity</span>
-        </li>
-    </ul>
-</div>
+    <div class="products-container">
+        <ul class="reset-ul-list products-list">
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+            <li class="products-list-item">
+                <img class="products-list-item__image" src="https://nato.cdnartwhere.eu/cdn/ff/oca4fwSi7ZMflFF5-LRcenPXoZTDpZSTkwLZEvZtQIw/1607780582/public/default_images/default-image.jpg" alt="product image" draggable="false" />
+                <span class="product-text-color products-list-item__title">Product name</span>
+                <span class="product-text-color products-list-item__amount">Quantity</span>
+            </li>
+        </ul>
+    </div>
 
-<div class="buttons">
-    <ul class="reset-ul-list buttons-list">
-        <li class="buttons-list-item" onclick="makePurchase()">
-            Make purchase
-        </li>
-        <li class="buttons-list-item" onclick="releaseChange()">
-            Release change
-        </li>
-        <li class="buttons-list-item" onclick="makePurchaseAndReleaseChange()">
-            Make purchase and release change
-        </li>
-    </ul>
+    <div class="buttons">
+        <ul class="reset-ul-list buttons-list">
+            <li class="interface-button buttons-list-item" onclick="makePurchase()">
+                Make purchase
+            </li>
+            <li class="interface-button buttons-list-item" onclick="releaseChange()">
+                Release change
+            </li>
+            <li class="interface-button buttons-list-item" onclick="makePurchaseAndReleaseChange()">
+                Make purchase and release change
+            </li>
+        </ul>
+    </div>
 </div>

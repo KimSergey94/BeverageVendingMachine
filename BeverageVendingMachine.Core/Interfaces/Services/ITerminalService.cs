@@ -32,6 +32,9 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
 
         #endregion
 
+        #region Load terminal data
+        
+        #endregion
 
         #region User interface
 

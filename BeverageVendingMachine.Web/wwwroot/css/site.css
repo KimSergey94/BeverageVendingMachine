@@ -97,20 +97,26 @@ body {
 .product-text-color {
     color: var(--product-text-color);
 }
+.admin-terminal .welcome-title {
+    margin-bottom: 126px;
+}
 .welcome-title {
     display: flex;
     justify-content: center;
     margin-bottom: 26px;
+    user-select: none;
 }
 .coins-info {
     display: flex;
     align-items: center;
     flex-direction: column;
     margin-bottom: 66px;
+    user-select: none;
 }
 .coins-list-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 60px;
 }
 .reset-ul-list {
@@ -118,9 +124,30 @@ body {
     padding: 0;
     margin: 0;
 }
+.admin-terminal .coins-list {
+    margin-bottom: 18px;
+}
 .coins-list {
     display: flex;
 }
+.coins-list-item {
+    cursor: pointer;
+}
+    .coins-list-item:hover {
+        background: #dfdf00;
+        color: #c35e17;
+        border: 2px #d18700 solid;
+    }
+    .coins-list-item:active {
+        background: #bfbf00;
+        color: #9d490e;
+        border: 2px #a36900 solid;
+    }
+    .coins-list-item.selected {
+        background: #bfbf00;
+        color: #9d490e;
+        border: 2px #a36900 solid;
+    }
 .coins-list-item:not(:last-child) {
     margin-right: 42px;
 }
@@ -136,6 +163,7 @@ body {
     font-weight: 500;
     cursor: pointer;
     color: chocolate;
+    user-select: none;
 }
 .products-container {
     display: flex;
@@ -156,9 +184,23 @@ body {
     background: deepskyblue;
     margin-bottom: 30px;
     padding-bottom: 3px;
+    user-select: none;
 }
     .products-list-item:not(:nth-child(4n)) {
         margin-right: 27px;
+    }
+    .products-list-item:hover {
+        border: 5px solid #0099cd;
+        background: #0099cd;
+        box-shadow: 0px 0px 9px 1px #0080ab;
+    }
+    .products-list-item:active {
+        border: 5px solid black;
+        background: #0080ab;
+    }
+    .products-list-item--active {
+        border: 5px solid black;
+        background: #0080ab;
     }
 .products-list-item__image {
     width: 210px;
@@ -174,12 +216,7 @@ body {
     flex-direction: row-reverse;
     flex-wrap: wrap;
 }
-.buttons-list-item {
-    /*
-    border: 3px solid black;
-    */
-    margin-left: 12px;
-    margin-bottom: 6px;
+.interface-button {
     border: 3px solid #337cff;
     background: cornflowerblue;
     padding: 3px 6px;
@@ -187,4 +224,37 @@ body {
     color: floralwhite;
     cursor: pointer;
     box-shadow: 0px 0px 4px 1px #337cff;
+    user-select: none;
 }
+    .interface-button:hover {
+        border: 3px solid #246ff5;
+        box-shadow: 0px 0px 4px 1px #156afb;
+        color: #e7d6b5;
+        background: #3979ed;
+    }
+    .interface-button:active {
+        border: 3px solid #0a53d5;
+        box-shadow: 0px 0px 4px 1px #093fa1;
+        color: #938469;
+        background: #0f53cf;
+    }
+.buttons-list-item {
+    margin-left: 12px;
+    margin-bottom: 6px;
+}
+
+.coins-buttons {
+    display: flex;
+    justify-content: center;
+}
+.coins-buttons-button {
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+}
+    .coins-buttons-button:first-child {
+        margin-right: 32px;
+    }
+    .coins-buttons-button.visible {
+        visibility: visible;
+    }
