@@ -3,6 +3,34 @@
 @{
 }
 
-<div>
-    <span>Testsadasd Admin terminal</span>
+<h3 class="welcome-title text-color">I am a beverage vending machine ADMIN terminal</h3>
+
+<div class="coins-info">
+    <h4 class="coins-info__deposited-amount text-color">Deposited amount: <span id="coins-info__deposited-amount-value" class="coins-info__deposited-amount-value"></span></h4>
+    <h4 class="coins-info__change-amount text-color">Your change: <span id="coins-info__change-amount-value" class="coins-info__change-amount-value"></span></h4>
+</div>
+
+<div class="coins-list-container">
+    <ul class="reset-ul-list coins-list">
+        <li id="coins-list-item" class="coins-list-item">1</li>
+    </ul>
+</div>
+
+<div class="products-container">
+    <ul class="reset-ul-list products-list">
+        <li id="products-list-item" class="products-list-item">
+            <img src="" alt="products-list-item" />
+        </li>
+    </ul>
+</div>
+
+<div class="buttons">
+    <ul class="reset-ul-list buttons-list">
+        <li class="buttons-list-item">
+            <button class="buttons-list-item" onclick="importItems()">Import items</button>
+        </li>
+        <li class="buttons-list-item">
+            <button class="buttons-list-item" onclick="addNewItem()">Add new item</button>
+        </li>
+    </ul>
 </div>

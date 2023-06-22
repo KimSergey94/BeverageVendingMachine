@@ -22,18 +22,10 @@
     <div class="container">
         <main role="main" class="pb-3"> 
             <div class="terminal-container">
-                <h3>I am a beverage terminal</h3>
-
-                <div class="coins-info">
-                    <h4 class="coins-info__deposited-amount">Deposited amount: <span id="coins-info__deposited-amount-value" class="coins-info__deposited-amount-value"></span>></h4>
-                    <h4 class="coins-info__change-amount">Your change: <span id="coins-info__change-amount-value" class="coins-info__change-amount-value"></span>></h4>
-                </div>
-
-                <div class="coins">
-
+                <div class="terminal">
+                    @RenderBody()
                 </div>
             </div>
-            @RenderBody()
         </main>
     </div>
 
