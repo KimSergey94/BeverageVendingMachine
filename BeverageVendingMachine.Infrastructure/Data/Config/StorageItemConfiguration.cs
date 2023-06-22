@@ -15,7 +15,7 @@ namespace BeverageVendingMachine.Infrastructure.Data.Config
         {
             builder.Property(p => p.Id).IsRequired();
             builder.Property(p => p.Name).IsRequired();
-            builder.Property(p => p.Cost).IsRequired();
+            builder.Property(p => p.Cost).IsRequired().HasPrecision(6, 2);
         }
     }
 }
