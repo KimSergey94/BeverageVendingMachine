@@ -21,5 +21,11 @@ namespace BeverageVendingMachine.Infrastructure.Data
         public DbSet<CoinOperation> CoinOperations { get; set; }
         public DbSet<CoinDenomination> CoinDenominations { get; set; }
         public DbSet<StorageItem> StorageItems { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
     }
 }
