@@ -1,27 +1,23 @@
 [
   {
-    "Id": 1,
     "Name": "Coca-cola",
     "Cost": 3.00,
     "ImageUrl": "https://simg.marwin.kz/media/catalog/product/cache/8d1771fdd19ec2393e47701ba45e606d/s/e/napitok_coca_cola_bez_saharast_025lkz.jpg",
     "StorageQuantity": 10
   },
   {
-    "Id": 2,
     "Name": "Sprite",
     "Cost": 3.00,
     "ImageUrl": "https://m.media-amazon.com/images/I/61slsTqQruL.jpg",
     "StorageQuantity": 10
   },
   {
-    "Id": 3,
     "Name": "7up",
     "Cost": 3.00,
     "ImageUrl": "https://www.bigbasket.com/media/uploads/p/l/40130830_9-7-up-soft-drink-lemon.jpg",
     "StorageQuantity": 10
   },
   {
-    "Id": 4,
     "Name": "Pepsi",
     "Cost": 3.00,
     "ImageUrl": "https://m.media-amazon.com/images/I/51pGxfs4w1L.jpg",

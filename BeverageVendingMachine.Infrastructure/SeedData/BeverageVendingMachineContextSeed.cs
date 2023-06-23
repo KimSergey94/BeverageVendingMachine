@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace BeverageVendingMachine.Infrastructure.SeedData
 {
@@ -19,26 +20,25 @@ namespace BeverageVendingMachine.Infrastructure.SeedData
         {
             try
             {
-                if (!beverageVendingMachineContext.CoinDenominations.Any())
+
+                if (!beverageVendingMachineContext.CoinDenominations.Any() && !beverageVendingMachineContext.CoinOperations.Any() && !beverageVendingMachineContext.StorageItems.Any())
                 {
                     var coinDenominationsData = File.ReadAllText("../BeverageVendingMachine.Infrastructure/SeedData/coinDenominations.json");
                     var coinDenominations = JsonSerializer.Deserialize<List<CoinDenomination>>(coinDenominationsData);
+
                     foreach (var coinDenomination in coinDenominations)
                         beverageVendingMachineContext.CoinDenominations.AddAsync(coinDenomination);
                     await beverageVendingMachineContext.SaveChangesAsync();
-                }
-                if (!beverageVendingMachineContext.CoinOperations.Any())
-                {
-                    var coinOperationsData = File.ReadAllText("../BeverageVendingMachine.Infrastracture/SeedData/coinOperations.json");
+
+                    var coinOperationsData = File.ReadAllText("../BeverageVendingMachine.Infrastructure/SeedData/coinOperations.json");
                     var coinOperations = JsonSerializer.Deserialize<List<CoinOperation>>(coinOperationsData);
 
                     foreach (var coinOperation in coinOperations)
                         beverageVendingMachineContext.CoinOperations.AddAsync(coinOperation);
                     await beverageVendingMachineContext.SaveChangesAsync();
-                }
-                if (!beverageVendingMachineContext.StorageItems.Any())
-                {
-                    var storageItemsData = File.ReadAllText("../Skinet.Infrastracture/SeedData/storageItems.json");
+
+
+                    var storageItemsData = File.ReadAllText("../BeverageVendingMachine.Infrastructure/SeedData/storageItems.json");
                     var storageItems = JsonSerializer.Deserialize<List<StorageItem>>(storageItemsData);
 
                     foreach (var storageItem in storageItems)
