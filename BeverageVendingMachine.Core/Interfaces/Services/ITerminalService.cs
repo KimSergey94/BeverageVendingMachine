@@ -1,6 +1,7 @@
 ﻿using BeverageVendingMachine.Application.DTOs;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
+using BeverageVendingMachine.Core.DTOs;
+using BeverageVendingMachine.Core.Entities;
+using BeverageVendingMachine.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,14 +52,14 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
         /// </summary>
-        /// <param name="coin">Coin you want to deposit</param>
-        void DepositCoin(CoinDenomination coin);
+        /// <param name="coinDenominationId">Id of the coin denomination you want to deposit</param>
+        Task<UpdateData> DepositCoin(int coinDenominationId);
 
         /// <summary>
         /// Selects item for a puchase
         /// </summary>
         /// <param name="purchaseItem">Selected purchase item</param>
-        void SelectPurchaseItem(IStorageItem purchaseItem);
+        void SelectPurchaseItem(StorageItem purchaseItem);
 
         /// <summary>
         /// Unselects item for a puchase
@@ -81,13 +82,13 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Takes purchase item from inventory
         /// </summary>
         /// <returns>Returns purchase item from inventory</returns>
-        IStorageItem TakePurchaseItemFromInventory();
+        StorageItem TakePurchaseItemFromInventory();
 
         /// <summary>
         /// Releases change
         /// </summary>
-        /// <returns>Returns change for a customer</returns>
-        Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange();
+        /// <returns>Returns coins collection for a customer</returns>
+        Task<CoinsCollection> ReleaseChange();
 
         /// <summary>
         /// Releases purchase item and change
@@ -95,6 +96,11 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <returns>Returns an object with the purchase item and change inside</returns>
         Task<PurchaseResult> ReleasePurchaseItemAndChange();
 
+        /// <summary>
+        /// Get the instance of storage singleton
+        /// </summary>
+        /// <returns>Returns the instance of storage singleton</returns>
+        IStorageService GetStorageInstance();
         #endregion
     }
 }

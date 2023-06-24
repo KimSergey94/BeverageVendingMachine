@@ -1,6 +1,4 @@
 ﻿using BeverageVendingMachine.Core.Entities;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
 using BeverageVendingMachine.Infrastructure.Data;
 using Microsoft.Extensions.Logging;
 using System;

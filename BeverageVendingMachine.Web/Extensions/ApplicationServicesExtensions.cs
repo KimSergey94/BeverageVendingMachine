@@ -7,6 +7,8 @@ using BeverageVendingMachine.Infrastructure.Repositories;
 using BeverageVendingMachine.Infrastructure.SeedData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BeverageVendingMachine.Web.Extensions
 {
@@ -21,6 +23,8 @@ namespace BeverageVendingMachine.Web.Extensions
             services.AddScoped<IAdminTerminalService, AdminTerminalService>();
             services.AddScoped<IPurchaseService, PurchaseService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<IStorageService>(x => new StorageService(x.GetRequiredService<IUnitOfWork>()));//new StorageService(x.GetRequiredService<BeverageVendingMachineContext>().CoinDenominations.ToList(), x.GetRequiredService<BeverageVendingMachineContext>().StorageItems.ToList()));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             return services;
         }

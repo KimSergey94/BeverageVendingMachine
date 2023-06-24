@@ -1,5 +1,4 @@
-﻿using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,8 +16,8 @@ namespace BeverageVendingMachine.Infrastructure.Data.Config
             builder.Property(c => c.Id).IsRequired();
             builder.Property(c => c.IsDeposited).IsRequired();
             builder.Property(c => c.Quantity).IsRequired();
-            builder.Property(c => c.CoinDenominationId).IsRequired();
-            builder.HasOne(c => c.CoinDenomination).WithMany().HasForeignKey(p => p.CoinDenominationId);
+            builder.HasOne(c => c.CoinDenomination).WithMany().HasForeignKey(p => p.CoinDenominationId).IsRequired();
+            builder.HasOne(c => c.StorageItem).WithMany().HasForeignKey(p => p.StorageItemId).IsRequired();
         }
     }
 }

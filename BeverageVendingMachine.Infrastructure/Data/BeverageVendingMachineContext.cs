@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using BeverageVendingMachine.Core.Entities;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
 
 namespace BeverageVendingMachine.Infrastructure.Data
 {

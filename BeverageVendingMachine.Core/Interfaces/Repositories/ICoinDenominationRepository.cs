@@ -1,4 +1,4 @@
-﻿using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
+﻿using BeverageVendingMachine.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

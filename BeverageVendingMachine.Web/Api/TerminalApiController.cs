@@ -56,20 +56,12 @@ namespace BeverageVendingMachine.Web.Api
         //    return Ok(result);
         //}
 
-        //// POST: api/Projects
-        //[HttpPost]
-        //public async Task<IActionResult> Post([FromBody] CreateProjectDTO request)
-        //{
-        //    var newProject = new Project(request.Name, PriorityStatus.Backlog);
-
-        //    var createdProject = await _repository.AddAsync(newProject);
-
-        //    var result = new ProjectDTO
-        //    (
-        //        id: createdProject.Id,
-        //        name: createdProject.Name
-        //    );
-        //    return Ok(result);
-        //}
+        // POST: api/TerminalApi/DepositCoin
+        [HttpPost]
+        public async Task<IActionResult> DepositCoin([FromBody] int coinDenominationId)
+        {
+            var updateData = await Task.Run( ()=> _terminalService.DepositCoin(coinDenominationId));
+            return Ok(updateData);
+        }
     }
 }

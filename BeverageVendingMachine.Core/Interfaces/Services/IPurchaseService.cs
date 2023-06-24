@@ -1,6 +1,6 @@
 ﻿using BeverageVendingMachine.Application.DTOs;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
+using BeverageVendingMachine.Core.DTOs;
+using BeverageVendingMachine.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Selects an item from inventory for a purchase
         /// </summary>
         /// <param name="purchaseItem">Inventory item to be selected for a purchase</param>
-        void SelectPurchaseItem(IStorageItem purchaseItem);
+        void SelectPurchaseItem(StorageItem purchaseItem);
 
         /// <summary>
         /// Returns object with purchase result items
@@ -37,12 +37,12 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Takes purchase item from inventory
         /// </summary>
         /// <returns>Returns purchased item from inventory</returns>
-        IStorageItem ReleasePurchaseItem();
+        StorageItem ReleasePurchaseItem();
 
         /// <summary>
         /// Gets unused coin from deposited coins
         /// </summary>
         /// <returns>Returns change</returns>
-        Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange();
+        Task<CoinsCollection> ReleaseChange();
     }
 }

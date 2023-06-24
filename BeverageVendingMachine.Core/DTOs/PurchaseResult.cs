@@ -1,5 +1,5 @@
-﻿using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
+﻿using BeverageVendingMachine.Core.DTOs;
+using BeverageVendingMachine.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace BeverageVendingMachine.Application.DTOs
     /// </summary>
     public class PurchaseResult
     {
-        public PurchaseResult(IStorageItem purchaseItem, SortedDictionary<decimal, List<CoinDenomination>> change)
+        public PurchaseResult(StorageItem purchaseItem, CoinsCollection change)
         {
             PurchaseItem = purchaseItem;
             Change = change;
@@ -22,11 +22,11 @@ namespace BeverageVendingMachine.Application.DTOs
         /// <summary>
         /// The inventory item that is being purchased
         /// </summary>
-        public IStorageItem PurchaseItem { get; set; }
+        public StorageItem PurchaseItem { get; set; }
 
         /// <summary>
         /// Represents the coins for a change
         /// </summary>
-        public SortedDictionary<decimal, List<CoinDenomination>> Change { get; set; }
+        public CoinsCollection Change { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using BeverageVendingMachine.Core.Interfaces.Entities;
+﻿using BeverageVendingMachine.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// </summary>
         /// <param name="newStorageItem">new storage item object</param>
         /// <returns>Returns whether the creation of the new storage item was successful</returns>
-        Task<bool> AddNewStorageItem(IStorageItem newStorageItem);
+        Task<bool> AddNewStorageItem(StorageItem newStorageItem);
 
 
         /// <summary>
@@ -40,19 +40,19 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// </summary>
         /// <param name="storageItem">storage item update entity</param>
         /// <returns>Returns whether the update was successful</returns>
-        Task<bool> UpdateStorageItem(IStorageItem storageItem);
+        Task<bool> UpdateStorageItem(StorageItem storageItem);
 
         /// <summary>
         /// Deletes storage item
         /// </summary>
         /// <returns>Returns whether the deletion was successful</returns>
-        Task<bool> DeleteStorageItem(IStorageItem storageItem);
+        Task<bool> DeleteStorageItem(StorageItem storageItem);
 
         /// <summary>
         /// Imports new storage items and deletes storage items with ids that are in the passed collection
         /// </summary>
         /// <param name="newStorageItemsList">Collection of new storage items </param>
         /// <returns>Returns whether the import was successful</returns>
-        Task<bool> ImportAndChangeStorageItems(List<IStorageItem> newStorageItemsList);
+        Task<bool> ImportAndChangeStorageItems(List<StorageItem> newStorageItemsList);
     }
 }

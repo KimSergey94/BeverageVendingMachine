@@ -1,4 +1,4 @@
-﻿using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
+﻿using BeverageVendingMachine.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -16,6 +16,7 @@ namespace BeverageVendingMachine.Infrastructure.Data.Config
             builder.Property(p => p.Id).IsRequired();
             builder.Property(p => p.Value).IsRequired().HasPrecision(4,2);
             builder.Property(p => p.StorageQuantity).IsRequired();
+            builder.Property(p => p.DepositedQuantity).IsRequired();
             builder.Property(p => p.IsBlocked).IsRequired();
         }
     }

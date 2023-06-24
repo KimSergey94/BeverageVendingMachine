@@ -1,6 +1,5 @@
 ﻿using BeverageVendingMachine.Core.Common;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
+using BeverageVendingMachine.Core.Entities;
 using BeverageVendingMachine.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
@@ -56,13 +55,13 @@ namespace BeverageVendingMachine.Core.Services
         /// </summary>
         /// <param name="newStorageItem">new storage item object</param>
         /// <returns>Returns whether the creation of the new storage item was successful</returns>
-        public async Task<bool> AddNewStorageItem(IStorageItem newStorageItem)
+        public async Task<bool> AddNewStorageItem(StorageItem newStorageItem)
         {
             var result = true;
-            var addedStorageItem = await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem as StorageItem);
+            var addedStorageItem = await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem);
 
             if (addedStorageItem == null) result = false;
-            else TerminalService.GetStorageInstance().AddStorageItem(newStorageItem);
+            else _terminalService.GetStorageInstance().AddStorageItem(newStorageItem);
 
             return result;
         }
@@ -72,17 +71,17 @@ namespace BeverageVendingMachine.Core.Services
         /// </summary>
         /// <param name="storageItem">storage item update entity</param>
         /// <returns>Returns whether the update was successful</returns>
-        public async Task<bool> UpdateStorageItem(IStorageItem storageItem)
+        public async Task<bool> UpdateStorageItem(StorageItem storageItem)
         {
             var result = true;
 
-            var updatedStorageItemEntity = await _unitOfWork.Repository<StorageItem>().UpdateAsync(storageItem as StorageItem);
+            var updatedStorageItemEntity = await _unitOfWork.Repository<StorageItem>().UpdateAsync(storageItem);
             
             //needs to be checked
             if(updatedStorageItemEntity == storageItem) result = false;
             else
             {
-                var storageItemUpdateResult = TerminalService.GetStorageInstance().UpdateStorageItem(storageItem);
+                var storageItemUpdateResult = _terminalService.GetStorageInstance().UpdateStorageItem(storageItem);
                 if (storageItemUpdateResult != 1) throw new Exception("The storage item has not been updated in the system.");
             }
             return result;
@@ -92,13 +91,13 @@ namespace BeverageVendingMachine.Core.Services
         /// Deletes storage item
         /// </summary>
         /// <returns>Returns whether the deletion was successful</returns>
-        public async Task<bool> DeleteStorageItem(IStorageItem storageItem)
+        public async Task<bool> DeleteStorageItem(StorageItem storageItem)
         {
             var result = true;
 
-            if (await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItem as StorageItem))
+            if (await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItem))
             {
-                var storageItemDeletionResult = TerminalService.GetStorageInstance().DeleteStorageItem(storageItem as StorageItem);
+                var storageItemDeletionResult = _terminalService.GetStorageInstance().DeleteStorageItem(storageItem);
                 if (storageItemDeletionResult != 1) throw new Exception("The storage item deletion has not been updated in the system.");
             }
             else result = false;
@@ -111,11 +110,11 @@ namespace BeverageVendingMachine.Core.Services
         /// </summary>
         /// <param name="newStorageItemsList">Collection of new storage items </param>
         /// <returns>Returns whether the import was successful</returns>
-        public async Task<bool> ImportAndChangeStorageItems(List<IStorageItem> newStorageItemsList)
+        public async Task<bool> ImportAndChangeStorageItems(List<StorageItem> newStorageItemsList)
         {
             var result = false;
 
-            var currentStorageItems = TerminalService.GetStorageInstance().StorageItems;
+            var currentStorageItems = _terminalService.GetStorageInstance().StorageItems;
 
             //needs to be checked
             currentStorageItems = currentStorageItems;
@@ -125,15 +124,15 @@ namespace BeverageVendingMachine.Core.Services
 
             foreach(var storageItemToDelete in storageItemsToDelete)
             {
-                await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItemToDelete as StorageItem);
+                await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItemToDelete);
             }
 
             foreach (var newStorageItem in newStorageItemsList)
             {
-                await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem as StorageItem);
+                await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem);
             }
 
-            TerminalService.GetStorageInstance().ImportAndUpdatePassedStorageItems(newStorageItemsList);
+            _terminalService.GetStorageInstance().ImportAndUpdatePassedStorageItems(newStorageItemsList);
             result = true;
 
             return result;

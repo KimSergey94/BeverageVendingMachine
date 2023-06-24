@@ -7,40 +7,18 @@ window.addEventListener("load", (event) => {
     initData();
 });
 
-function initData() {
-    $.ajax({
-        url: '/api/TerminalApi/GetCoins',
-        type: 'get',
-        success: function (coins) {
-            console.log('initCoins', coins);
-            initCoins(coins);
-
-            $.ajax({
-                url: '/api/TerminalApi/GetStorageItems',
-                type: 'get',
-                success: function (products) {
-                    console.log('initProducts', products);
-                    initProducts(products);
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("error" + XMLHttpRequest.responseText);
-                }
-            })
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("error" + XMLHttpRequest.responseText);
-        }
-    })
-}
 function initCoins(coins) {
     if (!coins) return;
 
     var htmlCoinsList = document.getElementById('coins-list');
+    htmlCoinsList.innerHTML = '';
+    alert('006');
     coins.forEach(function (coin) {
         console.log('coin', coin);
         var htmlCoin = document.createElement('li');
         htmlCoin.className = 'coins-list-item coin';
         htmlCoin.innerHTML = coin.value;
+        htmlCoin.onclick = function () { depositCoin(coin) };
         htmlCoinsList.appendChild(htmlCoin);
     });
 }
@@ -49,18 +27,19 @@ function initProducts(products) {
 
     var htmlProductsList = document.getElementById('products-list');
     htmlProductsList.innerHTML = '';
+    alert('007');
     products.forEach(function (product) {
-        addProductToPage(htmlProductsList, product);
+        addProductHtmlToPage(htmlProductsList, product);
     });
 
     var leftStorageSpace = 8 - products.length;
     if (leftStorageSpace > 0) {
         for (var x = 0; x < leftStorageSpace; x++) {
-            addProductToPage(htmlProductsList);
+            addProductHtmlToPage(htmlProductsList);
         }
     }
 }
-function addProductToPage(htmlProductsList, product) {
+function addProductHtmlToPage(htmlProductsList, product) {
     console.log('addProductToPage', htmlProductsList, product);
     var htmlProductLi = document.createElement('li');
     htmlProductLi.className = 'products-list-item';
@@ -90,8 +69,49 @@ function addProductToPage(htmlProductsList, product) {
     htmlProductLi.appendChild(htmlProductAmount);
     htmlProductsList.appendChild(htmlProductLi);
 }
+function initData() {
+    $.ajax({
+        url: '/api/TerminalApi/GetCoins',
+        type: 'get',
+        success: function (coins) {
+            console.log('initCoins', coins);
+            initCoins(coins);
+
+            $.ajax({
+                url: '/api/TerminalApi/GetStorageItems',
+                type: 'get',
+                success: function (products) {
+                    console.log('initProducts', products);
+                    initProducts(products);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error" + XMLHttpRequest.responseText);
+                }
+            })
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("error" + XMLHttpRequest.responseText);
+        }
+    })
+}
 
 
+function depositCoin(coin) {
+    $.ajax({
+        type: "POST",
+        url: "api/TerminalApi/depositCoin",
+        data: JSON.stringify(coin.id),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (updateData) {
+            console.log('Coin deposited', updateData);
+            handleUpdateData(updateData);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("error" + XMLHttpRequest.responseText);
+        }
+    });
+}
 
 function makePurchase() {
     console.log('makePurchase');
@@ -107,4 +127,12 @@ function importItems(){
 }
 function addNewItem() {
 
+}
+
+function handleUpdateData(updateData) {
+    if (!updateData) return;
+    if (updateData.depositedAmount) document.getElementById('coins-info__deposited-amount-value').innerHTML = updateData.depositedAmount;
+    if (updateData.changeAmount) document.getElementById('coins-info__change-amount-value').innerHTML = updateData.depositedAmount;
+    if (updateData.coins) initCoins(updateData.coins);
+    if (updateData.products) initProducts(updateData.products);
 }

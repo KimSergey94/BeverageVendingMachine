@@ -1,6 +1,6 @@
 ﻿using BeverageVendingMachine.Application.DTOs;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
+using BeverageVendingMachine.Core.DTOs;
+using BeverageVendingMachine.Core.Entities;
 using BeverageVendingMachine.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
@@ -27,14 +27,14 @@ namespace BeverageVendingMachine.Core.Services
         /// <param name="coin">Coin denomination entity</param>
         public void DepositCoin(CoinDenomination coin)
         {
-            _terminalService.DepositCoin(coin);
+            _terminalService.DepositCoin(coin.Id);
         }
 
         /// <summary>
         /// Selects an item from inventory for a purchase
         /// </summary>
         /// <param name="purchaseItem">Inventory item to be selected for a purchase</param>
-        public void SelectPurchaseItem(IStorageItem purchaseItem)
+        public void SelectPurchaseItem(StorageItem purchaseItem)
         {
             _terminalService.SelectPurchaseItem(purchaseItem);
         }
@@ -53,7 +53,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Takes purchase item from inventory
         /// </summary>
         /// <returns>Returns purchased item from inventory</returns>
-        public IStorageItem ReleasePurchaseItem()
+        public StorageItem ReleasePurchaseItem()
         {
             return _terminalService.TakePurchaseItemFromInventory();
         }
@@ -62,7 +62,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Gets unused coin from deposited coins
         /// </summary>
         /// <returns>Returns change</returns>
-        public async Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange()
+        public async Task<CoinsCollection> ReleaseChange()
         {
             return await _terminalService.ReleaseChange();
         }

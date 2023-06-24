@@ -1,4 +1,4 @@
-﻿using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
+﻿using BeverageVendingMachine.Core.Entities;
 using BeverageVendingMachine.Core.Interfaces.Repositories;
 using BeverageVendingMachine.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

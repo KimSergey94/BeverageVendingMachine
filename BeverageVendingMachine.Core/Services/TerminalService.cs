@@ -1,8 +1,7 @@
 ﻿using BeverageVendingMachine.Application.DTOs;
 using BeverageVendingMachine.Core.Common;
+using BeverageVendingMachine.Core.DTOs;
 using BeverageVendingMachine.Core.Entities;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
-using BeverageVendingMachine.Core.Interfaces.Entities;
 using BeverageVendingMachine.Core.Interfaces.Repositories;
 using BeverageVendingMachine.Core.Interfaces.Services;
 using System;
@@ -20,30 +19,21 @@ namespace BeverageVendingMachine.Core.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICoinDenominationRepository _coinDenominationRepository;
+        private readonly IStorageService _storage;
 
-        /// <summary>
-        /// Singleton vending machine storage instance
-        /// </summary>
-        private static Storage _storage;
-
-        public TerminalService(IUnitOfWork unitOfWork, ICoinDenominationRepository coinDenominationRepository)
+        public TerminalService(IUnitOfWork unitOfWork, ICoinDenominationRepository coinDenominationRepository, IStorageService storage)
         {
             _unitOfWork = unitOfWork;
             _coinDenominationRepository = coinDenominationRepository;
+            _storage = storage;
         }
 
         /// <summary>
         /// Get the instance of storage singleton
         /// </summary>
         /// <returns>Returns the instance of storage singleton</returns>
-        public static Storage GetStorageInstance()
+        public IStorageService GetStorageInstance()
         {
-            if (_storage == null)
-            {
-                //init last state from db
-
-                _storage = new Storage();//add params
-            }
             return _storage;
         }
 
@@ -57,7 +47,7 @@ namespace BeverageVendingMachine.Core.Services
         /// <summary>
         /// Selected item for a purchase
         /// </summary>
-        private IStorageItem PurchaseItem { get; set; }
+        private StorageItem PurchaseItem { get; set; }
         #endregion
 
         #region Admin interface
@@ -121,19 +111,23 @@ namespace BeverageVendingMachine.Core.Services
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
         /// </summary>
-        /// <param name="coin">Coin you want to deposit</param>
-        public async void DepositCoin(CoinDenomination coin)
+        /// <param name="coinDenominationId">Id of the coin denomination you want to deposit</param>
+        public async Task<UpdateData> DepositCoin(int coinDenominationId)
         {
-            coin.DepositedQuantity += 1;
+            var coin = _storage.DepositCoin(coinDenominationId);
             await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coin);
-            _storage.DepositCoin(coin);
+            await _unitOfWork.Complete();
+            return new UpdateData(_storage.DepositedAmount, CalculateChange(), null, null);
+            
+            //return new UpdateData(_storage.DepositedAmount, CalculateChange(), await _unitOfWork.Repository<CoinDenomination>().GetAllAsync() as List<CoinDenomination>, 
+            //    await _unitOfWork.Repository<StorageItem>().GetAllAsync() as List<StorageItem>);
         }
 
         /// <summary>
         /// Selects item for a puchase
         /// </summary>
         /// <param name="purchaseItem">Selected inventory item for a purchase</param>
-        public void SelectPurchaseItem(IStorageItem purchaseItem)
+        public void SelectPurchaseItem(StorageItem purchaseItem)
         {
             PurchaseItem = purchaseItem;
         }
@@ -152,7 +146,7 @@ namespace BeverageVendingMachine.Core.Services
         /// <returns>Returns amount to be returned to a vending machine user</returns>
         public decimal CalculateChange()
         {
-            return GetDepositedAmount() - PurchaseItem.Cost;
+            return PurchaseItem == null ? GetDepositedAmount() : GetDepositedAmount() - PurchaseItem.Cost;
         }
 
         /// <summary>
@@ -168,15 +162,18 @@ namespace BeverageVendingMachine.Core.Services
         /// Takes purchase item from inventory, deducts the purchase item cost from deposited coins
         /// </summary>
         /// <returns>Returns purchase item from inventory</returns>
-        public IStorageItem TakePurchaseItemFromInventory()
+        public StorageItem TakePurchaseItemFromInventory()
         {
-            var result = _storage.TakeItemFromStorageItems(PurchaseItem);
+            if(PurchaseItem == null) throw new Exception("Purchase item is not selected.");
+
+            var result = _storage.TakeItemFromStorageItems(PurchaseItem.Id);
             UnselectPurchaseItem();
 
             try
             {
                 //needs to be checked
-                _storage.TakePurchasedItemCostFromDepositedCoins(result.Cost);
+                _storage.TakeAmountFromDepositedCoins(result.Cost);
+                _unitOfWork.Complete();
             }
             catch
             {
@@ -192,8 +189,8 @@ namespace BeverageVendingMachine.Core.Services
         /// <summary>
         /// Releases change
         /// </summary>
-        /// <returns>Returns change for a customer</returns>
-        public async Task<SortedDictionary<decimal, List<CoinDenomination>>> ReleaseChange()
+        /// <returns>Returns coins collection for a customer</returns>
+        public async Task<CoinsCollection> ReleaseChange()
         {
             var change = CalculateChange();
             if (change >= 0)
@@ -202,12 +199,12 @@ namespace BeverageVendingMachine.Core.Services
                 {
                     var changeCoins = GetStorageInstance().GetCoinsForChange(change);
 
-                    foreach (var coinDenominationGroup in changeCoins)
+                    foreach (var coinDenominationGroup in changeCoins.CoinDenominationsQuantity)
                     {
                         var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
-                        coinDenomination.DepositedQuantity -= coinDenominationGroup.Value.Count;
+                        coinDenomination.DepositedQuantity -= coinDenominationGroup.Value;
                         await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coinDenomination);
-                        var coinOperation = new CoinOperation(coinDenomination, coinDenominationGroup.Value.Count, false);
+                        var coinOperation = new CoinOperation(PurchaseItem, coinDenomination, coinDenominationGroup.Value, false);
                         await _unitOfWork.Repository<CoinOperation>().AddAsync(coinOperation);
                     }
                     return changeCoins;

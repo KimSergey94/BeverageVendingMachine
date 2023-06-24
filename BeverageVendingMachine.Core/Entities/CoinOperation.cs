@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BeverageVendingMachine.Core.Common;
-using BeverageVendingMachine.Core.Entities.Aggregates.StorageAggregate;
 
 namespace BeverageVendingMachine.Core.Entities
 {
@@ -17,11 +16,12 @@ namespace BeverageVendingMachine.Core.Entities
         {
 
         }
-        public CoinOperation(CoinDenomination coinDenomination, int quantity, bool isDeposited)
+        public CoinOperation(StorageItem storageItem, CoinDenomination coinDenomination, int quantity, bool isDeposited)
         {
             CoinDenomination = coinDenomination;
             Quantity = quantity;
             IsDeposited = isDeposited;
+            StorageItem = storageItem;
         }
 
         /// <summary>
@@ -43,5 +43,15 @@ namespace BeverageVendingMachine.Core.Entities
         /// Indicates whether the operation is of deposit type
         /// </summary>
         public bool IsDeposited { get; set; }
+
+        /// <summary>
+        /// Storage item
+        /// </summary>
+        public StorageItem StorageItem { get; set; }
+
+        /// <summary>
+        /// Foreign key to storage item
+        /// </summary>
+        public int StorageItemId { get; set; }
     }
 }
