@@ -34,9 +34,9 @@ namespace BeverageVendingMachine.Core.Services
         /// Selects an item from inventory for a purchase
         /// </summary>
         /// <param name="purchaseItem">Inventory item to be selected for a purchase</param>
-        public void SelectPurchaseItem(StorageItem purchaseItem)
+        public void SelectPurchaseItem(int storageItemId)
         {
-            _terminalService.SelectPurchaseItem(purchaseItem);
+            _terminalService.SelectPurchaseItem(storageItemId);
         }
 
         /// <summary>

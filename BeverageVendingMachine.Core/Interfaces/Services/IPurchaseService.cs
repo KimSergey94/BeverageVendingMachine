@@ -24,8 +24,8 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <summary>
         /// Selects an item from inventory for a purchase
         /// </summary>
-        /// <param name="purchaseItem">Inventory item to be selected for a purchase</param>
-        void SelectPurchaseItem(StorageItem purchaseItem);
+        /// <param name="purchaseItemId">Id of the selected purchase item</param>
+        void SelectPurchaseItem(int purchaseItemId);
 
         /// <summary>
         /// Returns object with purchase result items

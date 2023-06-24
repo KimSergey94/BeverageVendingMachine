@@ -109,35 +109,46 @@ namespace BeverageVendingMachine.Core.Services
         #region User interface
 
         /// <summary>
+        /// Gets update data for vending machine terminal
+        /// </summary>
+        /// <returns>Update data for vending machine terminal</returns>
+        public UpdateData GetUpdateData()
+        {
+            return new UpdateData(_storage.DepositedAmount, CalculateChange(), _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));
+        }
+
+        /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
         /// </summary>
         /// <param name="coinDenominationId">Id of the coin denomination you want to deposit</param>
+        /// <returns>Update data for vending machine terminal</returns>
         public async Task<UpdateData> DepositCoin(int coinDenominationId)
         {
             var coin = _storage.DepositCoin(coinDenominationId);
             await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coin);
             await _unitOfWork.Complete();
-            return new UpdateData(_storage.DepositedAmount, CalculateChange(), null, null);
-            
-            //return new UpdateData(_storage.DepositedAmount, CalculateChange(), await _unitOfWork.Repository<CoinDenomination>().GetAllAsync() as List<CoinDenomination>, 
-            //    await _unitOfWork.Repository<StorageItem>().GetAllAsync() as List<StorageItem>);
+            return GetUpdateData();
         }
 
         /// <summary>
         /// Selects item for a puchase
         /// </summary>
-        /// <param name="purchaseItem">Selected inventory item for a purchase</param>
-        public void SelectPurchaseItem(StorageItem purchaseItem)
+        /// <param name="purchaseItemId">Id of the selected purchase item</param>
+        /// <returns>Update data for vending machine terminal</returns>
+        public UpdateData SelectPurchaseItem(int purchaseItemId)
         {
-            PurchaseItem = purchaseItem;
+            PurchaseItem = _storage.StorageItems.FirstOrDefault(storageItem => storageItem.Id == purchaseItemId);
+            return GetUpdateData();
         }
 
         /// <summary>
         /// Unselects item for a puchase
         /// </summary>
-        public void UnselectPurchaseItem()
+        /// <returns>Update data for vending machine terminal</returns>
+        public UpdateData UnselectPurchaseItem()
         {
             PurchaseItem = null;
+            return GetUpdateData();
         }
 
         /// <summary>
@@ -179,7 +190,7 @@ namespace BeverageVendingMachine.Core.Services
             {
                 _storage.AddStorageItem(PurchaseItem);
                 //needs to be checked
-                SelectPurchaseItem(PurchaseItem);
+                SelectPurchaseItem(PurchaseItem.Id);
                 throw;
             }
 

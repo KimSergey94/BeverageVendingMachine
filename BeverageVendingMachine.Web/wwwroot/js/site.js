@@ -12,9 +12,7 @@ function initCoins(coins) {
 
     var htmlCoinsList = document.getElementById('coins-list');
     htmlCoinsList.innerHTML = '';
-    alert('006');
     coins.forEach(function (coin) {
-        console.log('coin', coin);
         var htmlCoin = document.createElement('li');
         htmlCoin.className = 'coins-list-item coin';
         htmlCoin.innerHTML = coin.value;
@@ -27,7 +25,6 @@ function initProducts(products) {
 
     var htmlProductsList = document.getElementById('products-list');
     htmlProductsList.innerHTML = '';
-    alert('007');
     products.forEach(function (product) {
         addProductHtmlToPage(htmlProductsList, product);
     });
@@ -40,10 +37,19 @@ function initProducts(products) {
     }
 }
 function addProductHtmlToPage(htmlProductsList, product) {
-    console.log('addProductToPage', htmlProductsList, product);
     var htmlProductLi = document.createElement('li');
     htmlProductLi.className = 'products-list-item';
+    if (product) {
+        if (product.isSelected) htmlProductLi.classList.add('selected');
+        else htmlProductLi.classList.remove('selected');
+    }
     htmlProductLi.id = product ? 'products-list-item__' + product.id : 'products-list-item__default';
+    htmlProductLi.onclick = function () {
+        if (product) {
+            if (product.isSelected) unselectPurchaseItem(product);
+            else selectPurchaseItem(product);
+        }
+    };
 
     var htmlProductImg = document.createElement('img');
     htmlProductImg.className = 'products-list-item__image';
@@ -74,14 +80,12 @@ function initData() {
         url: '/api/TerminalApi/GetCoins',
         type: 'get',
         success: function (coins) {
-            console.log('initCoins', coins);
             initCoins(coins);
 
             $.ajax({
                 url: '/api/TerminalApi/GetStorageItems',
                 type: 'get',
                 success: function (products) {
-                    console.log('initProducts', products);
                     initProducts(products);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -95,16 +99,14 @@ function initData() {
     })
 }
 
-
-function depositCoin(coin) {
+function makeAjaxRequestAndUpdate(url, data) {
     $.ajax({
         type: "POST",
-        url: "api/TerminalApi/depositCoin",
-        data: JSON.stringify(coin.id),
+        url: url,
+        data: data,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (updateData) {
-            console.log('Coin deposited', updateData);
             handleUpdateData(updateData);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -112,7 +114,15 @@ function depositCoin(coin) {
         }
     });
 }
-
+function depositCoin(coin) {
+    makeAjaxRequestAndUpdate("api/TerminalApi/depositCoin", JSON.stringify(coin.id));
+}
+function selectPurchaseItem(product) {
+    makeAjaxRequestAndUpdate("api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
+}
+function unselectPurchaseItem() {
+    makeAjaxRequestAndUpdate("api/TerminalApi/unselectPurchaseItem");
+}
 function makePurchase() {
     console.log('makePurchase');
 }
@@ -132,7 +142,7 @@ function addNewItem() {
 function handleUpdateData(updateData) {
     if (!updateData) return;
     if (updateData.depositedAmount) document.getElementById('coins-info__deposited-amount-value').innerHTML = updateData.depositedAmount;
-    if (updateData.changeAmount) document.getElementById('coins-info__change-amount-value').innerHTML = updateData.depositedAmount;
+    if (updateData.changeAmount) document.getElementById('coins-info__change-amount-value').innerHTML = updateData.changeAmount;
     if (updateData.coins) initCoins(updateData.coins);
     if (updateData.products) initProducts(updateData.products);
 }

@@ -1,4 +1,5 @@
 ﻿using BeverageVendingMachine.Core.Entities;
+using BeverageVendingMachine.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace BeverageVendingMachine.Core.DTOs
     /// </summary>
     public class UpdateData
     {
-        public UpdateData(decimal depositedAmount, decimal changeAmount, List<CoinDenomination> coins, List<StorageItem> products) 
+        public UpdateData(decimal depositedAmount, decimal changeAmount, List<CoinDenomination> coins, List<Product> products) 
         {
             DepositedAmount = depositedAmount;
             ChangeAmount = changeAmount;
@@ -38,6 +39,6 @@ namespace BeverageVendingMachine.Core.DTOs
         /// <summary>
         /// Storage items list
         /// </summary>
-        public List<StorageItem> Products { get; set; }
+        public List<Product> Products { get; set; }
     }
 }

@@ -50,21 +50,30 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         #region User interface
 
         /// <summary>
+        /// Gets update data for vending machine terminal
+        /// </summary>
+        /// <returns>Update data for vending machine terminal</returns>
+        UpdateData GetUpdateData();
+
+        /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
         /// </summary>
         /// <param name="coinDenominationId">Id of the coin denomination you want to deposit</param>
+        /// <returns>Update data for vending machine terminal</returns>
         Task<UpdateData> DepositCoin(int coinDenominationId);
 
         /// <summary>
         /// Selects item for a puchase
         /// </summary>
-        /// <param name="purchaseItem">Selected purchase item</param>
-        void SelectPurchaseItem(StorageItem purchaseItem);
+        /// <param name="purchaseItemId">Id of the selected purchase item</param>
+        /// <returns>Update data for vending machine terminal</returns>
+        UpdateData SelectPurchaseItem(int purchaseItemId);
 
         /// <summary>
         /// Unselects item for a puchase
         /// </summary>
-        void UnselectPurchaseItem();
+        /// <returns>Update data for vending machine terminal</returns>
+        UpdateData UnselectPurchaseItem();
 
         /// <summary>
         /// Calculates change by subtracting selected item cost from the deposited amount

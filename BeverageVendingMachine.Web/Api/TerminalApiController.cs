@@ -60,8 +60,23 @@ namespace BeverageVendingMachine.Web.Api
         [HttpPost]
         public async Task<IActionResult> DepositCoin([FromBody] int coinDenominationId)
         {
-            var updateData = await Task.Run( ()=> _terminalService.DepositCoin(coinDenominationId));
-            return Ok(updateData);
+            return Ok(await Task.Run(() => _terminalService.DepositCoin(coinDenominationId)));
         }
+
+        // POST: api/TerminalApi/SelectPurchaseItem
+        [HttpPost]
+        public async Task<IActionResult> SelectPurchaseItem([FromBody] int selectedStorageItemId)
+        {
+            return Ok(await Task.Run(() => _terminalService.SelectPurchaseItem(selectedStorageItemId)));
+        }
+
+        // POST: api/TerminalApi/UnselectPurchaseItem
+        [HttpPost]
+        public async Task<IActionResult> UnselectPurchaseItem()
+        {
+            return Ok(await Task.Run(() => _terminalService.UnselectPurchaseItem()));
+        }
+
+        //Product
     }
 }

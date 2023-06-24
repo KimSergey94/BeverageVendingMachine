@@ -1,4 +1,5 @@
 ﻿using BeverageVendingMachine.Core.Common;
+using BeverageVendingMachine.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,5 +41,20 @@ namespace BeverageVendingMachine.Core.Entities
         /// The quantity of the storage item inside the vending machine
         /// </summary>
         public int StorageQuantity { get; set; }
+    }
+
+    public static class StorageItemExtensions
+    {
+        public static Product ConvertToProduct(this StorageItem storageItem, bool isSelected)
+        {
+            return new Product(storageItem.Id, storageItem.Name, storageItem.Cost, storageItem.ImageUrl, isSelected);
+        }
+        public static List<Product> ConvertToProduct(this List<StorageItem> storageItemsList, int isSelectedItemId)
+        {
+            List<Product> productsResultList  = new List<Product>();
+            foreach (StorageItem storageItem in storageItemsList)
+                productsResultList.Add(storageItem.ConvertToProduct(storageItem.Id == isSelectedItemId));
+            return productsResultList;
+        }
     }
 }
