@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore;
 
 namespace BeverageVendingMachine.Web
 {
@@ -29,8 +28,7 @@ namespace BeverageVendingMachine.Web
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("SqlConnectionString");  //Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<BeverageVendingMachineContext>(options => { options.UseSqlServer(connectionString); });
-
+            services.AddDbContext<BeverageVendingMachineContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient, ServiceLifetime.Singleton);
             services.AddControllers();
             services.AddApplicationServices();
             services.AddSwaggerDocumentation();
