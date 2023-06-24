@@ -20,8 +20,7 @@ namespace BeverageVendingMachine.Web.Extensions
             services.AddSingleton<IStorageService, StorageService>();
             services.AddSingleton<ITerminalService, TerminalService>();
             services.AddSingleton<IAdminTerminalService, AdminTerminalService>();
-            services.AddScoped<IPurchaseService, PurchaseService>();
-            //services.AddSingleton<IStorageService>(x => new StorageService(x.GetRequiredService<IUnitOfWork>()));
+            services.AddSingleton<IPurchaseService, PurchaseService>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             return services;
         }
