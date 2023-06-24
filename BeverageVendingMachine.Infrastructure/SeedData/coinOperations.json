@@ -2,21 +2,25 @@
   {
     "CoinDenominationId": 1,
     "Quantity": 100,
-    "IsDeposited": true
+    "IsDeposited": true,
+    "StorageItemId": 1
   },
   {
     "CoinDenominationId": 2,
     "Quantity": 100,
-    "IsDeposited": true
+    "IsDeposited": true,
+    "StorageItemId": 1
   },
   {
     "CoinDenominationId": 3,
     "Quantity": 100,
-    "IsDeposited": true
+    "IsDeposited": true,
+    "StorageItemId": 1
   },
   {
     "CoinDenominationId": 4,
     "Quantity": 100,
-    "IsDeposited": true
+    "IsDeposited": true,
+    "StorageItemId": 1
   }
 ]

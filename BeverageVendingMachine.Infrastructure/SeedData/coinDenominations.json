@@ -2,21 +2,25 @@
   {
     "Value": 1.00,
     "StorageQuantity": 100,
+    "DepositedQuantity": 0,
     "IsBlocked": false
   },
   {
     "Value": 2.00,
     "StorageQuantity": 100,
+    "DepositedQuantity": 0,
     "IsBlocked": false
   },
   {
     "Value": 5.00,
     "StorageQuantity": 100,
+    "DepositedQuantity": 0,
     "IsBlocked": false
   },
   {
     "Value": 10.00,
     "StorageQuantity": 100,
+    "DepositedQuantity": 0,
     "IsBlocked": false
   }
 ]

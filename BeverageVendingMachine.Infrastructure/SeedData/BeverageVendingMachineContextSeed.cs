@@ -28,19 +28,20 @@ namespace BeverageVendingMachine.Infrastructure.SeedData
                         beverageVendingMachineContext.CoinDenominations.AddAsync(coinDenomination);
                     await beverageVendingMachineContext.SaveChangesAsync();
 
-                    var coinOperationsData = File.ReadAllText("../BeverageVendingMachine.Infrastructure/SeedData/coinOperations.json");
-                    var coinOperations = JsonSerializer.Deserialize<List<CoinOperation>>(coinOperationsData);
-
-                    foreach (var coinOperation in coinOperations)
-                        beverageVendingMachineContext.CoinOperations.AddAsync(coinOperation);
-                    await beverageVendingMachineContext.SaveChangesAsync();
-
 
                     var storageItemsData = File.ReadAllText("../BeverageVendingMachine.Infrastructure/SeedData/storageItems.json");
                     var storageItems = JsonSerializer.Deserialize<List<StorageItem>>(storageItemsData);
 
                     foreach (var storageItem in storageItems)
                         beverageVendingMachineContext.StorageItems.AddAsync(storageItem);
+                    await beverageVendingMachineContext.SaveChangesAsync();
+
+
+                    var coinOperationsData = File.ReadAllText("../BeverageVendingMachine.Infrastructure/SeedData/coinOperations.json");
+                    var coinOperations = JsonSerializer.Deserialize<List<CoinOperation>>(coinOperationsData);
+
+                    foreach (var coinOperation in coinOperations)
+                        beverageVendingMachineContext.CoinOperations.AddAsync(coinOperation);
                     await beverageVendingMachineContext.SaveChangesAsync();
                 }
             }
