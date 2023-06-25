@@ -47,7 +47,7 @@ namespace BeverageVendingMachine.Core.Entities
     {
         public static Product ConvertToProduct(this StorageItem storageItem, bool isSelected)
         {
-            return new Product(storageItem.Id, storageItem.Name, storageItem.Cost, storageItem.ImageUrl, isSelected);
+            return new Product(storageItem.Id, storageItem.Name, storageItem.Cost, storageItem.ImageUrl, storageItem.StorageQuantity, isSelected);
         }
         public static List<Product> ConvertToProduct(this List<StorageItem> storageItemsList, int isSelectedItemId)
         {

@@ -6,7 +6,30 @@
 window.addEventListener("load", (event) => {
     initData();
 });
+function initData() {
+    $.ajax({
+        url: '/api/TerminalApi/GetCoins',
+        type: 'get',
+        success: function (coins) {
+            initCoins(coins);
 
+            $.ajax({
+                url: '/api/TerminalApi/GetStorageItems',
+                type: 'get',
+                success: function (products) {
+                    initProducts(products);
+                    initUserButtons();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error" + XMLHttpRequest.responseText);
+                }
+            })
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("error" + XMLHttpRequest.responseText);
+        }
+    })
+}
 function initCoins(coins) {
     if (!coins) return;
 
@@ -63,10 +86,11 @@ function addProductHtmlToPage(htmlProductsList, product) {
 
     var htmlProductCost = document.createElement('span');
     htmlProductCost.className = 'product-text-color products-list-item__cost';
-    htmlProductCost.innerHTML = product ? product.cost + ' ₽' : 'Cost';
+    htmlProductCost.innerHTML = product ? product.cost : 'Cost';// + ' ₽'
 
     var htmlProductAmount = document.createElement('span');
     htmlProductAmount.className = 'product-text-color products-list-item__amount';
+    console.log(product);
     htmlProductAmount.innerHTML = product ? 'x' + product.storageQuantity : 'Quantity';
 
     htmlProductLi.appendChild(htmlProductImg);
@@ -75,28 +99,26 @@ function addProductHtmlToPage(htmlProductsList, product) {
     htmlProductLi.appendChild(htmlProductAmount);
     htmlProductsList.appendChild(htmlProductLi);
 }
-function initData() {
-    $.ajax({
-        url: '/api/TerminalApi/GetCoins',
-        type: 'get',
-        success: function (coins) {
-            initCoins(coins);
+function initUserButtons() {
+    var htmlProductsList = document.getElementById('products-list');
+    var selectedProduct = htmlProductsList.querySelector('.products-list-item.selected');
+    var depositedAmount = document.getElementById('coins-info__deposited-amount-value').innerHTML;
+    var changeAmount = document.getElementById('coins-info__change-amount-value').innerHTML;
+    console.log('depositedAmount, changeAmount, productPrice, productAmount', depositedAmount, changeAmount, productPrice, productAmount);
 
-            $.ajax({
-                url: '/api/TerminalApi/GetStorageItems',
-                type: 'get',
-                success: function (products) {
-                    initProducts(products);
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("error" + XMLHttpRequest.responseText);
-                }
-            })
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("error" + XMLHttpRequest.responseText);
+    if (parseInt(changeAmount) > 0) document.getElementById('interface-button__release-change').classList.add('visible');
+    if (selectedProduct) {
+        var productPrice = selectedProduct.querySelector('.products-list-item__cost').innerHTML;
+        var productAmount = selectedProduct.querySelector('.products-list-item__amount').innerHTML.substring(1);
+
+        if (parseInt(depositedAmount) > parseInt(productPrice)) {
+            document.getElementById('interface-button__make-purchase').classList.add('visible');
+            document.getElementById('interface-button__make-purchase-and-release-change').classList.add('visible');
         }
-    })
+    }
+}
+function hideInterfaceButtons() {
+    document.querySelectorAll('.interface-button').forEach(function (button) { button.classList.remove('visible'); });
 }
 
 function makeAjaxRequestAndUpdate(url, data) {
@@ -108,6 +130,7 @@ function makeAjaxRequestAndUpdate(url, data) {
         dataType: "json",
         success: function (updateData) {
             handleUpdateData(updateData);
+            initUserButtons();
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("error" + XMLHttpRequest.responseText);
@@ -115,12 +138,15 @@ function makeAjaxRequestAndUpdate(url, data) {
     });
 }
 function depositCoin(coin) {
+    hideInterfaceButtons();
     makeAjaxRequestAndUpdate("api/TerminalApi/depositCoin", JSON.stringify(coin.id));
 }
 function selectPurchaseItem(product) {
+    hideInterfaceButtons();
     makeAjaxRequestAndUpdate("api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
 }
 function unselectPurchaseItem() {
+    hideInterfaceButtons();
     makeAjaxRequestAndUpdate("api/TerminalApi/unselectPurchaseItem");
 }
 function makePurchase() {

@@ -2,12 +2,13 @@
 {
     public class Product
     {
-        public Product(int id, string name, decimal cost, string imageUrl, bool isSelected)
+        public Product(int id, string name, decimal cost, string imageUrl, int storageQuantity, bool isSelected)
         {
             Id = id;
             Name = name;
             Cost = cost;
             ImageUrl = imageUrl;
+            StorageQuantity = storageQuantity;
             IsSelected = isSelected;
         }
 

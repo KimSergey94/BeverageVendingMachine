@@ -197,9 +197,11 @@ body {
     .products-list-item:active {
         border: 5px solid black;
         background: #0080ab;
+        box-shadow: 0px 0px 9px 1px #0080ab;
     }
     .products-list-item.selected {
         border: 5px solid black;
+        box-shadow: 0px 0px 9px 1px #0080ab;
         background: #0080ab;
     }
 .products-list-item__image {
@@ -225,6 +227,7 @@ body {
     cursor: pointer;
     box-shadow: 0px 0px 4px 1px #337cff;
     user-select: none;
+    display:none;
 }
     .interface-button:hover {
         border: 3px solid #246ff5;
@@ -237,6 +240,9 @@ body {
         box-shadow: 0px 0px 4px 1px #093fa1;
         color: #938469;
         background: #0f53cf;
+    }
+    .interface-button.visible{
+        display: block;
     }
 .buttons-list-item {
     margin-left: 12px;
