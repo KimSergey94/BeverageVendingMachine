@@ -1,34 +1,25 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
-window.addEventListener("load", (event) => {
+﻿window.addEventListener("load", (event) => {
     initData();
 });
 function initData() {
     $.ajax({
-        url: '/api/TerminalApi/GetCoins',
+        url: '/api/TerminalApi/GetUpdateData',
         type: 'get',
-        success: function (coins) {
-            initCoins(coins);
-
-            $.ajax({
-                url: '/api/TerminalApi/GetStorageItems',
-                type: 'get',
-                success: function (products) {
-                    initProducts(products);
-                    initUserButtons();
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("error" + XMLHttpRequest.responseText);
-                }
-            })
+        success: function (updateData) {
+            handleUpdateData(updateData);
+            initUserButtons();
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("error" + XMLHttpRequest.responseText);
         }
-    })
+    });
+}
+function handleUpdateData(updateData) {
+    if (!updateData) return;
+    if (updateData.depositedAmount) document.getElementById('coins-info__deposited-amount-value').innerHTML = updateData.depositedAmount;
+    if (updateData.changeAmount) document.getElementById('coins-info__change-amount-value').innerHTML = updateData.changeAmount;
+    if (updateData.coins) initCoins(updateData.coins);
+    if (updateData.products) initProducts(updateData.products);
 }
 function initCoins(coins) {
     if (!coins) return;
@@ -121,7 +112,7 @@ function hideInterfaceButtons() {
     document.querySelectorAll('.interface-button').forEach(function (button) { button.classList.remove('visible'); });
 }
 
-function makeAjaxRequestAndUpdate(url, data) {
+function makeAjaxRequestAndUpdateData(url, data) {
     $.ajax({
         type: "POST",
         url: url,
@@ -139,15 +130,15 @@ function makeAjaxRequestAndUpdate(url, data) {
 }
 function depositCoin(coin) {
     hideInterfaceButtons();
-    makeAjaxRequestAndUpdate("api/TerminalApi/depositCoin", JSON.stringify(coin.id));
+    makeAjaxRequestAndUpdateData("api/TerminalApi/depositCoin", JSON.stringify(coin.id));
 }
 function selectPurchaseItem(product) {
     hideInterfaceButtons();
-    makeAjaxRequestAndUpdate("api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
+    makeAjaxRequestAndUpdateData("api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
 }
 function unselectPurchaseItem() {
     hideInterfaceButtons();
-    makeAjaxRequestAndUpdate("api/TerminalApi/unselectPurchaseItem");
+    makeAjaxRequestAndUpdateData("api/TerminalApi/unselectPurchaseItem");
 }
 function makePurchase() {
     console.log('makePurchase');
@@ -163,12 +154,4 @@ function importItems(){
 }
 function addNewItem() {
 
-}
-
-function handleUpdateData(updateData) {
-    if (!updateData) return;
-    if (updateData.depositedAmount) document.getElementById('coins-info__deposited-amount-value').innerHTML = updateData.depositedAmount;
-    if (updateData.changeAmount) document.getElementById('coins-info__change-amount-value').innerHTML = updateData.changeAmount;
-    if (updateData.coins) initCoins(updateData.coins);
-    if (updateData.products) initProducts(updateData.products);
 }

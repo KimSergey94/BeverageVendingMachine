@@ -1,4 +1,5 @@
-﻿using BeverageVendingMachine.Core.Interfaces.Services;
+﻿using BeverageVendingMachine.Core.Entities;
+using BeverageVendingMachine.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
@@ -16,48 +17,39 @@ namespace BeverageVendingMachine.Web.Api
         }
 
 
-        // GET: api/TerminalApi/GetCoins
+        // GET: api/TerminalApi/GetUpdateData
         [HttpGet]
-        public async Task<IActionResult> GetCoins()
+        public async Task<IActionResult> GetUpdateData()
         {
-            var coins = await _terminalService.GetCoins();
-            return Ok(coins);
-        }
-
-        // GET: api/TerminalApi/GetStorageItems
-        [HttpGet]
-        public async Task<IActionResult> GetStorageItems()
-        {
-            var storageItems = await _terminalService.GetStorageItems();
+            var storageItems = await _terminalService.GetUpdateData();
             return Ok(storageItems);
         }
+    //// GET: api/Projects
+    //[HttpGet("{id:int}")]
+    //public async Task<IActionResult> GetById(int id)
+    //{
+    //    var projectSpec = new ProjectByIdWithItemsSpec(id);
+    //    var project = await _repository.FirstOrDefaultAsync(projectSpec);
+    //    if (project == null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        //// GET: api/Projects
-        //[HttpGet("{id:int}")]
-        //public async Task<IActionResult> GetById(int id)
-        //{
-        //    var projectSpec = new ProjectByIdWithItemsSpec(id);
-        //    var project = await _repository.FirstOrDefaultAsync(projectSpec);
-        //    if (project == null)
-        //    {
-        //        return NotFound();
-        //    }
+    //    var result = new ProjectDTO
+    //    (
+    //        id: project.Id,
+    //        name: project.Name,
+    //        items: new List<ToDoItemDTO>
+    //        (
+    //            project.Items.Select(i => ToDoItemDTO.FromToDoItem(i)).ToList()
+    //        )
+    //    );
 
-        //    var result = new ProjectDTO
-        //    (
-        //        id: project.Id,
-        //        name: project.Name,
-        //        items: new List<ToDoItemDTO>
-        //        (
-        //            project.Items.Select(i => ToDoItemDTO.FromToDoItem(i)).ToList()
-        //        )
-        //    );
+    //    return Ok(result);
+    //}
 
-        //    return Ok(result);
-        //}
-
-        // POST: api/TerminalApi/DepositCoin
-        [HttpPost]
+    // POST: api/TerminalApi/DepositCoin
+    [HttpPost]
         public async Task<IActionResult> DepositCoin([FromBody] int coinDenominationId)
         {
             return Ok(await Task.Run(() => _terminalService.DepositCoin(coinDenominationId)));

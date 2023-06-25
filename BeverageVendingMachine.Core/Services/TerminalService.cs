@@ -112,9 +112,9 @@ namespace BeverageVendingMachine.Core.Services
         /// Gets update data for vending machine terminal
         /// </summary>
         /// <returns>Update data for vending machine terminal</returns>
-        public UpdateData GetUpdateData()
+        public Task<UpdateData> GetUpdateData()
         {
-            return new UpdateData(_storage.DepositedAmount, CalculateChange(), _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));
+            return Task.Run(() => { return new UpdateData(_storage.DepositedAmount, CalculateChange(), _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));  });
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace BeverageVendingMachine.Core.Services
             var coin = _storage.DepositCoin(coinDenominationId);
             await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coin);
             await _unitOfWork.Complete();
-            return GetUpdateData();
+            return await GetUpdateData();
         }
 
         /// <summary>
@@ -135,20 +135,20 @@ namespace BeverageVendingMachine.Core.Services
         /// </summary>
         /// <param name="purchaseItemId">Id of the selected purchase item</param>
         /// <returns>Update data for vending machine terminal</returns>
-        public UpdateData SelectPurchaseItem(int purchaseItemId)
+        public async Task<UpdateData> SelectPurchaseItem(int purchaseItemId)
         {
             PurchaseItem = _storage.StorageItems.FirstOrDefault(storageItem => storageItem.Id == purchaseItemId);
-            return GetUpdateData();
+            return await GetUpdateData();
         }
 
         /// <summary>
         /// Unselects item for a puchase
         /// </summary>
         /// <returns>Update data for vending machine terminal</returns>
-        public UpdateData UnselectPurchaseItem()
+        public async Task<UpdateData> UnselectPurchaseItem()
         {
             PurchaseItem = null;
-            return GetUpdateData();
+            return await GetUpdateData();
         }
 
         /// <summary>

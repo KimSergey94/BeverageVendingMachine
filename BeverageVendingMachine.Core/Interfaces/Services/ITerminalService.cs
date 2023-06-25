@@ -53,7 +53,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Gets update data for vending machine terminal
         /// </summary>
         /// <returns>Update data for vending machine terminal</returns>
-        UpdateData GetUpdateData();
+        Task<UpdateData> GetUpdateData();
 
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
@@ -67,13 +67,13 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// </summary>
         /// <param name="purchaseItemId">Id of the selected purchase item</param>
         /// <returns>Update data for vending machine terminal</returns>
-        UpdateData SelectPurchaseItem(int purchaseItemId);
+        Task<UpdateData> SelectPurchaseItem(int purchaseItemId);
 
         /// <summary>
         /// Unselects item for a puchase
         /// </summary>
         /// <returns>Update data for vending machine terminal</returns>
-        UpdateData UnselectPurchaseItem();
+        Task<UpdateData> UnselectPurchaseItem();
 
         /// <summary>
         /// Calculates change by subtracting selected item cost from the deposited amount
