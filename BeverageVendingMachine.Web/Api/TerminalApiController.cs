@@ -20,29 +20,35 @@ namespace BeverageVendingMachine.Web.Api
         [HttpGet]
         public async Task<IActionResult> GetUpdateData()
         {
-            var storageItems = await _terminalService.GetUpdateData();
-            return Ok(storageItems);
+            return Ok(await _terminalService.GetUpdateData());
         }
 
         // POST: api/TerminalApi/DepositCoin
         [HttpPost]
         public async Task<IActionResult> DepositCoin([FromBody] int coinDenominationId)
         {
-            return Ok(await Task.Run(() => _terminalService.DepositCoin(coinDenominationId)));
+            return Ok(await _terminalService.DepositCoin(coinDenominationId));
         }
 
         // POST: api/TerminalApi/SelectPurchaseItem
         [HttpPost]
         public async Task<IActionResult> SelectPurchaseItem([FromBody] int selectedStorageItemId)
         {
-            return Ok(await Task.Run(() => _terminalService.SelectPurchaseItem(selectedStorageItemId)));
+            return Ok(await _terminalService.SelectPurchaseItem(selectedStorageItemId));
         }
 
         // POST: api/TerminalApi/UnselectPurchaseItem
         [HttpPost]
         public async Task<IActionResult> UnselectPurchaseItem()
         {
-            return Ok(await Task.Run(() => _terminalService.UnselectPurchaseItem()));
+            return Ok(await _terminalService.UnselectPurchaseItem());
+        }
+
+        // GET: api/TerminalApi/ReleaseChange
+        [HttpGet]
+        public async Task<IActionResult> ReleaseChange()
+        {
+            return Ok(await _terminalService.ReleaseChange());
         }
     }
 }

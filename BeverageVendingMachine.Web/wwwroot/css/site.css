@@ -74,6 +74,7 @@ body {
 :root {
     --text-color: deepskyblue;
     --product-text-color: #df0000;
+    --white: #f8f9fa;
 }
 .terminal-container {
     display: flex;
@@ -91,6 +92,34 @@ body {
     .terminal * {
         font-size: 21px;
     }
+.terminal-modal {
+    display: block;
+    position: absolute;
+    top: -81%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: blue;
+    padding: 21px 30px;
+    border-radius: 9px;
+    min-width: 666px;
+    min-height: 699px;
+}
+    .terminal-modal.visible {
+        top: 13%;
+        transition: top ease-in-out 0.5s;
+    }
+.terminal-modal__close-button {
+    color: var(--white);
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 1px 8px;
+    cursor: pointer;
+    user-select: none;
+}
+.modal-text-color {
+    color: var(--white);
+}
 .text-color {
     color: var(--text-color);
 }

@@ -93,18 +93,18 @@ function addProductHtmlToPage(htmlProductsList, product) {
 function initUserButtons() {
     var htmlProductsList = document.getElementById('products-list');
     var selectedProduct = htmlProductsList.querySelector('.products-list-item.selected');
-    var depositedAmount = document.getElementById('coins-info__deposited-amount-value').innerHTML;
-    var changeAmount = document.getElementById('coins-info__change-amount-value').innerHTML;
+    var depositedAmount = parseInt(document.getElementById('coins-info__deposited-amount-value').innerHTML);
+    var changeAmount = parseInt(document.getElementById('coins-info__change-amount-value').innerHTML);
     console.log('depositedAmount, changeAmount, productPrice, productAmount', depositedAmount, changeAmount, productPrice, productAmount);
 
-    if (parseInt(changeAmount) > 0) document.getElementById('interface-button__release-change').classList.add('visible');
+    if (changeAmount > 0) document.getElementById('interface-button__release-change').classList.add('visible');
     if (selectedProduct) {
-        var productPrice = selectedProduct.querySelector('.products-list-item__cost').innerHTML;
+        var productPrice = parseInt(selectedProduct.querySelector('.products-list-item__cost').innerHTML);
         var productAmount = selectedProduct.querySelector('.products-list-item__amount').innerHTML.substring(1);
 
-        if (parseInt(depositedAmount) > parseInt(productPrice)) {
+        if (depositedAmount > productPrice) {
             document.getElementById('interface-button__make-purchase').classList.add('visible');
-            document.getElementById('interface-button__make-purchase-and-release-change').classList.add('visible');
+            if (changeAmount > 0) document.getElementById('interface-button__make-purchase-and-release-change').classList.add('visible');
         }
     }
 }
@@ -140,12 +140,39 @@ function unselectPurchaseItem() {
     hideInterfaceButtons();
     makeAjaxRequestAndUpdateData("api/TerminalApi/unselectPurchaseItem");
 }
+
+function closeModal() {
+    var modal = document.getElementById('terminal-modal');
+    modal.classList.remove('visible');
+    document.getElementById('terminal-modal-content').innerHTML = '';
+}
+function openModal() {
+    var modal = document.getElementById('terminal-modal');
+    modal.classList.add('visible');
+    document.getElementById('terminal-modal-content').innerHTML = '';
+}
+
 function makePurchase() {
-    console.log('makePurchase');
+    console.log('makePurchase', test);
 }
 function releaseChange() {
-    console.log('releaseChange');
+    $.ajax({
+        url: '/api/TerminalApi/releaseChange',
+        type: 'get',
+        success: function (changeCoins) {
+            initData();
+            openModal();
+            initReleaseChangeModal(changeCoins);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            initData();
+            alert("error" + XMLHttpRequest.responseText);
+        }
+    });
 }
+function initReleaseChangeModal(changeCoins) {
+}
+
 function makePurchaseAndReleaseChange() {
     console.log('makePurchaseAndReleaseChange');
 }
