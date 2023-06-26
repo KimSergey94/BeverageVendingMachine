@@ -156,6 +156,16 @@ body {
 .admin-terminal .coins-list {
     margin-bottom: 18px;
 }
+.coins-list-item__container{
+    display: flex;
+    position:relative;
+}
+.coins-list-item__quantity {
+    position: absolute;
+    right: 9px;
+    font-size: 26px;
+    top: 3px;
+}
 .coins-list {
     display: flex;
 }

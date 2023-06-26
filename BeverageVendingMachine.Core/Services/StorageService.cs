@@ -72,6 +72,32 @@ namespace BeverageVendingMachine.Core.Services
         #region Take coins by amount operations
 
         /// <summary>
+        /// Takes passed amount from deposited and storage coins and returns coins collection object
+        /// </summary>
+        /// <param name="amount">The amount to take from deposited and storage coins</param>
+        public CoinsCollection TakeAmountFromDepositedAndStorageCoins(decimal amount)
+        {
+            try
+            {
+                var result = new CoinsCollection(new Dictionary<decimal, int>());
+                var changeFromDepositedCoins = TakeAmountFromCoins(amount, StorageCoinsTypeEnum.Deposited, true);
+                amount -= changeFromDepositedCoins.CoinDenominationsQuantity.Sum(x => x.Key * x.Value);
+                changeFromDepositedCoins.AddToCoinCollection(result);
+
+                if (amount > 0)
+                {
+                    var changeFromStorageCoins = TakeAmountFromCoins(amount, StorageCoinsTypeEnum.Storage);
+                    changeFromStorageCoins.AddToCoinCollection(result);
+                }
+                return result;
+            }
+            catch
+            {
+                throw new Exception($"Not enough deposited and storage coins in the amount of {amount}");
+            }
+        }
+
+        /// <summary>
         /// Takes passed amount from deposited coins and returns coins collection object
         /// </summary>
         /// <param name="amount">The amount to take from deposited coins</param>
@@ -88,7 +114,7 @@ namespace BeverageVendingMachine.Core.Services
         }
 
         /// <summary>
-        /// Provides coins collection for a change to a customer
+        /// Provides coins collection for a change to a customer from storage coins
         /// </summary>
         /// <param name="amount">The change amount needed to be returned to a user</param>
         /// <returns>The coins collection to provide to user</returns>
@@ -110,7 +136,7 @@ namespace BeverageVendingMachine.Core.Services
         /// <param name="amount">The amount needed to be taken from coins</param>
         /// <param name="storageCoinsType">Storage type of coins (deposited or already in storage)</param>
         /// <returns>Taken amount in coins representation</returns>
-        private CoinsCollection TakeAmountFromCoins(decimal amount, StorageCoinsTypeEnum storageCoinsType)
+        private CoinsCollection TakeAmountFromCoins(decimal amount, StorageCoinsTypeEnum storageCoinsType, bool isRemainderTolerant = false)
         {
             var result = new CoinsCollection(new Dictionary<decimal, int>());
             foreach (var coinDenomination in CoinDenominations.OrderByDescending(x => x.Value))
@@ -120,7 +146,7 @@ namespace BeverageVendingMachine.Core.Services
                 result.CoinDenominationsQuantity.Add(coinDenomination.Value, takenCoins[coinDenomination.Value]);
             }
 
-            if (amount > 0)
+            if (amount > 0 && !isRemainderTolerant)
             {
                 foreach (var coinDenominationGroup in result.CoinDenominationsQuantity) DepositCoinsToCollection(coinDenominationGroup.Key, coinDenominationGroup.Value, storageCoinsType);
                 throw new Exception($"Not enough coins in the amount of {amount}");

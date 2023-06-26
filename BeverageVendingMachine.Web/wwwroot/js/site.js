@@ -6,6 +6,7 @@ function initData() {
         url: '/api/TerminalApi/GetUpdateData',
         type: 'get',
         success: function (updateData) {
+            console.log('initData', updateData);
             handleUpdateData(updateData);
             initUserButtons();
         },
@@ -15,9 +16,12 @@ function initData() {
     });
 }
 function handleUpdateData(updateData) {
+        console.log(' handleUpdateData updateData', updateData.changeAmount);
     if (!updateData) return;
-    if (updateData.depositedAmount) document.getElementById('coins-info__deposited-amount-value').innerHTML = updateData.depositedAmount;
-    if (updateData.changeAmount) document.getElementById('coins-info__change-amount-value').innerHTML = updateData.changeAmount;
+
+    document.getElementById('coins-info__deposited-amount-value').innerHTML = updateData.depositedAmount;
+    document.getElementById('coins-info__change-amount-value').innerHTML = updateData.changeAmount;
+
     if (updateData.coins) initCoins(updateData.coins);
     if (updateData.products) initProducts(updateData.products);
 }
@@ -102,7 +106,7 @@ function initUserButtons() {
         var productPrice = parseInt(selectedProduct.querySelector('.products-list-item__cost').innerHTML);
         var productAmount = selectedProduct.querySelector('.products-list-item__amount').innerHTML.substring(1);
 
-        if (depositedAmount > productPrice) {
+        if (depositedAmount >= productPrice) {
             document.getElementById('interface-button__make-purchase').classList.add('visible');
             if (changeAmount > 0) document.getElementById('interface-button__make-purchase-and-release-change').classList.add('visible');
         }
@@ -133,8 +137,11 @@ function depositCoin(coin) {
     makeAjaxRequestAndUpdateData("api/TerminalApi/depositCoin", JSON.stringify(coin.id));
 }
 function selectPurchaseItem(product) {
-    hideInterfaceButtons();
-    makeAjaxRequestAndUpdateData("api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
+    var depositedAmount = parseInt(document.getElementById('coins-info__deposited-amount-value').innerHTML);
+    if (depositedAmount >= product.cost) {
+        hideInterfaceButtons();
+        makeAjaxRequestAndUpdateData("api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
+    }
 }
 function unselectPurchaseItem() {
     hideInterfaceButtons();
@@ -149,7 +156,6 @@ function closeModal() {
 function openModal() {
     var modal = document.getElementById('terminal-modal');
     modal.classList.add('visible');
-    document.getElementById('terminal-modal-content').innerHTML = '';
 }
 
 function makePurchase() {
@@ -171,6 +177,42 @@ function releaseChange() {
     });
 }
 function initReleaseChangeModal(changeCoins) {
+    if (!changeCoins) return;
+    console.log(changeCoins);
+    var terminalModalContentEl = document.getElementById('terminal-modal-content');
+    var h3El = document.createElement('h3');
+    h3El.className = "welcome-title modal-text-color";
+    terminalModalContentEl.append(h3El);
+
+    var coinsListContainerEl = document.createElement('div');
+    coinsListContainerEl.className = "coins-list-container";
+    var coinsListEl = document.createElement('ul');
+    coinsListEl.className = "reset-ul-list coins-list";
+    coinsListEl.id = "modal-coins-list";
+
+    var changeAmount = 0.00; 
+    Object.keys(changeCoins.coinDenominationsQuantity).forEach(function (coinDenomination) {
+        var coin = changeCoins.coinDenominationsQuantity[coinDenomination];
+        console.log('coin', coin);
+        changeAmount += coinDenomination * changeCoins.coinDenominationsQuantity[coinDenomination];
+        var coinEl = document.createElement('li');
+        coinEl.className = 'coins-list-item__container';
+
+        var coinContainerEl = document.createElement('div');
+        coinContainerEl.className = 'coins-list-item coin';
+        coinContainerEl.innerHTML = parseInt(coinDenomination);
+
+        var coinQuantityEl = document.createElement('span');
+        coinQuantityEl.className = "coins-list-item__quantity modal-text-color";
+        coinQuantityEl.innerHTML = "x" + changeCoins.coinDenominationsQuantity[coinDenomination];
+
+        coinEl.appendChild(coinContainerEl);
+        coinEl.appendChild(coinQuantityEl);
+        coinsListEl.appendChild(coinEl);
+    });
+    h3El.innerHTML = "Your change: " + changeAmount;
+    coinsListContainerEl.append(coinsListEl);
+    terminalModalContentEl.append(coinsListContainerEl);
 }
 
 function makePurchaseAndReleaseChange() {

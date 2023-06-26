@@ -18,10 +18,10 @@ namespace BeverageVendingMachine.Core.Entities
         }
         public CoinOperation(StorageItem storageItem, CoinDenomination coinDenomination, int quantity, bool isDeposited)
         {
+            StorageItem = storageItem;
             CoinDenomination = coinDenomination;
             Quantity = quantity;
             IsDeposited = isDeposited;
-            StorageItem = storageItem;
         }
 
         /// <summary>
@@ -52,6 +52,6 @@ namespace BeverageVendingMachine.Core.Entities
         /// <summary>
         /// Foreign key to storage item
         /// </summary>
-        public int StorageItemId { get; set; }
+        public int? StorageItemId { get; set; }
     }
 }

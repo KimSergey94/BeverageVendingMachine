@@ -115,7 +115,6 @@ namespace BeverageVendingMachine.Core.Services
         public Task<UpdateData> GetUpdateData()
         {
             return Task.Run(() => { return new UpdateData(_storage.DepositedAmount, CalculateChange(), _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));  });
-            return Task.Run(() => { return new UpdateData(_storage.DepositedAmount, change, _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));  });
         }
 
         /// <summary>
@@ -184,7 +183,7 @@ namespace BeverageVendingMachine.Core.Services
             try
             {
                 //needs to be checked
-                _storage.TakeAmountFromDepositedCoins(result.Cost);
+                _storage.TakeAmountFromDepositedAndStorageCoins(result.Cost);
                 _unitOfWork.Complete();
             }
             catch
@@ -209,16 +208,16 @@ namespace BeverageVendingMachine.Core.Services
             {
                 try
                 {
-                    var changeCoins = GetStorageInstance().GetCoinsForChange(change);
+                    var changeCoins = GetStorageInstance().TakeAmountFromDepositedAndStorageCoins(change);
 
-                    foreach (var coinDenominationGroup in changeCoins.CoinDenominationsQuantity)
+                    foreach (var coinDenominationGroup in changeCoins.CoinDenominationsQuantity.Where(coinDenominationGroup => coinDenominationGroup.Value > 0))
                     {
                         var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
-                        coinDenomination.DepositedQuantity -= coinDenominationGroup.Value;
                         await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coinDenomination);
                         var coinOperation = new CoinOperation(PurchaseItem, coinDenomination, coinDenominationGroup.Value, false);
                         await _unitOfWork.Repository<CoinOperation>().AddAsync(coinOperation);
                     }
+                    await _unitOfWork.Complete();
                     return changeCoins;
                 }
                 catch

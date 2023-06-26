@@ -19,6 +19,20 @@ namespace BeverageVendingMachine.Core.DTOs
         /// <summary>
         /// Dictionary of coin denominations and their quantity
         /// </summary>
-        public Dictionary<decimal, int> CoinDenominationsQuantity { get; set; }
+        public Dictionary<decimal, int> CoinDenominationsQuantity { get; set; } = new Dictionary<decimal, int>();
     }
+
+    public static class CoinsCollectionExtensions
+    {
+        public static CoinsCollection AddToCoinCollection(this CoinsCollection coinsCollectionFrom, CoinsCollection coinsCollectionTo)
+        {
+            coinsCollectionFrom.CoinDenominationsQuantity.ToList().ForEach(x => {
+                if (coinsCollectionTo.CoinDenominationsQuantity.ContainsKey(x.Key))
+                    coinsCollectionTo.CoinDenominationsQuantity[x.Key] += x.Value;
+                else coinsCollectionTo.CoinDenominationsQuantity.Add(x.Key, x.Value); 
+            });
+            return coinsCollectionTo;
+        }
+    }
+
 }

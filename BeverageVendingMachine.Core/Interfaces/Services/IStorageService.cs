@@ -43,13 +43,19 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         #region Take coins by amount operations
 
         /// <summary>
+        /// Takes passed amount from deposited and storage coins and returns coins collection object
+        /// </summary>
+        /// <param name="amount">The amount to take from deposited and storage coins</param>
+        CoinsCollection TakeAmountFromDepositedAndStorageCoins(decimal amount);
+
+        /// <summary>
         /// Takes passed amount from deposited coins and returns coins collection object
         /// </summary>
         /// <param name="amount">The amount to take from deposited coins</param>
         CoinsCollection TakeAmountFromDepositedCoins(decimal amount);
 
         /// <summary>
-        /// Provides coins collection for a change to a customer
+        /// Provides coins collection for a change to a customer from storage coins
         /// </summary>
         /// <param name="amount">The change amount needed to be returned to a user</param>
         /// <returns>The coins collection to provide to user</returns>
