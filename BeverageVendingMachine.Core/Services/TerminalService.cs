@@ -115,6 +115,7 @@ namespace BeverageVendingMachine.Core.Services
         public Task<UpdateData> GetUpdateData()
         {
             return Task.Run(() => { return new UpdateData(_storage.DepositedAmount, CalculateChange(), _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));  });
+            return Task.Run(() => { return new UpdateData(_storage.DepositedAmount, change, _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));  });
         }
 
         /// <summary>
