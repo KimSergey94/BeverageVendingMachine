@@ -11,32 +11,50 @@ using System.Threading.Tasks;
 namespace BeverageVendingMachine.Core.Services
 {
     /// <summary>
-    /// Service to make purchases by clients
+    /// Service interface to interact with terminal by clients
     /// </summary>
-    public class PurchaseService : IPurchaseService
+    public class UserTerminalService : IUserTerminalService
     {
         private readonly ITerminalService _terminalService;
-        public PurchaseService(ITerminalService terminalService)
+        public UserTerminalService(ITerminalService terminalService)
         {
             _terminalService = terminalService;
+        }
+
+        /// <summary>
+        /// Gets update data from the vending machine terminal
+        /// </summary>
+        /// <returns>Update data from the vending machine terminal</returns>
+        public UpdateData GetUpdateData()
+        {
+            return _terminalService.GetTerminalUpdateData();
         }
 
         /// <summary>
         /// Deposits a coin to make purchase
         /// </summary>
         /// <param name="coin">Coin denomination entity</param>
-        public void DepositCoin(CoinDenomination coin)
+        public Task<UpdateData> DepositCoin(int coinDenominationId)
         {
-            _terminalService.DepositCoin(coin.Id);
+            return Task.Run(() => _terminalService.DepositCoin(coinDenominationId));
         }
 
         /// <summary>
         /// Selects an item from inventory for a purchase
         /// </summary>
         /// <param name="purchaseItem">Inventory item to be selected for a purchase</param>
-        public void SelectPurchaseItem(int storageItemId)
+        public Task<UpdateData> SelectPurchaseItem(int purchaseItemId)
         {
-            _terminalService.SelectPurchaseItem(storageItemId);
+            return Task.Run(() => _terminalService.SelectPurchaseItem(purchaseItemId));
+        }
+
+        /// <summary>
+        /// Unselects item for a puchase
+        /// </summary>
+        /// <returns>Update data for vending machine terminal</returns>
+        public Task<UpdateData> UnselectPurchaseItem()
+        {
+            return Task.Run(() => _terminalService.UnselectPurchaseItem());
         }
 
         /// <summary>
@@ -53,7 +71,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Takes purchase item from inventory
         /// </summary>
         /// <returns>Returns purchased item from inventory</returns>
-        public StorageItem ReleasePurchaseItem()
+        public StorageItem TakePurchaseItemFromInventory()
         {
             return _terminalService.TakePurchaseItemFromInventory();
         }
@@ -66,5 +84,6 @@ namespace BeverageVendingMachine.Core.Services
         {
             return await _terminalService.ReleaseChange();
         }
+
     }
 }

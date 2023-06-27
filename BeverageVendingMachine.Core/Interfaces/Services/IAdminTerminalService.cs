@@ -1,4 +1,5 @@
-﻿using BeverageVendingMachine.Core.Entities;
+﻿using BeverageVendingMachine.Core.DTOs;
+using BeverageVendingMachine.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,16 @@ using System.Threading.Tasks;
 namespace BeverageVendingMachine.Core.Interfaces.Services
 {
     /// <summary>
-    /// Interface for a service to manage vending machine terminal as ab admin
+    /// Interface for a service to manage vending machine terminal as an admin
     /// </summary>
     public interface IAdminTerminalService
     {
+        /// <summary>
+        /// Gets update data from the vending machine terminal
+        /// </summary>
+        /// <returns>Update data from the vending machine terminal</returns>
+        UpdateData GetUpdateData();
+
         /// <summary>
         /// Blocks passed coin denomination by Id
         /// </summary>
@@ -26,14 +33,12 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <returns>Returns 1 if successful, 0 if the coin is already unblocked, -1 if there was error</returns>
         int UnblockCoinDenomination(int coinDenominationId);
 
-
         /// <summary>
         /// Creates new storage item
         /// </summary>
         /// <param name="newStorageItem">new storage item object</param>
         /// <returns>Returns whether the creation of the new storage item was successful</returns>
         Task<bool> AddNewStorageItem(StorageItem newStorageItem);
-
 
         /// <summary>
         /// Updates storage item

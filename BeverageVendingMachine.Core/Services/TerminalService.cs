@@ -109,12 +109,12 @@ namespace BeverageVendingMachine.Core.Services
         #region User interface
 
         /// <summary>
-        /// Gets update data for vending machine terminal
+        /// Gets update data from the vending machine terminal
         /// </summary>
-        /// <returns>Update data for vending machine terminal</returns>
-        public Task<UpdateData> GetUpdateData()
+        /// <returns>Update data from the vending machine terminal</returns>
+        public UpdateData GetTerminalUpdateData()
         {
-            return Task.Run(() => { return new UpdateData(_storage.DepositedAmount, CalculateChange(), _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));  });
+            return new UpdateData(_storage.DepositedAmount, CalculateChange(), _storage.CoinDenominations, _storage.StorageItems.ConvertToProduct(PurchaseItem == null ? 0 : PurchaseItem.Id));
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace BeverageVendingMachine.Core.Services
             var coin = _storage.DepositCoin(coinDenominationId);
             await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coin);
             await _unitOfWork.Complete();
-            return await GetUpdateData();
+            return GetTerminalUpdateData();
         }
 
         /// <summary>
@@ -135,20 +135,20 @@ namespace BeverageVendingMachine.Core.Services
         /// </summary>
         /// <param name="purchaseItemId">Id of the selected purchase item</param>
         /// <returns>Update data for vending machine terminal</returns>
-        public async Task<UpdateData> SelectPurchaseItem(int purchaseItemId)
+        public UpdateData SelectPurchaseItem(int purchaseItemId)
         {
             PurchaseItem = _storage.StorageItems.FirstOrDefault(storageItem => storageItem.Id == purchaseItemId);
-            return await GetUpdateData();
+            return GetTerminalUpdateData();
         }
 
         /// <summary>
         /// Unselects item for a puchase
         /// </summary>
         /// <returns>Update data for vending machine terminal</returns>
-        public async Task<UpdateData> UnselectPurchaseItem()
+        public UpdateData UnselectPurchaseItem()
         {
             PurchaseItem = null;
-            return await GetUpdateData();
+            return GetTerminalUpdateData();
         }
 
         /// <summary>
@@ -182,15 +182,13 @@ namespace BeverageVendingMachine.Core.Services
 
             try
             {
-                //needs to be checked
                 _storage.TakeAmountFromDepositedAndStorageCoins(result.Cost);
                 _unitOfWork.Complete();
             }
             catch
             {
-                _storage.AddStorageItem(PurchaseItem);
-                //needs to be checked
-                SelectPurchaseItem(PurchaseItem.Id);
+                _storage.AddStorageItem(result);
+                SelectPurchaseItem(result.Id);
                 throw;
             }
 
@@ -247,6 +245,7 @@ namespace BeverageVendingMachine.Core.Services
                 throw;
             }
         }
+        
         #endregion
     }
 }

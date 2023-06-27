@@ -15,7 +15,52 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
     /// </summary>
     public interface ITerminalService
     {
-        #region Admin interface
+        #region User interface
+
+        /// <summary>
+        /// Gets update data from the vending machine terminal
+        /// </summary>
+        /// <returns>Update data from the vending machine terminal</returns>
+        UpdateData GetTerminalUpdateData();
+
+        #endregion
+
+
+        #region Terminal data
+
+        /// <summary>
+        /// Get the instance of storage singleton
+        /// </summary>
+        /// <returns>Returns the instance of storage singleton</returns>
+        IStorageService GetStorageInstance();
+
+        /// <summary>
+        /// Gets all existing coins
+        /// </summary>
+        /// <returns>All existing coins</returns>
+        Task<IReadOnlyList<CoinDenomination>> GetCoins();
+
+        /// <summary>
+        /// Gets all existing storage items
+        /// </summary>
+        /// <returns>All existing storage items</returns>
+        Task<IReadOnlyList<StorageItem>> GetStorageItems();
+
+        /// <summary>
+        /// Calculates change by subtracting selected item cost from the deposited amount
+        /// </summary>
+        /// <returns>Returns amount to be returned to a vending machine user</returns>
+        decimal CalculateChange();
+
+        /// <summary>
+        /// Returns the amount of deposited coins for a purchase
+        /// </summary>
+        /// <returns>the amount of deposited coins for a purchase</returns>
+        decimal GetDepositedAmount();
+
+        #endregion
+
+        #region AdminTerminal
 
         /// <summary>
         /// Blocks passed coin denomination by Id
@@ -33,27 +78,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
 
         #endregion
 
-        #region Load terminal data
-        /// <summary>
-        /// Gets all existing coins
-        /// </summary>
-        /// <returns>All existing coins</returns>
-        Task<IReadOnlyList<CoinDenomination>> GetCoins();
-
-        /// <summary>
-        /// Gets all existing storage items
-        /// </summary>
-        /// <returns>All existing storage items</returns>
-        Task<IReadOnlyList<StorageItem>> GetStorageItems();
-        #endregion
-
-        #region User interface
-
-        /// <summary>
-        /// Gets update data for vending machine terminal
-        /// </summary>
-        /// <returns>Update data for vending machine terminal</returns>
-        Task<UpdateData> GetUpdateData();
+        #region User terminal
 
         /// <summary>
         /// To deposit a coin to a vending machine temporary storage for a purchase
@@ -67,25 +92,19 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// </summary>
         /// <param name="purchaseItemId">Id of the selected purchase item</param>
         /// <returns>Update data for vending machine terminal</returns>
-        Task<UpdateData> SelectPurchaseItem(int purchaseItemId);
+        UpdateData SelectPurchaseItem(int purchaseItemId);
 
         /// <summary>
         /// Unselects item for a puchase
         /// </summary>
         /// <returns>Update data for vending machine terminal</returns>
-        Task<UpdateData> UnselectPurchaseItem();
+        UpdateData UnselectPurchaseItem();
 
         /// <summary>
-        /// Calculates change by subtracting selected item cost from the deposited amount
+        /// Releases purchase item and change
         /// </summary>
-        /// <returns>Returns amount to be returned to a vending machine user</returns>
-        decimal CalculateChange();
-
-        /// <summary>
-        /// Returns the amount of deposited coins for a purchase
-        /// </summary>
-        /// <returns>the amount of deposited coins for a purchase</returns>
-        decimal GetDepositedAmount();
+        /// <returns>Returns an object with the purchase item and change inside</returns>
+        Task<PurchaseResult> ReleasePurchaseItemAndChange();
 
         /// <summary>
         /// Takes purchase item from inventory
@@ -99,17 +118,6 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <returns>Returns coins collection for a customer</returns>
         Task<CoinsCollection> ReleaseChange();
 
-        /// <summary>
-        /// Releases purchase item and change
-        /// </summary>
-        /// <returns>Returns an object with the purchase item and change inside</returns>
-        Task<PurchaseResult> ReleasePurchaseItemAndChange();
-
-        /// <summary>
-        /// Get the instance of storage singleton
-        /// </summary>
-        /// <returns>Returns the instance of storage singleton</returns>
-        IStorageService GetStorageInstance();
         #endregion
     }
 }

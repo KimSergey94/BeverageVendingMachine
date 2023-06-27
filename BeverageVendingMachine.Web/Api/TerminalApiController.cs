@@ -1,4 +1,5 @@
-﻿using BeverageVendingMachine.Core.Entities;
+﻿using BeverageVendingMachine.Application.DTOs;
+using BeverageVendingMachine.Core.Entities;
 using BeverageVendingMachine.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -9,46 +10,54 @@ namespace BeverageVendingMachine.Web.Api
 {
     public class TerminalApiController : BaseApiController
     {
-        private readonly ITerminalService _terminalService;
+        private readonly IUserTerminalService _userTerminalService;
 
-        public TerminalApiController(ITerminalService terminalService)
+        public TerminalApiController(IUserTerminalService userTerminalService)
         {
-            _terminalService = terminalService;
+            _userTerminalService = userTerminalService;
         }
 
         // GET: api/TerminalApi/GetUpdateData
         [HttpGet]
         public async Task<IActionResult> GetUpdateData()
         {
-            return Ok(await _terminalService.GetUpdateData());
+            return Ok(await Task.Run(() => _userTerminalService.GetUpdateData()));
         }
 
         // POST: api/TerminalApi/DepositCoin
         [HttpPost]
         public async Task<IActionResult> DepositCoin([FromBody] int coinDenominationId)
         {
-            return Ok(await _terminalService.DepositCoin(coinDenominationId));
+            return Ok(await Task.Run(() => _userTerminalService.DepositCoin(coinDenominationId)));
         }
 
         // POST: api/TerminalApi/SelectPurchaseItem
         [HttpPost]
         public async Task<IActionResult> SelectPurchaseItem([FromBody] int selectedStorageItemId)
         {
-            return Ok(await _terminalService.SelectPurchaseItem(selectedStorageItemId));
+            return Ok(await Task.Run(() => _userTerminalService.SelectPurchaseItem(selectedStorageItemId)));
         }
 
         // POST: api/TerminalApi/UnselectPurchaseItem
         [HttpPost]
         public async Task<IActionResult> UnselectPurchaseItem()
         {
-            return Ok(await _terminalService.UnselectPurchaseItem());
+            return Ok(await Task.Run(() => _userTerminalService.UnselectPurchaseItem()));
         }
 
         // GET: api/TerminalApi/ReleaseChange
         [HttpGet]
         public async Task<IActionResult> ReleaseChange()
         {
-            return Ok(await _terminalService.ReleaseChange());
+            var purchaseResult = new PurchaseResult(null, await _userTerminalService.ReleaseChange());
+            return Ok(purchaseResult);
+        }
+
+        // GET: api/TerminalApi/MakePurchase
+        [HttpGet]
+        public async Task<IActionResult> MakePurchase()
+        {
+            return Ok(await Task.Run(() => new PurchaseResult(_userTerminalService.TakePurchaseItemFromInventory(), null)));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BeverageVendingMachine.Core.Common;
+using BeverageVendingMachine.Core.DTOs;
 using BeverageVendingMachine.Core.Entities;
 using BeverageVendingMachine.Core.Interfaces.Services;
 using System;
@@ -22,6 +23,15 @@ namespace BeverageVendingMachine.Core.Services
             _terminalService = terminalService;
         }
 
+
+        /// <summary>
+        /// Gets update data from the vending machine terminal
+        /// </summary>
+        /// <returns>Update data from the vending machine terminal</returns>
+        public UpdateData GetUpdateData()
+        {
+            return _terminalService.GetTerminalUpdateData();
+        }
 
         #region Coins operations
 
@@ -115,10 +125,6 @@ namespace BeverageVendingMachine.Core.Services
             var result = false;
 
             var currentStorageItems = _terminalService.GetStorageInstance().StorageItems;
-
-            //needs to be checked
-            currentStorageItems = currentStorageItems;
-
             var newStorageItemsIds = newStorageItemsList.Select(storageItem => storageItem.Id).ToList();
             var storageItemsToDelete = currentStorageItems.Where(storageItem => newStorageItemsIds.Contains(storageItem.Id));
 

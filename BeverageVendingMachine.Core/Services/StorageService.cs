@@ -88,15 +88,46 @@ namespace BeverageVendingMachine.Core.Services
                 {
                     var changeFromStorageCoins = TakeAmountFromCoins(amount, StorageCoinsTypeEnum.Storage);
                     changeFromStorageCoins.AddToCoinCollection(result);
+                    if (!ActualizeDepositedCoins(changeFromStorageCoins.CoinDenominationsQuantity.Sum(x => x.Key * x.Value))) throw new Exception("");
                 }
                 return result;
             }
-            catch
+            catch (Exception e)
             {
                 throw new Exception($"Not enough deposited and storage coins in the amount of {amount}");
             }
         }
 
+        /// <summary>
+        /// Actualizes deposited coins after
+        /// </summary>
+        /// <param name="amountTakenFromStorageCoins">amount taken from storage coins</param>
+        /// <returns>Returns whether the process was successful</returns>
+        public bool ActualizeDepositedCoins(decimal amountTakenFromStorageCoins)
+        {
+            try
+            {
+                var depositedAmount = 0.00m;
+                foreach (var coinDenomination in CoinDenominations.Where(coinDenomination => coinDenomination.DepositedQuantity > 0))
+                {
+                    coinDenomination.StorageQuantity += coinDenomination.DepositedQuantity;
+                    depositedAmount += coinDenomination.DepositedQuantity * coinDenomination.Value;
+                    coinDenomination.DepositedQuantity = 0;
+                }
+
+                var storageCoinsToDeposit = TakeAmountFromCoins(depositedAmount - amountTakenFromStorageCoins, StorageCoinsTypeEnum.Storage, true);
+                storageCoinsToDeposit.CoinDenominationsQuantity.ToList()
+                    .ForEach(storageCoinToDeposit =>
+                    {
+                        DepositCoinsToCollection(storageCoinToDeposit.Key, storageCoinToDeposit.Value, StorageCoinsTypeEnum.Deposited);
+                    });
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
         /// <summary>
         /// Takes passed amount from deposited coins and returns coins collection object
         /// </summary>
@@ -139,11 +170,16 @@ namespace BeverageVendingMachine.Core.Services
         private CoinsCollection TakeAmountFromCoins(decimal amount, StorageCoinsTypeEnum storageCoinsType, bool isRemainderTolerant = false)
         {
             var result = new CoinsCollection(new Dictionary<decimal, int>());
-            foreach (var coinDenomination in CoinDenominations.OrderByDescending(x => x.Value))
+            var coinDenominations = CoinDenominations.OrderByDescending(x => x.Value);
+
+            foreach (var coinDenomination in coinDenominations)
             {
-                var takenCoins = TakeMaxCoinsByDenomination(coinDenomination.Value, amount, storageCoinsType);
-                amount -= takenCoins[coinDenomination.Value] * coinDenomination.Value;
-                result.CoinDenominationsQuantity.Add(coinDenomination.Value, takenCoins[coinDenomination.Value]);
+                var takenCoins = TakeMaxCoinsByDenomination(coinDenomination, amount, storageCoinsType);
+                if(takenCoins.ContainsKey(coinDenomination.Value))
+                {
+                    amount -= takenCoins[coinDenomination.Value] * coinDenomination.Value;
+                    result.CoinDenominationsQuantity.Add(coinDenomination.Value, takenCoins[coinDenomination.Value]);
+                }
             }
 
             if (amount > 0 && !isRemainderTolerant)
@@ -161,24 +197,26 @@ namespace BeverageVendingMachine.Core.Services
         /// <param name="amount">The total amount left</param>
         /// <param name="storageCoinsType">Storage type of coins (deposited or already in storage)</param>
         /// <returns>Dictionary of coin denomination and its quantity</returns>
-        private Dictionary<decimal, int> TakeMaxCoinsByDenomination(decimal coinDenomination, decimal amount, StorageCoinsTypeEnum storageCoinsType)
+        private Dictionary<decimal, int> TakeMaxCoinsByDenomination(CoinDenomination coinDenominationEntity, decimal amount, StorageCoinsTypeEnum storageCoinsType)
         {
             var result = new Dictionary<decimal, int>();
-            var coinDenominationEntity = CoinDenominations.FirstOrDefault(x => x.Value == coinDenomination);
+            //if (storageCoinsType.Equals(StorageCoinsTypeEnum.Deposited) && coinDenominationEntity.DepositedQuantity < 1 ||
+            //    storageCoinsType.Equals(StorageCoinsTypeEnum.Storage) && coinDenominationEntity.StorageQuantity < 1) return result;
+
             var totalCoins = storageCoinsType == StorageCoinsTypeEnum.Storage ? coinDenominationEntity.StorageQuantity : coinDenominationEntity.DepositedQuantity;
-            var coinsNeeded = amount / coinDenomination;
+            var coinsNeeded = amount / coinDenominationEntity.Value;
 
             if (totalCoins >= coinsNeeded)
             {
                 if (storageCoinsType == StorageCoinsTypeEnum.Storage) coinDenominationEntity.StorageQuantity -= (int)coinsNeeded;
                 else if (storageCoinsType == StorageCoinsTypeEnum.Deposited) coinDenominationEntity.DepositedQuantity -= (int)coinsNeeded;
-                result.Add(coinDenomination, (int)coinsNeeded);
+                result.Add(coinDenominationEntity.Value, (int)coinsNeeded);
             }
             else
             {
                 if (storageCoinsType == StorageCoinsTypeEnum.Storage) coinDenominationEntity.StorageQuantity -= totalCoins;
                 else if (storageCoinsType == StorageCoinsTypeEnum.Deposited) coinDenominationEntity.DepositedQuantity -= totalCoins;
-                result.Add(coinDenomination, totalCoins);
+                result.Add(coinDenominationEntity.Value, totalCoins);
             }
             return result;
         }
@@ -194,8 +232,8 @@ namespace BeverageVendingMachine.Core.Services
             var coinDenominationEntity = CoinDenominations.FirstOrDefault(x => x.Value == coinDenomination);
             if (coinDenominationEntity == null) throw new Exception($"Not found coin denomination: {coinDenomination}");
 
-            if (StorageCoinsTypeEnum.Storage == storageCoinsType) coinDenominationEntity.StorageQuantity -= coinsAmount;
-            else if (StorageCoinsTypeEnum.Deposited == storageCoinsType) coinDenominationEntity.DepositedQuantity -= coinsAmount;
+            if (StorageCoinsTypeEnum.Storage == storageCoinsType) coinDenominationEntity.StorageQuantity += coinsAmount;
+            else if (StorageCoinsTypeEnum.Deposited == storageCoinsType) coinDenominationEntity.DepositedQuantity += coinsAmount;
         }
 
         #endregion
