@@ -128,6 +128,7 @@ function initUserButtons() {
     console.log('depositedAmount, changeAmount, productPrice, productAmount', depositedAmount, changeAmount, productPrice, productAmount);
 
     if (changeAmount > 0) document.getElementById('interface-button__release-change').classList.add('visible');
+    else document.getElementById('interface-button__release-change').classList.remove('visible');
     if (selectedProduct) {
         var productPrice = parseInt(selectedProduct.querySelector('.products-list-item__cost').innerHTML);
         var productAmount = selectedProduct.querySelector('.products-list-item__amount').innerHTML.substring(1);
@@ -135,7 +136,16 @@ function initUserButtons() {
         if (depositedAmount >= productPrice) {
             document.getElementById('interface-button__make-purchase').classList.add('visible');
             if (changeAmount > 0) document.getElementById('interface-button__make-purchase-and-release-change').classList.add('visible');
+            else document.getElementById('interface-button__make-purchase-and-release-change').classList.remove('visible');
         }
+        else {
+            document.getElementById('interface-button__make-purchase').classList.remove('visible');
+            document.getElementById('interface-button__make-purchase-and-release-change').classList.remove('visible');
+        }
+    }
+    else {
+        document.getElementById('interface-button__make-purchase').classList.remove('visible');
+        document.getElementById('interface-button__make-purchase-and-release-change').classList.remove('visible');
     }
 }
 function initAdminButtons() {
@@ -239,7 +249,6 @@ function makePurchase() {
         url: '/api/TerminalApi/makePurchase',
         type: 'get',
         success: function (purchaseResult) {
-            console.log(purchaseResult);
             initData();
             openModal();
             initPurchasedItemModal(purchaseResult.purchaseItem);

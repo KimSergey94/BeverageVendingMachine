@@ -238,7 +238,8 @@ namespace BeverageVendingMachine.Core.Services
         {
             try
             {
-                return new PurchaseResult(TakePurchaseItemFromInventory(), await ReleaseChange());
+                var change = await ReleaseChange();
+                return new PurchaseResult(TakePurchaseItemFromInventory(), change);
             }
             catch
             {
