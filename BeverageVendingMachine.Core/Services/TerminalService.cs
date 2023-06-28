@@ -198,7 +198,7 @@ namespace BeverageVendingMachine.Core.Services
         /// Takes purchase item from inventory, deducts the purchase item cost from deposited coins
         /// </summary>
         /// <returns>Returns purchase item from inventory</returns>
-        public StorageItem TakePurchaseItemFromInventory()
+        public async Task<StorageItem> TakePurchaseItemFromInventory()
         {
             if(PurchaseItem == null) throw new Exception("Purchase item is not selected.");
 
@@ -208,10 +208,13 @@ namespace BeverageVendingMachine.Core.Services
             try
             {
                 _storage.TakeAmountFromDepositedAndStorageCoins(result.Cost);
-                _unitOfWork.Complete();
+                result.StorageQuantity -= 1;
+                await _unitOfWork.Repository<StorageItem>().UpdateAsync(result);
+                await _unitOfWork.Complete();
             }
             catch
             {
+                result.StorageQuantity += 1;
                 _storage.AddStorageItem(result);
                 SelectPurchaseItem(result.Id);
                 throw;
@@ -264,7 +267,8 @@ namespace BeverageVendingMachine.Core.Services
             try
             {
                 var change = await ReleaseChange();
-                return new PurchaseResult(TakePurchaseItemFromInventory(), change);
+                var purchasedItem = await TakePurchaseItemFromInventory();
+                return new PurchaseResult(purchasedItem, change);
             }
             catch
             {

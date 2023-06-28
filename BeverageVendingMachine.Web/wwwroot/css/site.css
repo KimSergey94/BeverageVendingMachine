@@ -319,3 +319,24 @@ body {
     .coins-buttons-button.visible {
         visibility: visible;
     }
+
+
+.product-fields-form {
+    display: flex;
+    flex-direction: column;
+}
+.product-fields-form__field {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+    .product-fields-form__field:last-of-type {
+        margin-bottom: 30px;
+    }
+.product-fields-form__label {
+    min-width: 230px;
+}
+.product-fields-form__submit-btn {
+    color: cornsilk;
+    background: cornflowerblue;
+}

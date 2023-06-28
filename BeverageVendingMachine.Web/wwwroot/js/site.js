@@ -75,16 +75,13 @@ function addProductHtmlToPage(htmlProductsList, product, isModal) {
         if (product.isSelected) htmlProductLi.classList.add('selected');
         else htmlProductLi.classList.remove('selected');
     }
-    htmlProductLi.id = product ? 'products-list-item__' + product.id : 'products-list-item__default';
 
+    htmlProductLi.id = product ? 'products-list-item__' + product.id : 'products-list-item__default';
     if (isModal) htmlProductLi.id = 'modal__' + htmlProductLi.id;
     else {
         if (isAdmin())
             htmlProductLi.onclick = function () {
-                if (product) {
-                    if (product.isSelected) adminUnselectPurchaseItem(product);
-                    else adminSelectPurchaseItem(product);
-                }
+                adminSelectPurchaseItem(htmlProductLi);
             };
         else htmlProductLi.onclick = function () {
             if (product) {
@@ -231,15 +228,37 @@ function selectPurchaseItem(product) {
         makeAjaxRequestAndUpdateData("post", "api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
     }
 }
-function adminUnselectPurchaseItem() {
-    console.log('adminUnselectPurchaseItem');
+function adminSelectPurchaseItem(productEl) {
+    if (productEl.id === 'products-list-item__default') {
+        addNewItem();
+    }
+    else {
+        productEl.classList.add('selected');
+        unselectOtherProductElements(productEl);
+        productEl.onclick = function () {
+            adminUnselectPurchaseItem(productEl);
+        };
+    }
+}
+function unselectOtherProductElements(productEl) {
+    var productsListEl = document.getElementById('products-list');
+    productsListEl.querySelectorAll('.products-list-item').forEach(function (productLiEl) {
+        if (productEl && productLiEl.innerHTML !== productEl.innerHTML)
+            productLiEl.classList.remove('selected');
+    });
 }
 function unselectPurchaseItem() {
     hideInterfaceButtons();
     makeAjaxRequestAndUpdateData("post", "api/TerminalApi/unselectPurchaseItem");
 }
-function adminSelectPurchaseItem() {
-    console.log('adminSelectPurchaseItem');
+function adminUnselectPurchaseItem(productEl) {
+    if (!productEl.classList.contains('selected')) adminSelectPurchaseItem(productEl);
+    else {
+        productEl.classList.remove('selected');
+        productEl.onclick = function () {
+            adminSelectPurchaseItem(productEl);
+        };
+    }
 }
 
 function closeModal() {
@@ -249,6 +268,7 @@ function closeModal() {
 }
 function openModal() {
     var modal = document.getElementById('terminal-modal');
+    document.getElementById('terminal-modal-content').innerHTML = '';
     modal.classList.add('visible');
 }
 
@@ -365,5 +385,50 @@ function importItems(){
     console.log('importItems');
 }
 function addNewItem() {
+    initEditProductModal();
+}
+function initEditProductModal(product) {
+    if (product) return;
+    console.log('openEditProductModal');
+    openModal();
+    var terminalModalContentEl = document.getElementById('terminal-modal-content');
+    var h3El = document.createElement('h3');
+    h3El.className = "welcome-title modal-text-color";
+    h3El.innerHTML = product ? "Edit product: " + product.name : "Add new product";
+    terminalModalContentEl.append(h3El);
 
+    var productFieldsFormEl = document.createElement('form');
+    productFieldsFormEl.className = "product-fields-form";
+    productFieldsFormEl.action = "api/AdminTerminalApi/updateStorageItem";
+    productFieldsFormEl.method = "post";
+    productFieldsFormEl.append(createProductFieldElement('name'));
+    productFieldsFormEl.append(createProductFieldElement('cost'));
+    productFieldsFormEl.append(createProductFieldElement('imageUrl'));
+    productFieldsFormEl.append(createProductFieldElement('storageQuantity'));
+    var submitInputEl = document.createElement('input');
+    submitInputEl.type = "submit";
+    submitInputEl.value = "Add new product";
+    submitInputEl.className = "product-fields-form__submit-btn";
+    productFieldsFormEl.append(submitInputEl);
+    terminalModalContentEl.append(productFieldsFormEl);
+}
+function createProductFieldElement(fieldName) {
+    var productFieldEl = document.createElement('div');
+    productFieldEl.className = "product-fields-form__field product-fields-form__" + fieldName +"-field";
+    productFieldEl.id = "product-fields__" + fieldName + "name-field";
+
+    var inputEl = document.createElement('input');
+    inputEl.type = "text";
+    inputEl.id = "product-fields-form__" + fieldName + "-input";
+    inputEl.name = fieldName;
+    inputEl.className = "product-fields-form__input product-fields-form__" + fieldName + "-input";
+
+    var labelEl = document.createElement('label');
+    labelEl.className = "product-fields-form__label modal-text-color";
+    labelEl.htmlFor = inputEl.id;
+    labelEl.innerHTML = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ":";
+    labelEl.innerHTML = labelEl.innerHTML.replace(/([A-Z])/g, ' $1').trim();
+    productFieldEl.append(labelEl);
+    productFieldEl.append(inputEl);
+    return productFieldEl;
 }

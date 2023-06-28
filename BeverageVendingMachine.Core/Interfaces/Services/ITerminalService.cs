@@ -110,7 +110,7 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Takes purchase item from inventory
         /// </summary>
         /// <returns>Returns purchase item from inventory</returns>
-        StorageItem TakePurchaseItemFromInventory();
+        Task<StorageItem> TakePurchaseItemFromInventory();
 
         /// <summary>
         /// Releases change

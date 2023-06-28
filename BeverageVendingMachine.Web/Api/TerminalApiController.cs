@@ -57,7 +57,8 @@ namespace BeverageVendingMachine.Web.Api
         [HttpGet]
         public async Task<IActionResult> MakePurchase()
         {
-            return Ok(await Task.Run(() => new PurchaseResult(_userTerminalService.TakePurchaseItemFromInventory(), null)));
+            var purchaseResult = new PurchaseResult(await _userTerminalService.TakePurchaseItemFromInventory(), null);
+            return Ok(await Task.Run(() => purchaseResult));
         }
 
         // GET: api/TerminalApi/ReleasePurchaseItemAndChange

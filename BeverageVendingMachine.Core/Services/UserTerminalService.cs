@@ -71,9 +71,9 @@ namespace BeverageVendingMachine.Core.Services
         /// Takes purchase item from inventory
         /// </summary>
         /// <returns>Returns purchased item from inventory</returns>
-        public StorageItem TakePurchaseItemFromInventory()
+        public async Task<StorageItem> TakePurchaseItemFromInventory()
         {
-            return _terminalService.TakePurchaseItemFromInventory();
+            return await _terminalService.TakePurchaseItemFromInventory();
         }
 
         /// <summary>
