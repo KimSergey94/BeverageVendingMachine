@@ -325,7 +325,21 @@ function initReleaseChangeModal(changeCoins) {
 }
 
 function makePurchaseAndReleaseChange() {
-    console.log('makePurchaseAndReleaseChange');
+    $.ajax({
+        url: '/api/TerminalApi/releasePurchaseItemAndChange',
+        type: 'get',
+        success: function (purchaseResult) {
+            initData();
+            openModal();
+            initReleaseChangeModal(purchaseResult.change);
+            initPurchasedItemModal(purchaseResult.purchaseItem);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            initData();
+            alert("error" + XMLHttpRequest.responseText);
+        }
+    });
+    
 }
 
 
