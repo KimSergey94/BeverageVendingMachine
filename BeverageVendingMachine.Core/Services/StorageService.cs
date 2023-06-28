@@ -182,7 +182,7 @@ namespace BeverageVendingMachine.Core.Services
                 if(takenCoins.ContainsKey(coinDenomination.Value))
                 {
                     amount -= takenCoins[coinDenomination.Value] * coinDenomination.Value;
-                    result.CoinDenominationsQuantity.Add(coinDenomination.Value, takenCoins[coinDenomination.Value]);
+                    result.CoinDenominationsQuantity.AddCoinCollection(takenCoins);
                 }
             }
 
