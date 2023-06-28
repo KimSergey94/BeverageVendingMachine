@@ -170,8 +170,12 @@ namespace BeverageVendingMachine.Core.Services
         private CoinsCollection TakeAmountFromCoins(decimal amount, StorageCoinsTypeEnum storageCoinsType, bool isRemainderTolerant = false)
         {
             var result = new CoinsCollection(new Dictionary<decimal, int>());
-            var coinDenominations = CoinDenominations.OrderByDescending(x => x.Value);
+            CoinDenominations.Select(coin => coin.Value).ToList().ForEach(coin =>
+            {
+                result.CoinDenominationsQuantity.Add(coin, 0);
+            });
 
+            var coinDenominations = CoinDenominations.OrderByDescending(x => x.Value);
             foreach (var coinDenomination in coinDenominations)
             {
                 var takenCoins = TakeMaxCoinsByDenomination(coinDenomination, amount, storageCoinsType);
@@ -200,8 +204,8 @@ namespace BeverageVendingMachine.Core.Services
         private Dictionary<decimal, int> TakeMaxCoinsByDenomination(CoinDenomination coinDenominationEntity, decimal amount, StorageCoinsTypeEnum storageCoinsType)
         {
             var result = new Dictionary<decimal, int>();
-            //if (storageCoinsType.Equals(StorageCoinsTypeEnum.Deposited) && coinDenominationEntity.DepositedQuantity < 1 ||
-            //    storageCoinsType.Equals(StorageCoinsTypeEnum.Storage) && coinDenominationEntity.StorageQuantity < 1) return result;
+            if (storageCoinsType.Equals(StorageCoinsTypeEnum.Deposited) && coinDenominationEntity.DepositedQuantity < 1 ||
+                storageCoinsType.Equals(StorageCoinsTypeEnum.Storage) && coinDenominationEntity.StorageQuantity < 1) return result;
 
             var totalCoins = storageCoinsType == StorageCoinsTypeEnum.Storage ? coinDenominationEntity.StorageQuantity : coinDenominationEntity.DepositedQuantity;
             var coinsNeeded = amount / coinDenominationEntity.Value;

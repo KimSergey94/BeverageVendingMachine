@@ -59,10 +59,21 @@ namespace BeverageVendingMachine.Core.Services
         /// <returns>Returns 1 if successful, 0 if the coin is already blocked, -1 if there was error</returns>
         public int BlockCoinDenomination(int coinDenominationId)
         {
-            var result = 1;
-            if (!BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
-                BlockedCoinDenominations.Add(coinDenominationId);
-            else result = 0;
+            var result = 0;
+            var coinDenomination = GetStorageInstance().CoinDenominations.FirstOrDefault(coin => coin.Id == coinDenominationId);
+            if (coinDenomination != null)
+            {
+                try
+                {
+                    coinDenomination.IsBlocked = true;
+                    if (!BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
+                        BlockedCoinDenominations.Add(coinDenominationId);
+
+                    _unitOfWork.Complete();
+                    result = 1;
+                }
+                catch { throw new Exception($"Error during blocking a coin denomination with Id: {coinDenominationId}"); }
+            }
             return result;
         }
 
@@ -73,10 +84,24 @@ namespace BeverageVendingMachine.Core.Services
         /// <returns>Returns 1 if successful, 0 if the coin is already unblocked, -1 if there was error</returns>
         public int UnblockCoinDenomination(int coinDenominationId)
         {
-            var result = 1;
-            if (BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
-                BlockedCoinDenominations.RemoveAll(coinDenomination => coinDenomination == coinDenominationId);
-            else result = 0;
+
+            var result = 0;
+            var coinDenomination = GetStorageInstance().CoinDenominations.FirstOrDefault(coin => coin.Id == coinDenominationId);
+            if (coinDenomination != null)
+            {
+                try
+                {
+                    coinDenomination.IsBlocked = false;
+                    if (BlockedCoinDenominations.Any(coinDenomination => coinDenomination == coinDenominationId))
+                        BlockedCoinDenominations.RemoveAll(coinDenomination => coinDenomination == coinDenominationId);
+
+                    _unitOfWork.Complete();
+                    result = 1;
+                }
+                catch { throw new Exception($"Error during blocking a coin denomination with Id: {coinDenominationId}"); }
+
+
+            }
             return result;
         }
 

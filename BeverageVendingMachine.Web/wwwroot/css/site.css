@@ -187,6 +187,13 @@ body {
         color: #9d490e;
         border: 2px #a36900 solid;
     }
+    .coins-list-item.blocked {
+        cursor: not-allowed;
+        background: #838306;
+        color: #622900;
+        border: 2px #563902 solid;
+    }
+
 .coins-list-item:not(:last-child) {
     margin-right: 42px;
 }

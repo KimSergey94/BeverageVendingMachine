@@ -8,15 +8,14 @@ function initData() {
         success: function (updateData) {
             console.log('initData', updateData);
             handleUpdateData(updateData);
-
-            if (!isAdmin()) initUserButtons();
-            else initAdminButtons();
+            initButtons();
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("error" + XMLHttpRequest.responseText);
         }
     });
 }
+
 function isAdmin() {
     console.log('window.location.pathname', window.location.href);
     var urlArr = window.location.href.split('?');
@@ -29,12 +28,10 @@ function isAdmin() {
     return false;
 }
 function handleUpdateData(updateData) {
-        console.log(' handleUpdateData updateData', updateData.changeAmount);
     if (!updateData) return;
 
     if (document.getElementById('coins-info__deposited-amount-value')) document.getElementById('coins-info__deposited-amount-value').innerHTML = updateData.depositedAmount;
     if (document.getElementById('coins-info__change-amount-value')) document.getElementById('coins-info__change-amount-value').innerHTML = updateData.changeAmount;
-
     if (updateData.coins) initCoins(updateData.coins);
     if (updateData.products) initProducts(updateData.products);
 }
@@ -46,6 +43,8 @@ function initCoins(coins) {
     coins.forEach(function (coin) {
         var coinEl = document.createElement('li');
         coinEl.className = 'coins-list-item coin';
+        if (coin.isBlocked) coinEl.classList.add('blocked')
+
         coinEl.innerHTML = coin.value;
         coinEl.id = 'coins-list-item__' + coin.id;
         if (isAdmin()) coinEl.onclick = function () { togglePickCoin(coin) };
@@ -120,6 +119,10 @@ function addProductHtmlToPage(htmlProductsList, product, isModal) {
     htmlProductLi.appendChild(htmlProductAmount);
     htmlProductsList.appendChild(htmlProductLi);
 }
+function initButtons() {
+    if (isAdmin()) initAdminButtons();
+    else initUserButtons();
+}
 function initUserButtons() {
     var htmlProductsList = document.getElementById('products-list');
     var selectedProduct = htmlProductsList.querySelector('.products-list-item.selected');
@@ -155,25 +158,29 @@ function hideInterfaceButtons() {
     document.querySelectorAll('.interface-button').forEach(function (button) { button.classList.remove('visible'); });
 }
 
-function makeAjaxRequestAndUpdateData(url, data) {
+function makeAjaxRequestAndUpdateData(type, url, data, callback) {
     $.ajax({
-        type: "POST",
+        type: type,
         url: url,
         data: data,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (updateData) {
-            handleUpdateData(updateData);
-            initUserButtons();
+        success: function (response) {
+            if (!callback) {
+                handleUpdateData(response);
+                initButtons();
+            }
+            else callback(response);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+            initData();
             alert("error" + XMLHttpRequest.responseText);
         }
     });
 }
 function depositCoin(coin) {
     hideInterfaceButtons();
-    makeAjaxRequestAndUpdateData("api/TerminalApi/depositCoin", JSON.stringify(coin.id));
+    makeAjaxRequestAndUpdateData("post", "api/TerminalApi/depositCoin", JSON.stringify(coin.id));
 }
 function togglePickCoin(coin) {
     if (!coin) return;
@@ -187,7 +194,7 @@ function togglePickCoin(coin) {
     }
     else {
         coinEl.classList.add('selected');
-        showCoinBlockButtons(coin.isBlocked);
+        showCoinBlockButtons(coinEl.classList.contains('blocked'));
     }
 }
 function showCoinBlockButtons(isBlockedCoin) {
@@ -195,19 +202,20 @@ function showCoinBlockButtons(isBlockedCoin) {
     var unblockButtonEl = document.getElementById('interface-button__unblock-coin');
     if (isBlockedCoin) {
         blockButtonEl.classList.add('active', 'visible', 'blocked');
+        unblockButtonEl.classList.remove('active', 'blocked');
         unblockButtonEl.classList.add('visible');
     }
     else {
         unblockButtonEl.classList.add('active', 'visible', 'blocked');
-        unblockButtonEl.disabled = true;
+        blockButtonEl.classList.remove('active', 'blocked');
         blockButtonEl.classList.add('visible');
     }
 }
 function hideCoinBlockButtons() {
     var blockButtonEl = document.getElementById('interface-button__block-coin');
     var unblockButtonEl = document.getElementById('interface-button__unblock-coin');
-    blockButtonEl.classList.remove('visible');
-    unblockButtonEl.classList.remove('visible');
+    blockButtonEl.classList.remove('active', 'visible', 'blocked');
+    unblockButtonEl.classList.remove('active', 'visible', 'blocked');
 }
 function unpickOtherCoins(currentCoinEl) {
     var coinsListEl = document.getElementById('coins-list');
@@ -220,7 +228,7 @@ function selectPurchaseItem(product) {
     var depositedAmount = parseInt(document.getElementById('coins-info__deposited-amount-value').innerHTML);
     if (depositedAmount >= product.cost) {
         hideInterfaceButtons();
-        makeAjaxRequestAndUpdateData("api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
+        makeAjaxRequestAndUpdateData("post", "api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
     }
 }
 function adminUnselectPurchaseItem() {
@@ -228,7 +236,7 @@ function adminUnselectPurchaseItem() {
 }
 function unselectPurchaseItem() {
     hideInterfaceButtons();
-    makeAjaxRequestAndUpdateData("api/TerminalApi/unselectPurchaseItem");
+    makeAjaxRequestAndUpdateData("post", "api/TerminalApi/unselectPurchaseItem");
 }
 function adminSelectPurchaseItem() {
     console.log('adminSelectPurchaseItem');
@@ -245,19 +253,12 @@ function openModal() {
 }
 
 function makePurchase() {
-    $.ajax({
-        url: '/api/TerminalApi/makePurchase',
-        type: 'get',
-        success: function (purchaseResult) {
-            initData();
-            openModal();
-            initPurchasedItemModal(purchaseResult.purchaseItem);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            initData();
-            alert("error" + XMLHttpRequest.responseText);
-        }
-    });
+    var callback = function (response) {
+        initData();
+        openModal();
+        initPurchasedItemModal(response.purchaseItem);
+    };
+    makeAjaxRequestAndUpdateData("get", "api/TerminalApi/makePurchase", null, callback);
 }
 function initPurchasedItemModal(purchaseItem) {
     if (!purchaseItem) return;
@@ -280,19 +281,12 @@ function initPurchasedItemModal(purchaseItem) {
     terminalModalContentEl.append(productsContainerEl);
 }
 function releaseChange() {
-    $.ajax({
-        url: '/api/TerminalApi/releaseChange',
-        type: 'get',
-        success: function (purchaseResult) {
-            initData();
-            openModal();
-            initReleaseChangeModal(purchaseResult.change);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            initData();
-            alert("error" + XMLHttpRequest.responseText);
-        }
-    });
+    var callback = function (response) {
+        initData();
+        openModal();
+        initReleaseChangeModal(response.change);
+    };
+    makeAjaxRequestAndUpdateData("get", "api/TerminalApi/releaseChange", null, callback);
 }
 function initReleaseChangeModal(changeCoins) {
     if (!changeCoins) return;
@@ -334,21 +328,13 @@ function initReleaseChangeModal(changeCoins) {
 }
 
 function makePurchaseAndReleaseChange() {
-    $.ajax({
-        url: '/api/TerminalApi/releasePurchaseItemAndChange',
-        type: 'get',
-        success: function (purchaseResult) {
-            initData();
-            openModal();
-            initReleaseChangeModal(purchaseResult.change);
-            initPurchasedItemModal(purchaseResult.purchaseItem);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            initData();
-            alert("error" + XMLHttpRequest.responseText);
-        }
-    });
-    
+    var callback = function (response) {
+        initData();
+        openModal();
+        initReleaseChangeModal(response.change);
+        initPurchasedItemModal(response.purchaseItem);
+    };
+    makeAjaxRequestAndUpdateData("get", "api/TerminalApi/releasePurchaseItemAndChange", null, callback);
 }
 
 
@@ -356,13 +342,24 @@ function makePurchaseAndReleaseChange() {
 function blockCoinDenomination() {
     var blockButtonEl = document.getElementById('interface-button__block-coin');
     if (blockButtonEl.classList.contains('blocked')) return;
-    console.log('blockCoinDenomination');
+
+    var selectedCoin = document.querySelector('.coins-list-item.coin.selected');
+    var callback = function (response) {
+        if (response === 1) showCoinBlockButtons(true);
+        selectedCoin.classList.add('blocked');
+    };
+    makeAjaxRequestAndUpdateData("post", "api/AdminTerminalApi/blockCoinDenomination", JSON.stringify(selectedCoin.id.replace("coins-list-item__", "")), callback);
 }
 function unblockCoinDenomination() {
     var unblockButtonEl = document.getElementById('interface-button__unblock-coin');
     if (unblockButtonEl.classList.contains('blocked')) return;
-    console.log('unblockCoinDenomination');
 
+    var selectedCoin = document.querySelector('.coins-list-item.coin.selected');
+    var callback = function (response) {
+        if (response === 1) showCoinBlockButtons(false);
+        selectedCoin.classList.remove('blocked');
+    };
+    makeAjaxRequestAndUpdateData("post", "api/AdminTerminalApi/unblockCoinDenomination", JSON.stringify(selectedCoin.id.replace("coins-list-item__", "")), callback);
 }
 function importItems(){
     console.log('importItems');
