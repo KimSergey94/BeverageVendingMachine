@@ -240,7 +240,7 @@ namespace BeverageVendingMachine.Core.Services
                     {
                         var coinDenomination = await _coinDenominationRepository.GetCoinDenominationByValue(coinDenominationGroup.Key);
                         await _unitOfWork.Repository<CoinDenomination>().UpdateAsync(coinDenomination);
-                        var coinOperation = new CoinOperation(PurchaseItem, coinDenomination, coinDenominationGroup.Value, false);
+                        var coinOperation = new CoinOperation(coinDenomination, coinDenominationGroup.Value, false);
                         await _unitOfWork.Repository<CoinOperation>().AddAsync(coinOperation);
                     }
                     await _unitOfWork.Complete();

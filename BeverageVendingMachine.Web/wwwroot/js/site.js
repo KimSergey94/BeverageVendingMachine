@@ -51,7 +51,7 @@ function initCoins(coins) {
         coinEl.innerHTML = coin.value;
         coinEl.id = 'coins-list-item__' + coin.id;
         if (isAdmin()) coinEl.onclick = function () { togglePickCoin(coin) };
-        else coinEl.onclick = function () { depositCoin(coin) };
+        else coinEl.onclick = function () { depositCoin(coinEl) };
         coinsListEl.appendChild(coinEl);
     });
 }
@@ -86,8 +86,8 @@ function addProductHtmlToPage(htmlProductsList, product, isModal) {
             };
         else htmlProductLi.onclick = function () {
             if (product) {
-                if (product.isSelected) unselectPurchaseItem(product);
-                else selectPurchaseItem(product);
+                if (product.isSelected) unselectPurchaseItem();
+                else selectPurchaseItem(htmlProductLi);
             }
         };
     }
@@ -185,9 +185,10 @@ function makeAjaxRequestAndUpdateData(type, url, data, callback) {
         }
     });
 }
-function depositCoin(coin) {
+function depositCoin(coinEl) {
+    if (coinEl.classList.contains('blocked')) return;
     hideInterfaceButtons();
-    makeAjaxRequestAndUpdateData("post", "api/TerminalApi/depositCoin", JSON.stringify(coin.id));
+    makeAjaxRequestAndUpdateData("post", "api/TerminalApi/depositCoin", JSON.stringify(coinEl.id.replace('coins-list-item__', '')));
 }
 function togglePickCoin(coin) {
     if (!coin) return;
@@ -232,11 +233,14 @@ function unpickOtherCoins(currentCoinEl) {
     });
 }
 
-function selectPurchaseItem(product) {
+function selectPurchaseItem(productEl) {
+    if (!productEl || parseInt(productEl.querySelector('.products-list-item__amount').innerHTML.slice(1)) === 0) return;
+
     var depositedAmount = parseInt(document.getElementById('coins-info__deposited-amount-value').innerHTML);
-    if (depositedAmount >= product.cost) {
+    var cost = parseInt(productEl.querySelector('.products-list-item__cost').innerHTML);
+    if (depositedAmount >= cost) {
         hideInterfaceButtons();
-        makeAjaxRequestAndUpdateData("post", "api/TerminalApi/selectPurchaseItem", JSON.stringify(product.id));
+        makeAjaxRequestAndUpdateData("post", "api/TerminalApi/selectPurchaseItem", JSON.stringify(productEl.id.replace('products-list-item__', '')));
     }
 }
 function adminSelectPurchaseItem(productEl) {
