@@ -37,21 +37,21 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Creates new storage item
         /// </summary>
         /// <param name="newStorageItem">new storage item object</param>
-        /// <returns>Returns whether the creation of the new storage item was successful</returns>
-        Task<bool> AddNewStorageItem(StorageItem newStorageItem);
+        /// <returns>The created storage item</returns>
+        Task<StorageItem> AddNewStorageItem(StorageItem newStorageItem);
 
         /// <summary>
         /// Updates storage item
         /// </summary>
         /// <param name="storageItem">storage item update entity</param>
-        /// <returns>Returns whether the update was successful</returns>
-        Task<bool> UpdateStorageItem(StorageItem storageItem);
+        /// <returns>The updated storage item</returns>
+        Task<StorageItem> UpdateStorageItem(StorageItem storageItem);
 
         /// <summary>
         /// Deletes storage item
         /// </summary>
         /// <returns>Returns whether the deletion was successful</returns>
-        Task<bool> DeleteStorageItem(StorageItem storageItem);
+        Task<bool> DeleteStorageItem(int storageItemId);
 
         /// <summary>
         /// Imports new storage items and deletes storage items with ids that are in the passed collection

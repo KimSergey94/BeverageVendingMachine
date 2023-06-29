@@ -14,12 +14,14 @@ namespace BeverageVendingMachine.Core.Entities
     public class StorageItem : BaseEntity
     {
         public StorageItem() { }
-        public StorageItem(int id, string name, decimal cost, string imageUrl)
+        public StorageItem(int id, string name, decimal cost, string imageUrl, int storageQuantity, bool isDeleted)
         {
             Id = id;
             Name = name;
             Cost = cost;
             ImageUrl = imageUrl;
+            StorageQuantity = storageQuantity;
+            IsDeleted = isDeleted;
         }
 
         /// <summary>
@@ -41,6 +43,11 @@ namespace BeverageVendingMachine.Core.Entities
         /// The quantity of the storage item inside the vending machine
         /// </summary>
         public int StorageQuantity { get; set; }
+
+        /// <summary>
+        /// Flag of the storage item deleted property
+        /// </summary>
+        public bool IsDeleted { get; set; }
     }
 
     public static class StorageItemExtensions

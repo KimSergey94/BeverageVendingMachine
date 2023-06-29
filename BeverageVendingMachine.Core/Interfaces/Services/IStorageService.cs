@@ -91,8 +91,8 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// Updates storage item
         /// </summary>
         /// <param name="storageItem">storage item update entity</param>
-        /// <returns>Returns 1 if successful, 0 if the item is not found, -1 if there was error</returns>
-        int UpdateStorageItem(StorageItem item);
+        /// <returns>Returns updated storage item</returns>
+        StorageItem UpdateStorageItem(StorageItem item);
 
         /// <summary>
         /// Deletes storage item

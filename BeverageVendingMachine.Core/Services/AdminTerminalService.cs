@@ -64,54 +64,76 @@ namespace BeverageVendingMachine.Core.Services
         /// Creates new storage item
         /// </summary>
         /// <param name="newStorageItem">new storage item object</param>
-        /// <returns>Returns whether the creation of the new storage item was successful</returns>
-        public async Task<bool> AddNewStorageItem(StorageItem newStorageItem)
+        /// <returns>The created storage item</returns>
+        public async Task<StorageItem> AddNewStorageItem(StorageItem newStorageItem)
         {
-            var result = true;
-            var addedStorageItem = await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem);
-
-            if (addedStorageItem == null) result = false;
-            else _terminalService.GetStorageInstance().AddStorageItem(newStorageItem);
-
-            return result;
+            try
+            {
+                var addedStorageItem = await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem);
+                await _unitOfWork.Complete();
+                if (addedStorageItem != null) _terminalService.GetStorageInstance().AddStorageItem(addedStorageItem);
+                return addedStorageItem;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         /// <summary>
         /// Updates storage item
         /// </summary>
         /// <param name="storageItem">storage item update entity</param>
-        /// <returns>Returns whether the update was successful</returns>
-        public async Task<bool> UpdateStorageItem(StorageItem storageItem)
+        /// <returns>The updated storage item</returns>
+        public async Task<StorageItem> UpdateStorageItem(StorageItem storageItem)
         {
-            var result = true;
-
-            var updatedStorageItemEntity = await _unitOfWork.Repository<StorageItem>().UpdateAsync(storageItem);
-            
-            //needs to be checked
-            if(updatedStorageItemEntity == storageItem) result = false;
-            else
+            try
             {
-                var storageItemUpdateResult = _terminalService.GetStorageInstance().UpdateStorageItem(storageItem);
-                if (storageItemUpdateResult != 1) throw new Exception("The storage item has not been updated in the system.");
+                var itemFromStorage = _terminalService.GetStorageInstance().StorageItems.FirstOrDefault(item => item.Id == storageItem.Id);
+                if(itemFromStorage != null)
+                {
+                    itemFromStorage.Name = storageItem.Name;
+                    itemFromStorage.Cost = storageItem.Cost;
+                    itemFromStorage.ImageUrl = storageItem.ImageUrl;
+                    itemFromStorage.StorageQuantity = storageItem.StorageQuantity;
+                }
+                var updatedStorageItemEntity = await _unitOfWork.Repository<StorageItem>().UpdateAsync(itemFromStorage);
+                await _unitOfWork.Complete();
+                var storageItemUpdateResult = _terminalService.GetStorageInstance().UpdateStorageItem(updatedStorageItemEntity);
+                if (storageItemUpdateResult == null) throw new Exception("The storage item has not been updated in the system. Has not been found in storage.");
+                return storageItemUpdateResult;
             }
-            return result;
+            catch
+            {
+                throw;
+            }
         }
 
         /// <summary>
         /// Deletes storage item
         /// </summary>
+        /// <param name="storageItemId">storage item id</param>
         /// <returns>Returns whether the deletion was successful</returns>
-        public async Task<bool> DeleteStorageItem(StorageItem storageItem)
+        public async Task<bool> DeleteStorageItem(int storageItemId)
         {
-            var result = true;
-
-            if (await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItem))
+            var result = false;
+            var storageItem = _terminalService.GetStorageInstance().StorageItems.FirstOrDefault(storageItem => storageItem.Id == storageItemId);
+            if (storageItem != null) 
             {
-                var storageItemDeletionResult = _terminalService.GetStorageInstance().DeleteStorageItem(storageItem);
-                if (storageItemDeletionResult != 1) throw new Exception("The storage item deletion has not been updated in the system.");
+                try
+                {
+                    storageItem.IsDeleted = true;
+                    await _unitOfWork.Repository<StorageItem>().UpdateAsync(storageItem);
+                    await _unitOfWork.Complete();
+                    var storageItemDeletionResult = _terminalService.GetStorageInstance().DeleteStorageItem(storageItem);
+                    if (storageItemDeletionResult != 1) throw new Exception("The storage item deletion has not been updated in the system.");
+                    result = true;
+                }
+                catch
+                {
+                    throw;
+                }
             }
-            else result = false;
-
             return result;
         }
 

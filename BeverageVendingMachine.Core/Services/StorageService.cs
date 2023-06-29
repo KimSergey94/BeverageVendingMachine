@@ -21,7 +21,7 @@ namespace BeverageVendingMachine.Core.Services
         {
             _unitOfWork = unitOfWork;
             CoinDenominations = _unitOfWork.Repository<CoinDenomination>().GetAllAsync().Result as List<CoinDenomination>;
-            StorageItems = _unitOfWork.Repository<StorageItem>().GetAllAsync().Result.ToList();
+            StorageItems = _unitOfWork.Repository<StorageItem>().GetAllAsync().Result.Where(item => !item.IsDeleted).ToList();
             //CoinDenominations = coinDenominations;// _unitOfWork.Repository<CoinDenomination>().GetAllAsync().Result as List<CoinDenomination>;
             //StorageItems = storageItems;// _unitOfWork.Repository<StorageItem>().GetAllAsync().Result as List<IStorageItem>;
         }
@@ -287,21 +287,18 @@ namespace BeverageVendingMachine.Core.Services
         /// Updates storage item
         /// </summary>
         /// <param name="storageItem">storage item update entity</param>
-        /// <returns>Returns 1 if successful, 0 if the item is not found, -1 if there was error</returns>
-        public int UpdateStorageItem(StorageItem item)
+        /// <returns>Returns updated storage item</returns>
+        public StorageItem UpdateStorageItem(StorageItem item)
         {
-            var result = 1;
             var storageItem = StorageItems.FirstOrDefault(storageItem => storageItem.Id == item.Id);
-
-            if (storageItem == null) result = 0;
-            else
+            if (storageItem != null)
             {
                 storageItem.Name = item.Name;
                 storageItem.StorageQuantity = item.StorageQuantity;
                 storageItem.ImageUrl = item.ImageUrl;
                 storageItem.Cost = item.Cost;
             }
-            return result;
+            return storageItem;
         }
 
         /// <summary>

@@ -17,7 +17,6 @@ namespace BeverageVendingMachine.Infrastructure.Data.Config
             builder.Property(c => c.IsDeposited).IsRequired();
             builder.Property(c => c.Quantity).IsRequired();
             builder.HasOne(c => c.CoinDenomination).WithMany().HasForeignKey(p => p.CoinDenominationId).IsRequired();
-            builder.HasOne(c => c.StorageItem).WithMany().HasForeignKey(p => p.StorageItemId);
         }
     }
 }

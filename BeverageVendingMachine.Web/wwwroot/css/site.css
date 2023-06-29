@@ -127,7 +127,8 @@ body {
     color: var(--product-text-color);
 }
 .admin-terminal .welcome-title {
-    margin-bottom: 126px;
+    /*margin-bottom: 126px;*/
+    margin-bottom: 81px;
 }
 .welcome-title {
     display: flex;
@@ -252,6 +253,7 @@ body {
     }
 .products-list-item__image {
     width: 210px;
+    min-height: 210px;
     max-height: 220px;
     margin-bottom: 3px;
 }
@@ -336,7 +338,21 @@ body {
 .product-fields-form__label {
     min-width: 230px;
 }
+    .product-fields-form__label.has-error {
+        color: red;
+    }
+.product-fields-form__input.has-error {
+    color: red;
+    outline: 1px solid red;
+}
 .product-fields-form__submit-btn {
     color: cornsilk;
     background: cornflowerblue;
 }
+.error-message-title {
+    display: none;
+    color: red;
+}
+    .error-message-title.has-error {
+        display: flex;
+    }

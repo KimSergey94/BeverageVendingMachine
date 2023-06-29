@@ -6,7 +6,6 @@ function initData() {
         url: '/api/TerminalApi/GetUpdateData',
         type: 'get',
         success: function (updateData) {
-            console.log('initData', updateData);
             handleUpdateData(updateData);
             initButtons();
         },
@@ -16,6 +15,10 @@ function initData() {
     });
 }
 
+function isNumeric(str) {
+    if (typeof str != "string") return false;
+    return !isNaN(str) && !isNaN(parseFloat(str));
+}
 function isAdmin() {
     console.log('window.location.pathname', window.location.href);
     var urlArr = window.location.href.split('?');
@@ -57,9 +60,7 @@ function initProducts(products) {
 
     var htmlProductsList = document.getElementById('products-list');
     htmlProductsList.innerHTML = '';
-    products.forEach(function (product) {
-        addProductHtmlToPage(htmlProductsList, product);
-    });
+    products.forEach(function (product) { addProductHtmlToPage(htmlProductsList, product); });
 
     var leftStorageSpace = 8 - products.length;
     if (leftStorageSpace > 0) {
@@ -107,7 +108,6 @@ function addProductHtmlToPage(htmlProductsList, product, isModal) {
 
     var htmlProductAmount = document.createElement('span');
     htmlProductAmount.className = 'product-text-color products-list-item__amount';
-    console.log(product);
     htmlProductAmount.innerHTML = product ? 'x' + product.storageQuantity : 'Quantity';
 
     htmlProductLi.appendChild(htmlProductImg);
@@ -125,7 +125,6 @@ function initUserButtons() {
     var selectedProduct = htmlProductsList.querySelector('.products-list-item.selected');
     var depositedAmount = parseInt(document.getElementById('coins-info__deposited-amount-value').innerHTML);
     var changeAmount = parseInt(document.getElementById('coins-info__change-amount-value').innerHTML);
-    console.log('depositedAmount, changeAmount, productPrice, productAmount', depositedAmount, changeAmount, productPrice, productAmount);
 
     if (changeAmount > 0) document.getElementById('interface-button__release-change').classList.add('visible');
     else document.getElementById('interface-button__release-change').classList.remove('visible');
@@ -149,7 +148,18 @@ function initUserButtons() {
     }
 }
 function initAdminButtons() {
-    console.log('initAdminButtons');
+    var htmlProductsList = document.getElementById('products-list');
+    var selectedProduct = htmlProductsList.querySelector('.products-list-item.selected');
+    if (selectedProduct) {
+        document.getElementById('interface-button__delete-item').classList.add('visible');
+        document.getElementById('interface-button__edit-item').classList.add('visible');
+    }
+    else {
+        document.getElementById('interface-button__delete-item').classList.remove('visible');
+        document.getElementById('interface-button__edit-item').classList.remove('visible');
+    }
+    document.getElementById('interface-button__add-new-item').classList.add('visible');
+    document.getElementById('interface-button__import-items').classList.add('visible');
 }
 function hideInterfaceButtons() {
     document.querySelectorAll('.interface-button').forEach(function (button) { button.classList.remove('visible'); });
@@ -221,6 +231,7 @@ function unpickOtherCoins(currentCoinEl) {
             coinEl.classList.remove('selected');
     });
 }
+
 function selectPurchaseItem(product) {
     var depositedAmount = parseInt(document.getElementById('coins-info__deposited-amount-value').innerHTML);
     if (depositedAmount >= product.cost) {
@@ -235,6 +246,7 @@ function adminSelectPurchaseItem(productEl) {
     else {
         productEl.classList.add('selected');
         unselectOtherProductElements(productEl);
+        initAdminButtons();
         productEl.onclick = function () {
             adminUnselectPurchaseItem(productEl);
         };
@@ -255,6 +267,7 @@ function adminUnselectPurchaseItem(productEl) {
     if (!productEl.classList.contains('selected')) adminSelectPurchaseItem(productEl);
     else {
         productEl.classList.remove('selected');
+        initAdminButtons();
         productEl.onclick = function () {
             adminSelectPurchaseItem(productEl);
         };
@@ -283,7 +296,6 @@ function makePurchase() {
 function initPurchasedItemModal(purchaseItem) {
     if (!purchaseItem) return;
 
-    console.log(purchaseItem);
     var terminalModalContentEl = document.getElementById('terminal-modal-content');
     var h3El = document.createElement('h3');
     h3El.className = "welcome-title modal-text-color";
@@ -310,7 +322,7 @@ function releaseChange() {
 }
 function initReleaseChangeModal(changeCoins) {
     if (!changeCoins) return;
-    console.log(changeCoins);
+
     var terminalModalContentEl = document.getElementById('terminal-modal-content');
     var h3El = document.createElement('h3');
     h3El.className = "welcome-title modal-text-color";
@@ -325,7 +337,6 @@ function initReleaseChangeModal(changeCoins) {
     var changeAmount = 0.00; 
     Object.keys(changeCoins.coinDenominationsQuantity).forEach(function (coinDenomination) {
         var coin = changeCoins.coinDenominationsQuantity[coinDenomination];
-        console.log('coin', coin);
         changeAmount += coinDenomination * changeCoins.coinDenominationsQuantity[coinDenomination];
         var coinEl = document.createElement('li');
         coinEl.className = 'coins-list-item__container';
@@ -346,7 +357,6 @@ function initReleaseChangeModal(changeCoins) {
     coinsListContainerEl.append(coinsListEl);
     terminalModalContentEl.append(coinsListContainerEl);
 }
-
 function makePurchaseAndReleaseChange() {
     var callback = function (response) {
         initData();
@@ -387,32 +397,57 @@ function importItems(){
 function addNewItem() {
     initEditProductModal();
 }
-function initEditProductModal(product) {
-    if (product) return;
-    console.log('openEditProductModal');
+function editItem() {
+    var selectedItem = document.querySelector('.products-list-item.selected');
+    if (selectedItem) initEditProductModal(selectedItem);
+}
+function deleteItem() {
+    var selectedItem = document.querySelector('.products-list-item.selected');
+    if (selectedItem) {
+        var callback = function (response) {
+            if (response) initData();
+            initButtons();
+            closeModal();
+        };
+        makeAjaxRequestAndUpdateData("post", "api/AdminTerminalApi/DeleteStorageItem", JSON.stringify(selectedItem.id.replace('products-list-item__', '')), callback);
+    }
+}
+function initEditProductModal(productEl) {
     openModal();
     var terminalModalContentEl = document.getElementById('terminal-modal-content');
     var h3El = document.createElement('h3');
     h3El.className = "welcome-title modal-text-color";
-    h3El.innerHTML = product ? "Edit product: " + product.name : "Add new product";
+    h3El.innerHTML = productEl ? "Edit product: " + productEl.querySelector('.products-list-item__title').innerHTML : "Add new product";
+
+    var errorMessageEl = document.createElement('h3');
+    errorMessageEl.id = "error-message-title";
+    errorMessageEl.className = "welcome-title error-message-title";
+    errorMessageEl.innerHTML = "Please fix highlighted fields";
     terminalModalContentEl.append(h3El);
+    terminalModalContentEl.append(errorMessageEl);
 
     var productFieldsFormEl = document.createElement('form');
     productFieldsFormEl.className = "product-fields-form";
-    productFieldsFormEl.action = "api/AdminTerminalApi/updateStorageItem";
     productFieldsFormEl.method = "post";
-    productFieldsFormEl.append(createProductFieldElement('name'));
-    productFieldsFormEl.append(createProductFieldElement('cost'));
-    productFieldsFormEl.append(createProductFieldElement('imageUrl'));
-    productFieldsFormEl.append(createProductFieldElement('storageQuantity'));
+    productFieldsFormEl.append(createProductFieldElement('name', productEl));
+    productFieldsFormEl.append(createProductFieldElement('cost', productEl));
+    productFieldsFormEl.append(createProductFieldElement('imageUrl', productEl));
+    productFieldsFormEl.append(createProductFieldElement('storageQuantity', productEl));
     var submitInputEl = document.createElement('input');
     submitInputEl.type = "submit";
-    submitInputEl.value = "Add new product";
+    submitInputEl.value = productEl ? "Edit product" : "Add new product";
     submitInputEl.className = "product-fields-form__submit-btn";
     productFieldsFormEl.append(submitInputEl);
+
+    var productInputs = productFieldsFormEl.querySelectorAll(".product-fields-form__input");
+    productFieldsFormEl.onsubmit = function (e) {
+        e.preventDefault();
+        errorMessageEl.classList.remove("has-error");
+        sendProductRequest(productEl ? productEl.id.replace('products-list-item__', '') : 0, productInputs, !productEl)
+    };
     terminalModalContentEl.append(productFieldsFormEl);
 }
-function createProductFieldElement(fieldName) {
+function createProductFieldElement(fieldName, productEl) {
     var productFieldEl = document.createElement('div');
     productFieldEl.className = "product-fields-form__field product-fields-form__" + fieldName +"-field";
     productFieldEl.id = "product-fields__" + fieldName + "name-field";
@@ -421,9 +456,16 @@ function createProductFieldElement(fieldName) {
     inputEl.type = "text";
     inputEl.id = "product-fields-form__" + fieldName + "-input";
     inputEl.name = fieldName;
+    if (productEl) {
+        if (fieldName === 'name') inputEl.value = productEl.querySelector('.products-list-item__title').innerHTML;
+        else if (fieldName === 'cost') inputEl.value = productEl.querySelector('.products-list-item__cost').innerHTML;
+        else if (fieldName === 'imageUrl') inputEl.value = productEl.querySelector('.products-list-item__image').src;
+        else if (fieldName === 'storageQuantity') inputEl.value = productEl.querySelector('.products-list-item__amount').innerHTML.slice(1);
+    }
     inputEl.className = "product-fields-form__input product-fields-form__" + fieldName + "-input";
 
     var labelEl = document.createElement('label');
+    labelEl.id = "product-fields-form__" + fieldName + "-label";
     labelEl.className = "product-fields-form__label modal-text-color";
     labelEl.htmlFor = inputEl.id;
     labelEl.innerHTML = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ":";
@@ -431,4 +473,55 @@ function createProductFieldElement(fieldName) {
     productFieldEl.append(labelEl);
     productFieldEl.append(inputEl);
     return productFieldEl;
+}
+function sendProductRequest(productId, productInputs, isNewProduct) {
+    if (!productInputs) return;
+
+    var hasError = false;
+    var storageItem = { Id: productId };
+    for (var x = 0; x < productInputs.length; x++) {
+        var input = productInputs[x];
+        storageItem[input.name.charAt(0).toUpperCase() + input.name.slice(1)] = input.value;
+        if (input.name === 'name' || input.name === 'imageUrl') {
+            if (input.value && input.value.trim().length) {
+                toggleHighlightErrorFields(input, false);
+                continue;
+            }
+        }
+        else if (input.name === 'cost' || input.name === 'storageQuantity') {
+            if (isNumeric(input.value)) {
+                toggleHighlightErrorFields(input, false);
+                continue;
+            }
+        }
+        toggleHighlightErrorFields(input, true);
+        hasError = true;
+    }
+
+    var errorMessageEl = document.getElementById("error-message-title");
+    if (!hasError) {
+        if (errorMessageEl) errorMessageEl.classList.remove('has-error');
+        closeModal();
+        var callback = function (response) {
+            if (response) initData();
+            initButtons();
+        };
+        if (isNewProduct) makeAjaxRequestAndUpdateData("post", "api/AdminTerminalApi/AddNewStorageItem", JSON.stringify(storageItem), callback);
+        else makeAjaxRequestAndUpdateData("post", "api/AdminTerminalApi/UpdateStorageItem", JSON.stringify(storageItem), callback);
+    }
+    else if (errorMessageEl) errorMessageEl.classList.add('has-error');
+    
+}
+function toggleHighlightErrorFields(inputEl, toHighlight) {
+    if (!inputEl) return;
+
+    var labelEl = document.getElementById("product-fields-form__" + inputEl.name + "-label");
+    if (toHighlight) {
+        inputEl.classList.add('has-error');
+        if (labelEl) labelEl.classList.add('has-error');
+    }
+    else {
+        inputEl.classList.remove('has-error');
+        if (labelEl) labelEl.classList.remove('has-error');
+    }
 }
