@@ -1,7 +1,9 @@
 ﻿using BeverageVendingMachine.Core.DTOs;
 using BeverageVendingMachine.Core.Entities;
+using BeverageVendingMachine.Core.Handlers;
 using BeverageVendingMachine.Core.Interfaces.Services;
 using BeverageVendingMachine.Core.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using System;
@@ -86,6 +88,22 @@ namespace BeverageVendingMachine.Web.Api
             try
             {
                 return Ok(await Task.Run(() => _adminTerminalService.DeleteStorageItem(storageItemId)));
+            }
+            catch (Exception e)
+            {
+                var innerException = e.InnerException != null ? "; InnerExceptionErrorMessage: " + e.InnerException.Message : "";
+                return BadRequest($"{e.Message}{innerException}");
+            }
+        }
+
+        // POST: api/AdminTerminalApi/ImportStorageItems
+        [HttpPost]
+        public async Task<IActionResult> ImportStorageItems(IFormFile file)
+        {
+            try
+            {
+                var storageItems = FileHandler.ExtractStorageItemsFromFile(file);
+                return Ok(await Task.Run(() => _adminTerminalService.ImportAndChangeStorageItems(storageItems)));
             }
             catch (Exception e)
             {

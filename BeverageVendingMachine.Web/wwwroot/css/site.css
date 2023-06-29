@@ -356,3 +356,10 @@ body {
     .error-message-title.has-error {
         display: flex;
     }
+.file-upload-form{
+
+}
+.file-upload-form__file-input {
+}
+.file-upload-form__submit-btn {
+}

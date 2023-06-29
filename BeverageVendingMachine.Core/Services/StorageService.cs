@@ -320,15 +320,11 @@ namespace BeverageVendingMachine.Core.Services
         /// <summary>
         /// Imports new storage items and deletes storage items with ids that are in the passed collection
         /// </summary>
-        /// <param name="newStorageItemsList">Collection of new storage items </param>
-        public void ImportAndUpdatePassedStorageItems(List<StorageItem> newStorageItemsList)
+        /// <param name="importedStorageItemsEntities">Collection of new storage items entities</param>
+        public void ImportAndUpdatePassedStorageItems(List<StorageItem> importedStorageItemsEntities)
         {
-            var newStorageItemsIds = newStorageItemsList.Select(storageItem => storageItem.Id).ToList();
-
-            //needs to be checked
-            StorageItems.RemoveAll(storageItem => newStorageItemsIds.Contains(storageItem.Id));
-
-            foreach (var newStorageItem in newStorageItemsList)
+            StorageItems.Clear();
+            foreach (var newStorageItem in importedStorageItemsEntities)
                 StorageItems.Add(newStorageItem);
         }
         #endregion

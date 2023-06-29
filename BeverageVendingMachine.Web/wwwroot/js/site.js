@@ -395,9 +395,6 @@ function unblockCoinDenomination() {
     };
     makeAjaxRequestAndUpdateData("post", "api/AdminTerminalApi/unblockCoinDenomination", JSON.stringify(selectedCoin.id.replace("coins-list-item__", "")), callback);
 }
-function importItems(){
-    console.log('importItems');
-}
 function addNewItem() {
     initEditProductModal();
 }
@@ -528,4 +525,56 @@ function toggleHighlightErrorFields(inputEl, toHighlight) {
         inputEl.classList.remove('has-error');
         if (labelEl) labelEl.classList.remove('has-error');
     }
+}
+function importItems() {
+    initImportProductsModal();
+}
+function initImportProductsModal() {
+    openModal();
+    var terminalModalContentEl = document.getElementById('terminal-modal-content');
+    var h3El = document.createElement('h3');
+    h3El.className = "welcome-title modal-text-color";
+    h3El.innerHTML = "Choose file to import products";
+
+    var h4El = document.createElement('h4');
+    h4El.className = "welcome-title modal-text-color";
+    h4El.innerHTML = "Import file format: .json";
+
+    var fileUploadFormEl = document.createElement('form');
+    fileUploadFormEl.className = "file-upload-form";
+    fileUploadFormEl.method = "post";
+
+    var inputEl = document.createElement('input');
+    inputEl.type = "file";
+    inputEl.name = "file";
+    inputEl.id = "file-upload-form__file-input";
+    inputEl.className = "file-upload-form__file-input";
+    fileUploadFormEl.append(inputEl);
+
+    var submitInputEl = document.createElement('input');
+    submitInputEl.type = "submit";
+    submitInputEl.value = "Import and change inventory";
+    submitInputEl.className = "file-upload-form__submit-btn";
+    fileUploadFormEl.append(submitInputEl);
+    fileUploadFormEl.onsubmit = function (e) {
+        e.preventDefault();
+        var formData = new FormData();
+        formData.append('file', $('#file-upload-form__file-input')[0].files[0]);
+
+        $.ajax({
+            type: "POST",
+            url: "api/AdminTerminalApi/ImportStorageItems",
+            data: formData,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            success: function (response) {
+                if (response) initData();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("error" + XMLHttpRequest.responseText);
+            }
+        }); 
+    };
+    terminalModalContentEl.append(fileUploadFormEl);
 }

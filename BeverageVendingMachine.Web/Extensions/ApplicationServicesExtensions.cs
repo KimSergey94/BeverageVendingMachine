@@ -1,4 +1,6 @@
 ﻿using BeverageVendingMachine.Core.Common;
+using BeverageVendingMachine.Core.Handlers;
+using BeverageVendingMachine.Core.Interfaces.Handlers;
 using BeverageVendingMachine.Core.Interfaces.Repositories;
 using BeverageVendingMachine.Core.Interfaces.Services;
 using BeverageVendingMachine.Core.Services;
@@ -21,6 +23,7 @@ namespace BeverageVendingMachine.Web.Extensions
             services.AddSingleton<ITerminalService, TerminalService>();
             services.AddSingleton<IAdminTerminalService, AdminTerminalService>();
             services.AddSingleton<IUserTerminalService, UserTerminalService>();
+            services.AddSingleton<IFileHandler, FileHandler>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             return services;
         }

@@ -104,8 +104,8 @@ namespace BeverageVendingMachine.Core.Interfaces.Services
         /// <summary>
         /// Imports new storage items and deletes storage items with ids that are in the passed collection
         /// </summary>
-        /// <param name="newStorageItemsList">Collection of new storage items </param>
-        void ImportAndUpdatePassedStorageItems(List<StorageItem> newStorageItemsList);
+        /// <param name="importedStorageItemsEntities">Collection of new storage items entities</param>
+        void ImportAndUpdatePassedStorageItems(List<StorageItem> importedStorageItemsEntities);
 
         #endregion
     }

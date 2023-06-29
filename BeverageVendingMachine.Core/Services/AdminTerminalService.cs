@@ -146,21 +146,24 @@ namespace BeverageVendingMachine.Core.Services
         {
             var result = false;
 
-            var currentStorageItems = _terminalService.GetStorageInstance().StorageItems;
-            var newStorageItemsIds = newStorageItemsList.Select(storageItem => storageItem.Id).ToList();
-            var storageItemsToDelete = currentStorageItems.Where(storageItem => newStorageItemsIds.Contains(storageItem.Id));
+            var importedStorageItemsEntities = new List<StorageItem>();
+            var currentStorageItemsIds = _terminalService.GetStorageInstance().StorageItems.Select(item => item.Id);
 
-            foreach(var storageItemToDelete in storageItemsToDelete)
+            var currentStorageItemsEntities = _unitOfWork.Repository<StorageItem>().GetAllAsync().Result.Where(item => currentStorageItemsIds.Contains(item.Id));
+
+            foreach(var currentStorageItemsEntitity in currentStorageItemsEntities)
             {
-                await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItemToDelete);
+                await _unitOfWork.Repository<StorageItem>().DeleteAsync(currentStorageItemsEntitity);
             }
 
             foreach (var newStorageItem in newStorageItemsList)
             {
-                await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem);
+                var newStorageItemEntity = await _unitOfWork.Repository<StorageItem>().AddAsync(newStorageItem);
+                importedStorageItemsEntities.Add(newStorageItemEntity);
             }
 
-            _terminalService.GetStorageInstance().ImportAndUpdatePassedStorageItems(newStorageItemsList);
+            _terminalService.GetStorageInstance().ImportAndUpdatePassedStorageItems(importedStorageItemsEntities);
+            await _unitOfWork.Complete();
             result = true;
 
             return result;
