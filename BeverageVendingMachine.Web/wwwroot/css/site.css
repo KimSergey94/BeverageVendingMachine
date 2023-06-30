@@ -295,7 +295,7 @@ body {
         color: #938469;
         background: #0f53cf;
     }
-    .interface-button.visible{
+    .interface-button.visible {
         display: block;
     }
     .interface-button.blocked {
@@ -345,7 +345,9 @@ body {
     color: red;
     outline: 1px solid red;
 }
-.product-fields-form__submit-btn {
+.product-fields-form__submit-btn,
+.file-upload-form__submit-btn,
+.file-upload-form__file-input-label {
     color: cornsilk;
     background: cornflowerblue;
 }
@@ -356,10 +358,46 @@ body {
     .error-message-title.has-error {
         display: flex;
     }
-.file-upload-form{
-
+.file-upload-form {
+    display: flex;
+    flex-direction: column;
 }
 .file-upload-form__file-input {
+    visibility: hidden;
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
 }
+.file-upload-form__file-input-label {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    padding: 1px 6px;
+    border: 2px solid black;
+    border-style: outset;
+    user-select: none;
+}
+    .file-upload-form__file-input-label:active {
+        border-style: inset;
+    }
+/*.file-upload-form__file-input {
+    background: beige;
+    margin-bottom: 54px;
+    background: blue;
+    margin-bottom: 54px;
+    color: var(--white);
+}
+
+    .file-upload-form__file-input::file-selector-button {
+        font-weight: bold;
+        color: dodgerblue;
+        padding: 0.5em;
+        border: thin solid grey;
+        border-radius: 3px;
+    }*/
 .file-upload-form__submit-btn {
+    visibility: hidden;
+}
+.file-upload-form__submit-btn.visible {
+    visibility:visible;
 }

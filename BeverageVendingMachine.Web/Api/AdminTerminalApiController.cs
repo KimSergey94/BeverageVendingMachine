@@ -100,6 +100,7 @@ namespace BeverageVendingMachine.Web.Api
         [HttpPost]
         public async Task<IActionResult> ImportStorageItems(IFormFile file)
         {
+            if(file == null) BadRequest("File is not chosen.");
             try
             {
                 var storageItems = FileHandler.ExtractStorageItemsFromFile(file);

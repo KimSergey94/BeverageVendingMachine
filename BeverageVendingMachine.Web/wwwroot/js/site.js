@@ -20,14 +20,10 @@ function isNumeric(str) {
     return !isNaN(str) && !isNaN(parseFloat(str));
 }
 function isAdmin() {
-    console.log('window.location.pathname', window.location.href);
     var urlArr = window.location.href.split('?');
-    console.log('urlArr ', urlArr);
 
-    if (urlArr.length > 1 && urlArr[1] !== '') {
-        console.log('params found', urlArr[1]);
+    if (urlArr.length > 1 && urlArr[1] !== '')
         if (urlArr[1].indexOf('secretKey') > -1) return true;
-    }
     return false;
 }
 function handleUpdateData(updateData) {
@@ -165,6 +161,7 @@ function hideInterfaceButtons() {
     document.querySelectorAll('.interface-button').forEach(function (button) { button.classList.remove('visible'); });
 }
 
+
 function makeAjaxRequestAndUpdateData(type, url, data, callback) {
     $.ajax({
         type: type,
@@ -288,6 +285,7 @@ function openModal() {
     document.getElementById('terminal-modal-content').innerHTML = '';
     modal.classList.add('visible');
 }
+
 
 function makePurchase() {
     var callback = function (response) {
@@ -537,29 +535,47 @@ function initImportProductsModal() {
     h3El.innerHTML = "Choose file to import products";
 
     var h4El = document.createElement('h4');
-    h4El.className = "welcome-title modal-text-color";
-    h4El.innerHTML = "Import file format: .json";
+    h4El.className = "welcome-title modal-text-color ";
+    h4El.innerHTML = "Import file format: text file with json format";
+    terminalModalContentEl.append(h3El);
+    terminalModalContentEl.append(h4El);
 
     var fileUploadFormEl = document.createElement('form');
     fileUploadFormEl.className = "file-upload-form";
     fileUploadFormEl.method = "post";
 
+    var inputLabelEl = document.createElement('label');
+    inputLabelEl.className = "file-upload-form__file-input-label";
+    inputLabelEl.htmlFor = "file-upload-form__file-input";
+    inputLabelEl.innerHTML = "Choose file";
     var inputEl = document.createElement('input');
     inputEl.type = "file";
     inputEl.name = "file";
     inputEl.id = "file-upload-form__file-input";
     inputEl.className = "file-upload-form__file-input";
-    fileUploadFormEl.append(inputEl);
-
     var submitInputEl = document.createElement('input');
     submitInputEl.type = "submit";
     submitInputEl.value = "Import and change inventory";
     submitInputEl.className = "file-upload-form__submit-btn";
+
+    inputEl.addEventListener('change', function (e) {
+        if (e.target.files[0]) {
+            inputLabelEl.innerHTML = e.target.files[0].name;
+            submitInputEl.classList.add('visible');
+        }
+        else {
+            inputLabelEl.innerHTML = "Choose file";
+            submitInputEl.classList.remove('visible');
+        }
+    });
+    fileUploadFormEl.append(inputLabelEl);
+    fileUploadFormEl.append(inputEl);
     fileUploadFormEl.append(submitInputEl);
     fileUploadFormEl.onsubmit = function (e) {
         e.preventDefault();
         var formData = new FormData();
-        formData.append('file', $('#file-upload-form__file-input')[0].files[0]);
+        formData.append('file', inputEl.files[0]);
+        //formData.append('file', $('#file-upload-form__file-input')[0].files[0]);
 
         $.ajax({
             type: "POST",
@@ -570,6 +586,7 @@ function initImportProductsModal() {
             processData: false,
             success: function (response) {
                 if (response) initData();
+                closeModal();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("error" + XMLHttpRequest.responseText);
