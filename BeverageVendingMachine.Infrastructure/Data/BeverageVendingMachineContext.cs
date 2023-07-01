@@ -10,6 +10,9 @@ using BeverageVendingMachine.Core.Entities;
 
 namespace BeverageVendingMachine.Infrastructure.Data
 {
+    /// <summary>
+    /// Class db context of the application as a bridge between entities and database
+    /// </summary>
     public class BeverageVendingMachineContext : DbContext
     {
         public BeverageVendingMachineContext(DbContextOptions<BeverageVendingMachineContext> options) : base(options)

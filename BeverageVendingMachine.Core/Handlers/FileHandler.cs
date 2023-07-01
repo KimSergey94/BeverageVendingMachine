@@ -25,10 +25,9 @@ namespace BeverageVendingMachine.Core.Handlers
         /// <exception cref="Exception">Corrupted file (length < 0)</exception>
         public static List<StorageItem> ExtractStorageItemsFromFile(IFormFile file)
         {
-            var extension = System.IO.Path.GetExtension(file.FileName);
             if (file.Length < 0) throw new Exception("File seems to be corrupted.");
             return Deserialize<List<StorageItem>>(file);
-
+            var extension = System.IO.Path.GetExtension(file.FileName);
             if (extension != ".json") throw new Exception("Wrong file format");
             else
             {

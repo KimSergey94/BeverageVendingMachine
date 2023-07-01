@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BeverageVendingMachine.Infrastructure.SeedData
 {
+    /// <summary>
+    /// Class to seed data during the first run
+    /// </summary>
     public class BeverageVendingMachineContextSeed
     {
         public static async Task SeedAsync(BeverageVendingMachineContext beverageVendingMachineContext, ILoggerFactory loggerFactory)

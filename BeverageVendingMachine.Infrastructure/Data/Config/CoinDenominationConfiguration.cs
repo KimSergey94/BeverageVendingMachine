@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Infrastructure.Data.Config
 {
+    /// <summary>
+    /// Coin denomination entity configuration for entity framework
+    /// </summary>
     public class CoinDenominationConfiguration : IEntityTypeConfiguration<CoinDenomination>
     {
         public void Configure(EntityTypeBuilder<CoinDenomination> builder)
