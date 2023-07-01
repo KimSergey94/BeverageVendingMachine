@@ -28,4 +28,8 @@
     <ProjectReference Include="..\BeverageVendingMachine.Infrastructure\BeverageVendingMachine.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+
 </Project>

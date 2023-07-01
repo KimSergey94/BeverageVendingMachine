@@ -27,7 +27,8 @@ namespace BeverageVendingMachine.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("SqlConnectionString");  //Configuration.GetConnectionString("DefaultConnection");
+            string connectionString = Configuration.GetConnectionString("SqlConnectionString");
+            connectionString = connectionString.Replace("|RootDirectory|", Environment.CurrentDirectory);
             services.AddDbContext<BeverageVendingMachineContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient, ServiceLifetime.Singleton);
             services.AddControllers();
             services.AddApplicationServices();
