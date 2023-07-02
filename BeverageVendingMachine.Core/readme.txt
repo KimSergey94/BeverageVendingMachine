@@ -59,8 +59,25 @@
 
 3. Web
 3.1 wwwroot
+3.1.1 wwwroot -> css -> site.css - css файл со стилями для интерфейса
+3.1.2 wwwroot -> js -> site.js - js файл с логикой для front end
+3.1.3 wwwroot -> lib - папка с библиотеками jquery и bootstrap
+
 3.2 API
-3.3 App_Data
+3.2.1 AdminTerminalApiController.cs - API контроллер для обработки запросов от админов со страницы админа
+3.2.2 BaseApiController.cs - абстрактный класс API контроллера для определения пути для запросов (api/[controller]/[action])
+3.2.3 TerminalApiController.cs - API контроллер для обработки запросов от пользователей со страницы пользователей
+
+3.3 App_Data - папка куда создается BeverageVendingMachineDB.mdf файл базы данных
+
 3.4 Controllers
+3.4.1 TerminalController - контроллер по умолчанию с Index действием по умолчанию, который открывает терминал админа или пользователя в зависимости был ли отправлен секретный ключ как параметр
+
 3.5 Extensions
+3.5.1 ApplicationServicesExtensions - статический класс для extension методов настройки зависимостей сервисов
+3.5.1 SwaggerServicesExtensions - статический класс для extension методов настройки swagger
+
 3.6 Views
+3.6.1 Views -> Shared -> _Layout - представление layout для всего приложения
+3.6.2 Views -> Terminal -> AdminTerminal - представление терминала для админов
+3.6.3 Views -> Terminal -> Index - представление терминала для пользователей

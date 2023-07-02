@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Web.Api
 {
+    /// <summary>
+    /// Controller for interactions from users section by users
+    /// </summary>
     public class TerminalApiController : BaseApiController
     {
         private readonly IUserTerminalService _userTerminalService;

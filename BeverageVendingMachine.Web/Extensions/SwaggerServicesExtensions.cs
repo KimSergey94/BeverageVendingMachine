@@ -4,8 +4,16 @@ using Microsoft.OpenApi.Models;
 
 namespace BeverageVendingMachine.Web.Extensions
 {
+    /// <summary>
+    /// Extension class to configure swagger
+    /// </summary>
     public static class SwaggerServicesExtensions
     {
+        /// <summary>
+        /// Adds swagger documentation to the services collection that calls the extension method
+        /// </summary>
+        /// <param name="services">Service collection that calls this extension</param>
+        /// <returns>The service collection that called this extension with the added swagger documentation</returns>
         public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -39,6 +47,11 @@ namespace BeverageVendingMachine.Web.Extensions
             return services;
         }
 
+        /// <summary>
+        /// IApplicationBuilder extension to init swagger with ui
+        /// </summary>
+        /// <param name="app">IApplicationBuilder that calls this extension</param>
+        /// <returns>IApplicationBuilder that called this extension with the added swagger</returns>
         public static IApplicationBuilder UseSwaggerGen(this IApplicationBuilder app)
         {
             app.UseSwagger();

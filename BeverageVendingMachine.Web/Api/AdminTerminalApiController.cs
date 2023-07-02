@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace BeverageVendingMachine.Web.Api
 {
+    /// <summary>
+    /// Controller for interactions from admin section by admin
+    /// </summary>
     public class AdminTerminalApiController : BaseApiController
     {
         private readonly IAdminTerminalService _adminTerminalService;
