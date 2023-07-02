@@ -21,7 +21,7 @@ namespace BeverageVendingMachine.Core.Services
         {
             _unitOfWork = unitOfWork;
             CoinDenominations = _unitOfWork.Repository<CoinDenomination>().GetAllAsync().Result as List<CoinDenomination>;
-            StorageItems = _unitOfWork.Repository<StorageItem>().GetAllAsync().Result.Where(item => !item.IsDeleted).ToList();
+            StorageItems = _unitOfWork.Repository<StorageItem>().GetAllAsync().Result.ToList();
             //CoinDenominations = coinDenominations;// _unitOfWork.Repository<CoinDenomination>().GetAllAsync().Result as List<CoinDenomination>;
             //StorageItems = storageItems;// _unitOfWork.Repository<StorageItem>().GetAllAsync().Result as List<IStorageItem>;
         }

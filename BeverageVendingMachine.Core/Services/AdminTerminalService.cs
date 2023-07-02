@@ -122,12 +122,14 @@ namespace BeverageVendingMachine.Core.Services
             {
                 try
                 {
-                    storageItem.IsDeleted = true;
-                    await _unitOfWork.Repository<StorageItem>().UpdateAsync(storageItem);
-                    await _unitOfWork.Complete();
-                    var storageItemDeletionResult = _terminalService.GetStorageInstance().DeleteStorageItem(storageItem);
-                    if (storageItemDeletionResult != 1) throw new Exception("The storage item deletion has not been updated in the system.");
-                    result = true;
+                    if(await _unitOfWork.Repository<StorageItem>().DeleteAsync(storageItem))
+                    {
+                        await _unitOfWork.Complete();
+                        var storageItemDeletionResult = _terminalService.GetStorageInstance().DeleteStorageItem(storageItem);
+                        if (storageItemDeletionResult != 1) throw new Exception("The storage item deletion has not been updated in the system.");
+                        result = true;
+                    }
+                    else throw new Exception("The storage item could not be deleted from database.");
                 }
                 catch
                 {
